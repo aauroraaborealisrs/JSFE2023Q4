@@ -2,6 +2,7 @@
     margin: auto;
     display: flex;
     flex-direction: row;
+    justify-content: center;
 }
 
 table {
@@ -17,6 +18,8 @@ td {
     border: 1px solid black;
     height: 60px;
     /*width: 60px;*/
+    text-align: center;
+    vertical-align: middle;   
 }
 
 td.filled {
@@ -27,13 +30,24 @@ td.empty {
     background-color: white;
 }
 
+
 #horizontalHints td {
     width: 20%; 
+    border-bottom: none;
+    border-top: none;   
+}
+
+#horizontalHints tr {
+    border-bottom: none;
 }
 
 #verticalHints td {
+    display: flex;
     height: 20%;
     height: 60px; 
+    justify-content: center;
+    align-items: center;
+    border: solid 1px black;
 }
 
 .table__container{
