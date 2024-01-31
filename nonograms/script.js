@@ -138,7 +138,6 @@ let handleClick = function(event) {
     target.textContent = '';
     target.style.backgroundColor = gameField[colIndex][rowIndex] === 1 ? 'black' : 'white';
 
-    // Проверить решение после короткой задержки
     setTimeout(checkSolution, 100);
 };
 
@@ -154,7 +153,7 @@ function checkSolution() {
     }
     alert("Поздравляем, вы выиграли!");
     hasWon = true;
-    table.removeEventListener('click', handleClick); // Удаление обработчика событий
+    table.removeEventListener('click', handleClick);
     return hasWon;
 }
 
@@ -169,7 +168,6 @@ let hintRow2 = document.createElement('tr');
 for (let i = 0; i < 5; i++) {
 	let hintCell1 = document.createElement('td');
 	let hintCell2 = document.createElement('td');
-	/*hintCell.textContent = 'Hint for horizontal line ' + (i+1);*/
 	hintRow1.appendChild(hintCell1);
 	hintRow2.appendChild(hintCell2);
 }
@@ -193,7 +191,6 @@ verticalHints.appendChild(hintColumn2);
 
 for (let i = 0; i < 5; i++) {
 	let hintCell = document.createElement('td');
-	/*hintCell.textContent = 'Hint for vertical line ' + (i+1);*/
 	hintColumn.appendChild(hintCell);
 }
 
