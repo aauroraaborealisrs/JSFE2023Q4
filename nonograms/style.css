@@ -3,23 +3,33 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    outline: 3px solid black;
+    width: fit-content;
 }
 
 table {
-    border: 1px solid black;
     border-spacing: 0px;
 }
 
+.verthintscont{
+    outline: 2px solid black;
+}
+
 #gameField {
-    color: white;
+    color: transparent;
+    outline: 2px solid black;
+
+}
+
+#gameField td {
+    border: 1px solid black;
 }
 
 td {
-    border: 1px solid black;
     height: 60px;
-    /*width: 60px;*/
+    width: 60px;
     text-align: center;
-    vertical-align: middle;   
+    vertical-align: middle;
 }
 
 td.filled {
@@ -30,24 +40,29 @@ td.empty {
     background-color: white;
 }
 
+#horizontalHints{
+    outline: 2px solid black;
+}
 
 #horizontalHints td {
     width: 20%; 
     border-bottom: none;
-    border-top: none;   
+    border-left: 2px solid black;
+    text-align: center;
+    vertical-align: middle;
 }
 
-#horizontalHints tr {
-    border-bottom: none;
+#horizontalHints tr{
+    border: 2px solid black;
 }
 
 #verticalHints td {
-    display: flex;
     height: 20%;
     height: 60px; 
-    justify-content: center;
-    align-items: center;
-    border: solid 1px black;
+    border-top: 3px solid black;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 60px;
 }
 
 .table__container{
@@ -59,16 +74,16 @@ td.empty {
 
 #verticalHints {
     display: flex;
-    flex-flow: column-reverse;
     width: 60px;
-    border: white;
+    /*border: white;*/
+    margin-right: 63px;
+    margin-top: 120px;
 }
 
 #verticalHints tr {
     display: flex;
     flex-flow: column;
+    border-bottom: none;
+    vertical-align: middle;
 }
 
-#gameField {
-    border: solid 2px black;
-}

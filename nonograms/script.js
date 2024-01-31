@@ -7,11 +7,11 @@ let gameField = [
 ];
 
 let originalGameField = [
-	[1, 1, 1, 1, 1],
-	[1, 0, 0, 0, 0],
-	[1, 1, 1, 1, 1],
-	[0, 0, 0, 0, 1],
-	[1, 1, 1, 1, 1]
+	[0, 1, 1, 1, 0],
+	[1, 1, 0, 1, 1],
+	[1, 0, 0, 0, 1],
+	[1, 1, 0, 1, 1],
+	[0, 1, 1, 1, 0]
 ];
 
 let table = document.getElementById('gameField');
@@ -64,19 +64,11 @@ function checkSolution() {
 
 //горизонтальные
 
-/*let horizontalHints = document.getElementById('horizontalHints');
-let hintRow = document.createElement('tr');
-
-for (let i = 0; i < 5; i++) {
-	let hintCell = document.createElement('td');
-	hintRow.appendChild(hintCell);
-}
-
-horizontalHints.appendChild(hintRow);*/
 
 let horizontalHints = document.getElementById('horizontalHints');
 let hintRow1 = document.createElement('tr');
 let hintRow2 = document.createElement('tr');
+
 
 for (let i = 0; i < 5; i++) {
 	let hintCell1 = document.createElement('td');
@@ -90,10 +82,19 @@ horizontalHints.appendChild(hintRow1);
 horizontalHints.appendChild(hintRow2);
 
 
+
 //вертикальные
 
 let verticalHints = document.getElementById('verticalHints');
 let hintColumn = document.createElement('tr');
+let hintColumn2 = document.createElement('tr');
+
+for (let i = 0; i < 5; i++) {
+    let hintCell = document.createElement('td');
+    hintColumn2.appendChild(hintCell);
+}
+
+verticalHints.appendChild(hintColumn2);
 
 for (let i = 0; i < 5; i++) {
 	let hintCell = document.createElement('td');
@@ -105,18 +106,25 @@ verticalHints.appendChild(hintColumn);
 
 //вертикальные заполнение
 
-let numberVerticalHints = [5, 1, 5, 1, 5];
+let numberVerticalHints = [ 0, 2, 1, 2, 0];
+let numberVerticalHints2 = [3, 2, 1, 2, 3];
 
 let hintCells = document.querySelectorAll('#verticalHints td');
 for (let i = 0; i < hintCells.length; i++) {
 	hintCells[i].textContent = numberVerticalHints[i];
 }
 
+let hintCells2 = document.querySelectorAll('#verticalHints tr:nth-child(2) td');
+for (let i = 0; i < hintCells2.length; i++) {
+    hintCells2[i].textContent = numberVerticalHints2[i];
+}
 //горизонтальные заполнение
 
-let horizontalHintsTop = [3, 1, 1, 1, 1];
+let horizontalHintsTop = [ 0, 1, 1, 1, 0];
 let horizontalHintsBottom = [1, 1, 1, 1, 3];
 
 let hintRows = document.querySelectorAll('#horizontalHints tr');
 hintRows[0].innerHTML = horizontalHintsTop.map(hint => '<td>' + hint + '</td>').join('');
 hintRows[1].innerHTML = horizontalHintsBottom.map(hint => '<td>' + hint + '</td>').join('');
+
+
