@@ -26,36 +26,41 @@ for (let i = 0; i < gameField.length; i++) {
 	table.appendChild(row);
 }
 
-table.addEventListener('click', function(event) {
-	let target = event.target;
-	while (target != null && target.tagName != 'TD') {
-		target = target.parentNode;
-	}
-	if (target == null) return;
+let handleClick = function(event) {
+    let target = event.target;
+    while (target != null && target.tagName != 'TD') {
+        target = target.parentNode;
+    }
+    if (target == null) return;
 
-	let rowIndex = Array.prototype.indexOf.call(target.parentNode.children, target);
-	let colIndex = Array.from(target.parentNode.parentNode.children).indexOf(target.parentNode);
+    let rowIndex = Array.prototype.indexOf.call(target.parentNode.children, target);
+    let colIndex = Array.from(target.parentNode.parentNode.children).indexOf(target.parentNode);
 
-	// Переключить значение ячейки в gameField
-	gameField[colIndex][rowIndex] = gameField[colIndex][rowIndex] === 0 ? 1 : 0;
-	target.textContent = '';
-	target.style.backgroundColor = gameField[colIndex][rowIndex] === 1 ? 'black' : 'white';
+    // Переключить значение ячейки в gameField
+    gameField[colIndex][rowIndex] = gameField[colIndex][rowIndex] === 0 ? 1 : 0;
+    target.textContent = '';
+    target.style.backgroundColor = gameField[colIndex][rowIndex] === 1 ? 'black' : 'white';
 
-	// Проверить решение после короткой задержки
-	setTimeout(checkSolution, 100);
-});
+    // Проверить решение после короткой задержки
+    setTimeout(checkSolution, 100);
+};
 
+table.addEventListener('click', handleClick);
 
 function checkSolution() {
-	for (let i = 0; i < gameField.length; i++) {
-		for (let j = 0; j < gameField[i].length; j++) {
-			if (gameField[i][j] !== originalGameField[i][j]) {
-				return;
-			}
-		}
-	}
-	alert("Поздравляем, вы выиграли!");
+    for (let i = 0; i < gameField.length; i++) {
+        for (let j = 0; j < gameField[i].length; j++) {
+            if (gameField[i][j] !== originalGameField[i][j]) {
+                return;
+            }
+        }
+    }
+    alert("Поздравляем, вы выиграли!");
+    hasWon = true;
+    table.removeEventListener('click', handleClick); // Удаление обработчика событий
+    return hasWon;
 }
+
 
 //горизонтальные
 
