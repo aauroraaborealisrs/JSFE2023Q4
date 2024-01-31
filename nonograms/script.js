@@ -6,13 +6,110 @@ let gameField = [
 	[0, 0, 0, 0, 0]
 ];
 
-let originalGameField = [
-	[0, 1, 1, 1, 0],
-	[1, 1, 0, 1, 1],
-	[1, 0, 0, 0, 1],
-	[1, 1, 0, 1, 1],
-	[0, 1, 1, 1, 0]
+let originalGameFields = [
+	
+	//крест
+
+	{
+		field: [
+			[0, 1, 1, 1, 0],
+			[1, 1, 0, 1, 1],
+			[1, 0, 0, 0, 1],
+			[1, 1, 0, 1, 1],
+			[0, 1, 1, 1, 0]
+		],
+		hints: [
+			[ 0, 2, 1, 2, 0], // левый
+			[ 3, 2, 1, 2, 3], // право
+			[ 0, 2, 1, 2, 0], // верх
+			[ 1, 2, 1, 2, 3] // низ
+		]
+	},
+
+	//решетка
+
+	{
+		field: [
+			[0, 1, 0, 1, 0],
+			[1, 1, 1, 1, 1],
+			[0, 1, 0, 1, 0],
+			[1, 1, 1, 1, 1],
+			[0, 1, 0, 1, 0]
+		],
+		hints: [
+			[ 1, 0, 1, 0, 1], 
+			[ 1, 5, 1, 5, 1], 
+			[ 1, 0, 1, 0, 1], 
+			[ 1, 5, 1, 5, 1], 
+		]
+	},
+
+	//часы
+
+	{
+		field: [
+			[1, 1, 1, 1, 1],
+			[0, 1, 1, 1, 0],
+			[0, 0, 1, 0, 0],
+			[0, 1, 0, 1, 0],
+			[1, 1, 1, 1, 1]
+		],
+		hints: [
+			[ 0, 0, 0, 1, 0], // левый
+			[ 5, 3, 1, 1, 5], // право
+			[ 1, 2, 3, 2, 1], // верх
+			[ 1, 2, 1, 2, 1] // низ
+		]
+	},
+
+	//коляска
+
+	{
+		field: [
+			[0, 1, 1, 0, 0],
+			[1, 1, 0, 0, 1],
+			[1, 1, 1, 1, 0],
+			[0, 1, 1, 0, 0],
+			[1, 0, 0, 1, 0]
+		],
+		hints: [
+			[ 0, 2, 0, 0, 1], // левый
+			[ 2, 1, 4, 2, 1], // право
+			[ 2, 0, 1, 2, 0], // верх
+			[ 1, 4, 2, 1, 1] // низ
+		]
+	},
+
+	//кiт
+
+	{
+		field: [
+			[0, 0, 1, 0, 1],
+			[0, 0, 1, 1, 1],
+			[1, 1, 1, 1, 1],
+			[1, 1, 1, 1, 0],
+			[1, 1, 1, 1, 1]
+		],
+		hints: [
+			[ 1, 0, 0, 0, 0], // левый
+			[ 1, 3, 5, 4, 5], // право
+			[ 0, 0, 0, 0, 3], // верх
+			[ 3, 3, 5, 4, 1] // низ
+		]
+	},
+
 ];
+
+
+let randomIndex = Math.floor(Math.random() * originalGameFields.length);
+let currentGameField = originalGameFields[randomIndex];
+
+let originalGameField = currentGameField.field;
+let numberVerticalHints = currentGameField.hints[0]; // Используйте первый массив подсказок
+let numberVerticalHints2 = currentGameField.hints[1]; // Используйте второй массив подсказок
+
+let horizontalHintsTop = currentGameField.hints[2];
+let horizontalHintsBottom = currentGameField.hints[3];
 
 let table = document.getElementById('gameField');
 
@@ -64,7 +161,6 @@ function checkSolution() {
 
 //горизонтальные
 
-
 let horizontalHints = document.getElementById('horizontalHints');
 let hintRow1 = document.createElement('tr');
 let hintRow2 = document.createElement('tr');
@@ -80,7 +176,6 @@ for (let i = 0; i < 5; i++) {
 
 horizontalHints.appendChild(hintRow1);
 horizontalHints.appendChild(hintRow2);
-
 
 
 //вертикальные
@@ -106,9 +201,6 @@ verticalHints.appendChild(hintColumn);
 
 //вертикальные заполнение
 
-let numberVerticalHints = [ 0, 2, 1, 2, 0];
-let numberVerticalHints2 = [3, 2, 1, 2, 3];
-
 let hintCells = document.querySelectorAll('#verticalHints td');
 for (let i = 0; i < hintCells.length; i++) {
 	hintCells[i].textContent = numberVerticalHints[i];
@@ -119,9 +211,6 @@ for (let i = 0; i < hintCells2.length; i++) {
     hintCells2[i].textContent = numberVerticalHints2[i];
 }
 //горизонтальные заполнение
-
-let horizontalHintsTop = [ 0, 2, 1, 2, 0];
-let horizontalHintsBottom = [1, 2, 1, 2, 3];
 
 let hintRows = document.querySelectorAll('#horizontalHints tr');
 hintRows[0].innerHTML = horizontalHintsTop.map(hint => '<td>' + hint + '</td>').join('');
