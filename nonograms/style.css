@@ -1,0 +1,60 @@
+.container {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+}
+
+table {
+    border: 1px solid black;
+    border-spacing: 0px;
+}
+
+#gameField {
+    color: white;
+}
+
+td {
+    border: 1px solid black;
+    height: 60px;
+    /*width: 60px;*/
+}
+
+td.filled {
+    background-color: black;
+}
+
+td.empty {
+    background-color: white;
+}
+
+#horizontalHints td {
+    width: 20%; 
+}
+
+#verticalHints td {
+    height: 20%;
+    height: 60px; 
+}
+
+.table__container{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 300px;
+}
+
+#verticalHints {
+    display: flex;
+    flex-flow: column-reverse;
+    width: 60px;
+    border: white;
+}
+
+#verticalHints tr {
+    display: flex;
+    flex-flow: column;
+}
+
+#gameField {
+    border: solid 2px black;
+}
