@@ -120,8 +120,8 @@ for (let i = 0; i < hintCells2.length; i++) {
 }
 //горизонтальные заполнение
 
-let horizontalHintsTop = [ 0, 1, 1, 1, 0];
-let horizontalHintsBottom = [1, 1, 1, 1, 3];
+let horizontalHintsTop = [ 0, 2, 1, 2, 0];
+let horizontalHintsBottom = [1, 2, 1, 2, 3];
 
 let hintRows = document.querySelectorAll('#horizontalHints tr');
 hintRows[0].innerHTML = horizontalHintsTop.map(hint => '<td>' + hint + '</td>').join('');

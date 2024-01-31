@@ -3,8 +3,12 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    outline: 3px solid black;
+    outline: 1px solid black;
     width: fit-content;
+}
+
+.gameboard__container{
+    display: flex;  
 }
 
 table {
@@ -16,9 +20,8 @@ table {
 }
 
 #gameField {
-    color: transparent;
+    font-size: 0;
     outline: 2px solid black;
-
 }
 
 #gameField td {
@@ -59,7 +62,7 @@ td.empty {
 #verticalHints td {
     height: 20%;
     height: 60px; 
-    border-top: 3px solid black;
+    border-top: 2px solid black;
     text-align: center;
     vertical-align: middle;
     line-height: 60px;
@@ -77,7 +80,7 @@ td.empty {
     width: 60px;
     /*border: white;*/
     margin-right: 63px;
-    margin-top: 120px;
+    margin-top: 125px;
 }
 
 #verticalHints tr {
