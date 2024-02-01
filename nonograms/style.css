@@ -1,3 +1,42 @@
+*{
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+*, *:before, *:after{
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+:focus, :active{outline: none;}
+a:focus, a:active{outline: none;}
+
+nav,footer,header,aside{display: block;}
+
+html, body{
+	height: 100%;
+	width: 100%;
+	font-style: 100%;
+	line-height: 1;
+	font-style: 14px;
+	-ms-text-size-adjust: 100%;
+	-moz-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+}
+
+input, button, textarea{font-family: inherit;}
+
+input::-ms-clear{display:none;}
+button{cursor: pointer;}
+button::-moz-focus-inner{padding: 0;border: 0;}
+a, a:visited{text-decoration: none;}
+a:hover{text-decoration: none;}
+ul li{list-style-type: none;}
+img{vertical-align: top;}
+
+h1,h2, h3, h4, h5, h6{font-style: inherit; font-weight: 400;}
+
 body {
     font: 1em sans-serif;
 }
@@ -5,9 +44,9 @@ body {
 .container {
     margin: auto;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
-    outline: 1px solid black;
+    /*outline: 1px solid black;*/
     width: fit-content;
 }
 
@@ -20,12 +59,14 @@ table {
 }
 
 .verthintscont{
-    outline: 2px solid black;
+    border: 2px solid black;
+    border-right: none;
 }
 
 #gameField {
     font-size: 0;
     outline: 2px solid black;
+    border: 2px solid black;
 }
 
 #gameField td {
@@ -48,7 +89,9 @@ td.empty {
 }
 
 #horizontalHints{
-    outline: 2px solid black;
+    border-top: 2px solid black;
+    border-right: 2px solid black;
+    margin-left: -2px;
 }
 
 #horizontalHints td {
@@ -83,8 +126,8 @@ td.empty {
     display: flex;
     width: 60px;
     /*border: white;*/
-    margin-right: 63px;
-    margin-top: 125px;
+    margin-right: 62px;
+    margin-top: 119px;
 }
 
 #verticalHints tr {
@@ -99,7 +142,7 @@ td.empty {
  display: none; 
  position: fixed; 
  z-index: 1; 
- padding-top: 100px; 
+ padding-top: 250px; 
  left: 0;
  top: 0;
  width: 100%; 
@@ -114,7 +157,7 @@ td.empty {
  margin: auto;
  padding: 20px;
  border: 1px solid #888;
- width: 50%;
+ width: fit-content;
  border-radius: 10px;
 }
 
@@ -123,6 +166,7 @@ td.empty {
  float: right;
  font-size: 28px;
  font-weight: bold;
+ margin-top:-10px;
 }
 
 .close:hover,
@@ -135,7 +179,8 @@ td.empty {
 
 .modal-button__level{
     padding: 5px 10px;
-    margin: 5px 5px
+    margin: 5px 5px;
+    border-radius: 5px;
 }
 
 p{
@@ -145,6 +190,9 @@ p{
 .modal-button__newlevel{
     padding: 5px 10px;
     margin: 5px 5px;
+    margin-top: 10px;
+    border-radius: 5px;
+    font: 1em sans-serif;
 }
 
 .modal-content__win{
@@ -152,11 +200,64 @@ p{
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 30%;
+    width: fit-content;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+
+/* Светлая тема */
+body {
+ background-color: white;
+ color: black;
+}
+
+body.dark-theme {
+    background-color: black;
+    color: white;
+}
+
+body.dark-theme * {
+    border-color: white !important;
+    outline-color: white !important;
+
+}
+
+body.dark-theme .modal p, .slider {
+    color: black;
+}
+
+.switch {
+    height: fit-content;
+    margin: 50px 0 30px 0;
+    padding: 10px 15px 10px 5px;
+    width: fit-content;
+    box-sizing: border-box;
+    /*outline: 1px solid #000;*/
+    border-radius: 20px;
+    background-color: #F0F0F0;
+    cursor: pointer;
+}
+
+#resetButton, #selectLevelButton {
+    border-radius: 20px;
+    width: fit-content;
+    padding: 5px 10px;
+    margin: 5px;
+    font: 1em sans-serif;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+#themeSwitcher{
+    visibility: collapse;
+    margin-left: -8px;
+}
+
+.modal-content p {
+    margin-bottom: 15px;
 }
