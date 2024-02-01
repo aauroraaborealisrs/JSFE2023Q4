@@ -5,10 +5,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <title>Nonogram</title>
+  <title>НОНОГРАММЫ ЕБУЧИЕ</title>
 </head>
 <body>
   <main class="container">
+
+    <label class="switch">
+     <input type="checkbox" id="themeSwitcher">
+     <span class="slider round">
+      Переключить тему
+     </span>
+    </label>
+
   <div class="gameboard__container">
       <div class="verthintscont">
           <table id="verticalHints">
@@ -28,7 +36,6 @@
     <button class = "modal-button__level" onclick="chooseRandomImage()">Случайный</button>
  </div>
 </div>
-
 
 <div id="winModal" class="modal">
  <div class="modal-content__win">

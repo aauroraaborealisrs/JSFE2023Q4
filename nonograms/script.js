@@ -146,6 +146,40 @@ for (let i = 0; i < gameField.length; i++) {
 }
 
 
+function invertColor(color) {
+    return color === 'black' ? 'white' : 'black';
+}
+
+
+// Функция для инвертирования цвета
+function invertColor(color) {
+    return color === 'black' ? 'white' : 'black';
+}
+
+// Функция для обновления цветов ячеек
+function updateCellColors() {
+    const isDarkTheme = document.body.classList.contains('dark-theme');
+    const gameFieldCells = document.querySelectorAll('#gameField td');
+
+    gameFieldCells.forEach(cell => {
+        const cellColIndex = Array.prototype.indexOf.call(cell.parentNode.children, cell);
+        const cellRowIndex = Array.from(cell.parentNode.parentNode.children).indexOf(cell.parentNode);
+
+        if (gameField[cellRowIndex][cellColIndex] === 1) {
+            cell.style.backgroundColor = isDarkTheme ? invertColor('black') : invertColor('white');
+        } else {
+            cell.style.backgroundColor = isDarkTheme ? invertColor('white') : invertColor('black');
+        }
+    });
+}
+
+// Обработка изменения темы
+const themeSwitcher = document.getElementById('themeSwitcher');
+themeSwitcher.addEventListener('change', function() {
+    updateCellColors();
+});
+
+// Обработка клика на ячейку
 let handleClick = function(event) {
     let target = event.target;
     while (target != null && target.tagName != 'TD') {
@@ -156,14 +190,15 @@ let handleClick = function(event) {
     let colIndex = Array.prototype.indexOf.call(target.parentNode.children, target);
     let rowIndex = Array.from(target.parentNode.parentNode.children).indexOf(target.parentNode);
 
-	gameField[rowIndex][colIndex] = gameField[rowIndex][colIndex] === 0 ? 1 : 0;
+    gameField[rowIndex][colIndex] = gameField[rowIndex][colIndex] === 0 ? 1 : 0;
 
     target.textContent = '';
-    target.style.backgroundColor = gameField[rowIndex][colIndex] === 1 ? 'black' : 'white';
+
+    // Обновление цветов ячеек после изменения значения в gameField
+    updateCellColors();
 
     setTimeout(checkSolution, 100);
 };
-
 
 
 table.addEventListener('click', handleClick);
@@ -364,3 +399,13 @@ function updateGameFieldAndHints() {
         }
 	}
 }
+
+
+themeSwitcher.addEventListener('change', function() {
+	setTimeout(updateCellColors, 0);
+ if (this.checked) {
+	document.body.classList.add('dark-theme');
+ } else {
+	document.body.classList.remove('dark-theme');
+ }
+});

@@ -7,7 +7,7 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    outline: 1px solid black;
+    /*outline: 1px solid black;*/
     width: fit-content;
 }
 
@@ -160,3 +160,31 @@ p{
     align-items: center;
     text-align: center;
 }
+
+
+/* Светлая тема */
+body {
+ background-color: white;
+ color: black;
+}
+
+body.dark-theme {
+    background-color: black;
+    color: white;
+}
+
+body.dark-theme * {
+    border-color: white !important;
+    outline-color: white !important;
+
+}
+
+body.dark-theme .modal p {
+    color: black;
+}
+
+.switch {
+    height: fit-content;
+    padding: 10px;
+}
+
