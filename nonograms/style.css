@@ -1,3 +1,7 @@
+body {
+    font: 1em sans-serif;
+}
+
 .container {
     margin: auto;
     display: flex;
@@ -110,7 +114,8 @@ td.empty {
  margin: auto;
  padding: 20px;
  border: 1px solid #888;
- width: 80%;
+ width: 50%;
+ border-radius: 10px;
 }
 
 .close {
@@ -125,4 +130,33 @@ td.empty {
  color: #000;
  text-decoration: none;
  cursor: pointer;
+}
+
+
+.modal-button__level{
+    padding: 5px 10px;
+    margin: 5px 5px
+}
+
+p{
+    text-align: center;
+}
+
+.modal-button__newlevel{
+    padding: 5px 10px;
+    margin: 5px 5px;
+}
+
+.modal-content__win{
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }

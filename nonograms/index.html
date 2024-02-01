@@ -20,15 +20,23 @@
         <table id="gameField">
         </table>
   </div>
-<!-- Модальное окно -->
+
 <div id="myModal" class="modal">
- <!-- Контент модального окна -->
  <div class="modal-content">
     <span class="close">&times;</span>
     <p>Выберите рисунок:</p>
-    <button onclick="chooseRandomImage()">Случайный</button>
+    <button class = "modal-button__level" onclick="chooseRandomImage()">Случайный</button>
  </div>
 </div>
+
+
+<div id="winModal" class="modal">
+ <div class="modal-content__win">
+    <p>Поздравляем, вы выиграли!</p>
+    <button class="modal-button__newlevel" onclick="restartGame()">Играть еще</button>
+ </div>
+</div>
+
    </div>
   </div>
 </div>

@@ -19,9 +19,9 @@ let originalGameFields = [
 		],
 		hints: [
 			[ 0, 0, 0, 0, 0], // левый
-			[ 0, 0, 0, 0, 0], // право
+			[ 0, 0, 1, 0, 0], // право
 			[ 0, 0, 0, 0, 0], // верх
-			[ 0, 0, 0, 0, 0] // низ
+			[ 0, 0, 1, 0, 0] // низ
 		]
 	},
 
@@ -179,10 +179,18 @@ function checkSolution() {
             }
         }
     }
-    alert("Поздравляем, вы выиграли!");
-    hasWon = true;
+	showWinModal();
     table.removeEventListener('click', handleClick);
-    return hasWon;
+	return true;
+}
+
+function showWinModal() {
+    document.getElementById("winModal").style.display = "block";
+}
+
+function restartGame() {
+	document.getElementById("winModal").style.display = "none";
+	openModal(); // Показать модальное окно с выбором уровня
 }
 
 //горизонтальные
@@ -243,7 +251,6 @@ hintRows[1].innerHTML = horizontalHintsBottom.map(hint => '<td>' + hint + '</td>
 
 /*          						  модалка выбора 5х5                                */
 
-// Функция для открытия модального окна
 function openModal() {
  document.getElementById("myModal").style.display = "block";
 }
@@ -252,46 +259,51 @@ function closeModal() {
  document.getElementById("myModal").style.display = "none";
 }
 
-// Открыть модальное окно при загрузке страницы
 window.onload = openModal;
 
-// Создание кнопок для каждой нонограммы
 originalGameFields.forEach((gameField, index) => {
 	let button = document.createElement('button');
 	button.textContent = gameField.name;
+	button.setAttribute('class', 'modal-button__level')
 	button.onclick = function() {
 		chooseImage(index);
 	};
 	document.querySelector('.modal-content').appendChild(button);
 });
 
-// Функция для выбора случайного рисунка
-function chooseRandomImage() {
-    closeModal();
-    let randomIndex = Math.floor(Math.random() * originalGameFields.length);
-    let currentGameField = originalGameFields[randomIndex];
-    gameField = Array.from({ length: 5 }, () => Array(5).fill(0));
-    originalGameField = currentGameField.field.map(row => row.slice());
-    numberVerticalHints = currentGameField.hints[0];
-    numberVerticalHints2 = currentGameField.hints[1];
-    horizontalHintsTop = currentGameField.hints[2];
-    horizontalHintsBottom = currentGameField.hints[3];
-
-    updateGameFieldAndHints();
-}
-
 
 function chooseImage(index) {
-    closeModal();
-    let currentGameField = originalGameFields[index];
-    gameField = Array.from({ length: 5 }, () => Array(5).fill(0)); 
-    originalGameField = currentGameField.field.map(row => row.slice());
-    numberVerticalHints = currentGameField.hints[0];
-    numberVerticalHints2 = currentGameField.hints[1];
-    horizontalHintsTop = currentGameField.hints[2];
-    horizontalHintsBottom = currentGameField.hints[3];
+	closeModal();
+	let currentGameField = originalGameFields[index];
+	gameField = Array.from({ length: 5 }, () => Array(5).fill(0)); 
+	originalGameField = currentGameField.field.map(row => row.slice());
+	numberVerticalHints = currentGameField.hints[0];
+	numberVerticalHints2 = currentGameField.hints[1];
+	horizontalHintsTop = currentGameField.hints[2];
+	horizontalHintsBottom = currentGameField.hints[3];
 
-    updateGameFieldAndHints();
+	updateGameFieldAndHints();
+	addClickListenerToTable(); 
+}
+
+function chooseRandomImage() {
+	closeModal();
+	let randomIndex = Math.floor(Math.random() * originalGameFields.length);
+	let currentGameField = originalGameFields[randomIndex];
+	gameField = Array.from({ length: 5 }, () => Array(5).fill(0));
+	originalGameField = currentGameField.field.map(row => row.slice());
+	numberVerticalHints = currentGameField.hints[0];
+	numberVerticalHints2 = currentGameField.hints[1];
+	horizontalHintsTop = currentGameField.hints[2];
+	horizontalHintsBottom = currentGameField.hints[3];
+
+	updateGameFieldAndHints();
+	addClickListenerToTable();
+}
+
+function addClickListenerToTable() {
+	let table = document.getElementById('gameField');
+	table.addEventListener('click', handleClick);
 }
 
 function updateGameFieldAndHints() {
@@ -311,20 +323,44 @@ function updateGameFieldAndHints() {
 	let hintCells = document.querySelectorAll('#verticalHints td');
 	for (let i = 0; i < hintCells.length; i++) {
 		hintCells[i].textContent = numberVerticalHints[i];
+
+        if (numberVerticalHints[i] === 0) {
+            hintCells[i].style.color = 'transparent'; 
+        } else {
+            hintCells[i].style.color = ''; 
+        }
 	}
 
 	let hintCells2 = document.querySelectorAll('#verticalHints tr:nth-child(2) td');
 	for (let i = 0; i < hintCells2.length; i++) {
 		hintCells2[i].textContent = numberVerticalHints2[i];
+		
+		if (numberVerticalHints2[i] === 0) {
+            hintCells2[i].style.color = 'transparent'; 
+        } else {
+            hintCells2[i].style.color = ''; 
+        }
 	}
 
 	let horizontalHintCells = document.querySelectorAll('#horizontalHints td');
 	for (let i = 0; i < horizontalHintCells.length; i++) {
 		horizontalHintCells[i].textContent = horizontalHintsTop[i];
+
+		if (horizontalHintsTop[i] === 0) {
+            horizontalHintCells[i].style.color = 'transparent'; 
+        } else {
+            horizontalHintCells[i].style.color = ''; 
+        }
 	}
 
 	let horizontalHintCells2 = document.querySelectorAll('#horizontalHints tr:nth-child(2) td');
 	for (let i = 0; i < horizontalHintCells2.length; i++) {
 		horizontalHintCells2[i].textContent = horizontalHintsBottom[i];
+
+		if (horizontalHintsBottom[i] === 0) {
+            horizontalHintCells2[i].style.color = 'transparent'; 
+        } else {
+            horizontalHintCells2[i].style.color = ''; 
+        }
 	}
 }
