@@ -173,6 +173,7 @@ function updateCellColors() {
 
 const themeSwitcher = document.getElementById('themeSwitcher');
 themeSwitcher.addEventListener('change', function() {
+	playButtonClickSound();
     updateCellColors();
 });
 
@@ -203,10 +204,20 @@ let handleClick = function(event) {
                 updateElapsedTimeDisplay();
             }, 1000);
         }
+
+		if (gameField[rowIndex][colIndex] === 0) {
+			playFlagEmptyCellSound(); 
+		}
+
+		if (gameField[rowIndex][colIndex] === 1) {
+			playFlagBlackCellSound();
+		}
+
+
     } else if (event.button === 2) {
-        // Правый клик
         handleRightClick(event);
     }
+
 };
 
 let handleRightClick = function(event) {
@@ -221,15 +232,17 @@ let handleRightClick = function(event) {
     let colIndex = Array.prototype.indexOf.call(target.parentNode.children, target);
     let rowIndex = Array.from(target.parentNode.parentNode.children).indexOf(target.parentNode);
 
-    if (gameField[rowIndex][colIndex] === 0) {
-        gameField[rowIndex][colIndex] = 'X';
-    } else if (gameField[rowIndex][colIndex] === 'X') {
-        gameField[rowIndex][colIndex] = '';
-    } else {
-        gameField[rowIndex][colIndex] = 0;
-    }
+	if (gameField[rowIndex][colIndex] === 0) {
+		gameField[rowIndex][colIndex] = 'X';
+	} else if (gameField[rowIndex][colIndex] === 'X') {
+		gameField[rowIndex][colIndex] = '';
+	} else {
+		gameField[rowIndex][colIndex] = 0;
+	}
+	
+	target.textContent = gameField[rowIndex][colIndex];
+	target.style.color = gameField[rowIndex][colIndex] === 0 ? 'transparent' : '';
 
-    target.textContent = gameField[rowIndex][colIndex];
     updateCellColors();
 
     setTimeout(checkSolution, 100);
@@ -241,11 +254,13 @@ let handleRightClick = function(event) {
             updateElapsedTimeDisplay();
         }, 1000);
     }
+
+	playFlagXCellSound();
 };
 
 
 table.addEventListener('contextmenu', function(event) {
-    event.preventDefault(); // Отменяем стандартное контекстное меню при правом клике
+    event.preventDefault(); 
 });
 
 table.addEventListener('mousedown', function(event) {
@@ -293,14 +308,21 @@ function checkSolution() {
 	timerInterval = null;
 
 	showWinModal();
+	playWinGameSound();
     table.removeEventListener('click', handleClick);
 	//elapsedSeconds = 0;
 	updateElapsedTimeDisplay();
 	return true;
 }
 
-function showWinModal() {
-    document.getElementById("winModal").style.display = "block";
+function showWinModal(isSolved) {
+    const winModal = document.getElementById("winModal");
+    if (isSolved) {
+        document.getElementById("winModalText").textContent = "Поздравляем, вы списали!";
+    } else {
+        document.getElementById("winModalText").textContent = "Поздравляем, вы выиграли!";
+    }
+    winModal.style.display = "block";
 }
 
 function restartGame() {
@@ -510,6 +532,7 @@ themeSwitcher.addEventListener('change', function() {
 
 
 function resetGame() {
+	playButtonClickSound();
 	gameField = Array.from({ length: 5 }, () => Array(5).fill(0));
 	updateGameFieldAndHints();
 	addClickListenerToTable();
@@ -518,9 +541,50 @@ function resetGame() {
 document.getElementById('resetButton').addEventListener('click', resetGame);
 
 function openLevelSelectionModal() {
+	playButtonClickSound();
     document.getElementById("myModal").style.display = "block";
 }
 
 document.getElementById('selectLevelButton').addEventListener('click', openLevelSelectionModal);
 
 document.querySelector('.close').addEventListener('click', closeModal);
+
+
+function solveGame() {
+	playButtonClickSound();
+    gameField = originalGameField.map(row => row.slice());
+    updateGameFieldAndHints();
+
+    const gameFieldCells = document.querySelectorAll('#gameField td');
+    gameFieldCells.forEach((cell, index) => {
+        const rowIndex = Math.floor(index / 5);
+        const colIndex = index % 5;
+
+        cell.style.backgroundColor = originalGameField[rowIndex][colIndex] === 1 ? 'black' : 'white';
+    });
+
+    clearInterval(timerInterval);
+    showWinModal();
+    table.removeEventListener('click', handleClick);
+	showWinModal(true);
+}
+
+function playButtonClickSound() {
+    document.getElementById('buttonClickSound').play();
+}
+
+function playFlagBlackCellSound() {
+    document.getElementById('flagBlackCellSound').play();
+}
+
+function playWinGameSound() {
+    document.getElementById('winGameSound').play();
+}
+
+function playFlagEmptyCellSound() {
+    document.getElementById('flagEmptyCellSound').play();
+}
+
+function playFlagXCellSound() {
+    document.getElementById('flagXCellSound').play();
+}
