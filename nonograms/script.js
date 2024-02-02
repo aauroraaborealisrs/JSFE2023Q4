@@ -169,6 +169,8 @@ function updateCellColors() {
     });
 }
 
+
+
 const themeSwitcher = document.getElementById('themeSwitcher');
 themeSwitcher.addEventListener('change', function() {
     updateCellColors();
@@ -176,6 +178,40 @@ themeSwitcher.addEventListener('change', function() {
 
 // Обработка клика на ячейку
 let handleClick = function(event) {
+    if (event.button === 0) {
+        // Левый клик
+        let target = event.target;
+        while (target != null && target.tagName != 'TD') {
+            target = target.parentNode;
+        }
+        if (target == null) return;
+
+        let colIndex = Array.prototype.indexOf.call(target.parentNode.children, target);
+        let rowIndex = Array.from(target.parentNode.parentNode.children).indexOf(target.parentNode);
+
+        gameField[rowIndex][colIndex] = gameField[rowIndex][colIndex] === 0 ? 1 : 0;
+
+        target.textContent = '';
+        updateCellColors();
+
+        setTimeout(checkSolution, 100);
+
+        if (!startTime) {
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateElapsedTimeDisplay();
+            }, 1000);
+        }
+    } else if (event.button === 2) {
+        // Правый клик
+        handleRightClick(event);
+    }
+};
+
+let handleRightClick = function(event) {
+    event.preventDefault(); // Отменяем стандартное контекстное меню
+
     let target = event.target;
     while (target != null && target.tagName != 'TD') {
         target = target.parentNode;
@@ -185,14 +221,20 @@ let handleClick = function(event) {
     let colIndex = Array.prototype.indexOf.call(target.parentNode.children, target);
     let rowIndex = Array.from(target.parentNode.parentNode.children).indexOf(target.parentNode);
 
-    gameField[rowIndex][colIndex] = gameField[rowIndex][colIndex] === 0 ? 1 : 0;
+    if (gameField[rowIndex][colIndex] === 0) {
+        gameField[rowIndex][colIndex] = 'X';
+    } else if (gameField[rowIndex][colIndex] === 'X') {
+        gameField[rowIndex][colIndex] = '';
+    } else {
+        gameField[rowIndex][colIndex] = 0;
+    }
 
-    target.textContent = '';
+    target.textContent = gameField[rowIndex][colIndex];
     updateCellColors();
 
     setTimeout(checkSolution, 100);
 
-	if (!startTime) {
+    if (!startTime) {
         startTime = Date.now();
         timerInterval = setInterval(() => {
             elapsedSeconds++;
@@ -200,6 +242,19 @@ let handleClick = function(event) {
         }, 1000);
     }
 };
+
+
+table.addEventListener('contextmenu', function(event) {
+    event.preventDefault(); // Отменяем стандартное контекстное меню при правом клике
+});
+
+table.addEventListener('mousedown', function(event) {
+    if (event.button === 2) {
+        handleRightClick(event);
+    }
+});
+
+
 
 
 let elapsedSeconds = 0;
@@ -385,14 +440,18 @@ function updateGameFieldAndHints() {
 	table.innerHTML = '';
 
 	for (let i = 0; i < gameField.length; i++) {
-		let row = document.createElement('tr');
-		for (let j = 0; j < gameField[i].length; j++) {
-			let cell = document.createElement('td');
-			cell.textContent = gameField[i][j];
-			row.appendChild(cell);
-		}
-		table.appendChild(row);
-	}
+        let row = document.createElement('tr');
+        for (let j = 0; j < gameField[i].length; j++) {
+            let cell = document.createElement('td');
+            if (gameField[i][j] === 0) {
+                cell.textContent = '';
+            } else {
+                cell.textContent = gameField[i][j];
+            }
+            row.appendChild(cell);
+        }
+        table.appendChild(row);
+    }
 
 	let hintCells = document.querySelectorAll('#verticalHints td');
 	for (let i = 0; i < hintCells.length; i++) {
