@@ -17,6 +17,8 @@
      </span>
     </label>
 
+  <div id="timeDisplay">Time: <span id="elapsedTimeDisplay">0</span></div>
+
   <div class="gameboard__container">
       <div class="verthintscont">
           <table id="verticalHints">
@@ -40,6 +42,7 @@
     <div id="winModal" class="modal">
     <div class="modal-content__win">
         <p>Поздравляем, вы выиграли!</p>
+        <p>Time: <span id="elapsedTime">0</span></p>
         <button class="modal-button__newlevel" onclick="restartGame()">Играть еще</button>
     </div>
     </div>

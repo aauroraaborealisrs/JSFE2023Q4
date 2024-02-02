@@ -133,6 +133,9 @@ let horizontalHintsBottom = currentGameField.hints[3];
 
 let originalGameField = null;
 
+let startTime;
+let timerInterval;
+
 let table = document.getElementById('gameField');
 
 for (let i = 0; i < gameField.length; i++) {
@@ -150,13 +153,6 @@ function invertColor(color) {
     return color === 'black' ? 'white' : 'black';
 }
 
-
-// Функция для инвертирования цвета
-function invertColor(color) {
-    return color === 'black' ? 'white' : 'black';
-}
-
-// Функция для обновления цветов ячеек
 function updateCellColors() {
     const isDarkTheme = document.body.classList.contains('dark-theme');
     const gameFieldCells = document.querySelectorAll('#gameField td');
@@ -173,7 +169,6 @@ function updateCellColors() {
     });
 }
 
-// Обработка изменения темы
 const themeSwitcher = document.getElementById('themeSwitcher');
 themeSwitcher.addEventListener('change', function() {
     updateCellColors();
@@ -193,12 +188,28 @@ let handleClick = function(event) {
     gameField[rowIndex][colIndex] = gameField[rowIndex][colIndex] === 0 ? 1 : 0;
 
     target.textContent = '';
-
-    // Обновление цветов ячеек после изменения значения в gameField
     updateCellColors();
 
     setTimeout(checkSolution, 100);
+
+	if (!startTime) {
+        startTime = Date.now();
+        timerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateElapsedTimeDisplay();
+        }, 1000);
+    }
 };
+
+
+let elapsedSeconds = 0;
+updateElapsedTimeDisplay();
+
+function updateElapsedTimeDisplay() {
+	let minutes = Math.floor(elapsedSeconds / 60);
+	let seconds = elapsedSeconds % 60;
+	document.getElementById('elapsedTimeDisplay').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
 
 
 table.addEventListener('click', handleClick);
@@ -214,8 +225,22 @@ function checkSolution() {
             }
         }
     }
+
+    let elapsedTime = Date.now() - startTime;
+    let seconds = Math.floor(elapsedTime / 1000); 
+
+    let minutes = Math.floor(seconds / 60);
+    let remainingSeconds = seconds % 60;
+    document.getElementById('elapsedTime').textContent = `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+
+	clearInterval(timerInterval);
+	startTime = null;
+	timerInterval = null;
+
 	showWinModal();
     table.removeEventListener('click', handleClick);
+	//elapsedSeconds = 0;
+	updateElapsedTimeDisplay();
 	return true;
 }
 
@@ -224,8 +249,10 @@ function showWinModal() {
 }
 
 function restartGame() {
+	elapsedSeconds = 0;
+	updateElapsedTimeDisplay();
 	document.getElementById("winModal").style.display = "none";
-	openModal(); // Показать модальное окно с выбором уровня
+	openModal(); 
 }
 
 //горизонтальные
@@ -317,6 +344,12 @@ function chooseImage(index) {
 	horizontalHintsTop = currentGameField.hints[2];
 	horizontalHintsBottom = currentGameField.hints[3];
 
+	elapsedSeconds = 0;
+	startTime = null;
+
+    updateElapsedTimeDisplay();
+    clearInterval(timerInterval);
+
 	updateGameFieldAndHints();
 	addClickListenerToTable(); 
 }
@@ -331,6 +364,12 @@ function chooseRandomImage() {
 	numberVerticalHints2 = currentGameField.hints[1];
 	horizontalHintsTop = currentGameField.hints[2];
 	horizontalHintsBottom = currentGameField.hints[3];
+
+	elapsedSeconds = 0;
+	startTime = null;
+
+    updateElapsedTimeDisplay();
+    clearInterval(timerInterval);
 
 	updateGameFieldAndHints();
 	addClickListenerToTable();
