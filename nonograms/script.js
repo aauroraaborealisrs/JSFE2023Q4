@@ -1,3 +1,7 @@
+document.addEventListener('DOMContentLoaded', function() {
+    continueLastGame();
+});
+
 let gameField = [
 	[0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0],
@@ -218,6 +222,7 @@ let handleClick = function(event) {
         handleRightClick(event);
     }
 
+	saveGameState();
 };
 
 let handleRightClick = function(event) {
@@ -256,6 +261,7 @@ let handleRightClick = function(event) {
     }
 
 	playFlagXCellSound();
+	saveGameState();
 };
 
 
@@ -458,10 +464,10 @@ function addClickListenerToTable() {
 }
 
 function updateGameFieldAndHints() {
-	let table = document.getElementById('gameField');
-	table.innerHTML = '';
+    let table = document.getElementById('gameField');
+    table.innerHTML = '';
 
-	for (let i = 0; i < gameField.length; i++) {
+    for (let i = 0; i < gameField.length; i++) {
         let row = document.createElement('tr');
         for (let j = 0; j < gameField[i].length; j++) {
             let cell = document.createElement('td');
@@ -469,56 +475,58 @@ function updateGameFieldAndHints() {
                 cell.textContent = '';
             } else {
                 cell.textContent = gameField[i][j];
+                cell.style.backgroundColor = gameField[i][j] === 1 ? 'black' : 'white';  // Добавьте эту строку
             }
             row.appendChild(cell);
         }
         table.appendChild(row);
     }
 
-	let hintCells = document.querySelectorAll('#verticalHints td');
-	for (let i = 0; i < hintCells.length; i++) {
-		hintCells[i].textContent = numberVerticalHints[i];
+    let hintCells = document.querySelectorAll('#verticalHints td');
+    for (let i = 0; i < hintCells.length; i++) {
+        hintCells[i].textContent = numberVerticalHints[i];
 
         if (numberVerticalHints[i] === 0) {
-            hintCells[i].style.color = 'transparent'; 
+            hintCells[i].style.color = 'transparent';
         } else {
-            hintCells[i].style.color = ''; 
+            hintCells[i].style.color = '';
         }
-	}
+    }
 
-	let hintCells2 = document.querySelectorAll('#verticalHints tr:nth-child(2) td');
-	for (let i = 0; i < hintCells2.length; i++) {
-		hintCells2[i].textContent = numberVerticalHints2[i];
-		
-		if (numberVerticalHints2[i] === 0) {
-            hintCells2[i].style.color = 'transparent'; 
+    let hintCells2 = document.querySelectorAll('#verticalHints tr:nth-child(2) td');
+    for (let i = 0; i < hintCells2.length; i++) {
+        hintCells2[i].textContent = numberVerticalHints2[i];
+
+        if (numberVerticalHints2[i] === 0) {
+            hintCells2[i].style.color = 'transparent';
         } else {
-            hintCells2[i].style.color = ''; 
+            hintCells2[i].style.color = '';
         }
-	}
+    }
 
-	let horizontalHintCells = document.querySelectorAll('#horizontalHints td');
-	for (let i = 0; i < horizontalHintCells.length; i++) {
-		horizontalHintCells[i].textContent = horizontalHintsTop[i];
+    let horizontalHintCells = document.querySelectorAll('#horizontalHints td');
+    for (let i = 0; i < horizontalHintCells.length; i++) {
+        horizontalHintCells[i].textContent = horizontalHintsTop[i];
 
-		if (horizontalHintsTop[i] === 0) {
-            horizontalHintCells[i].style.color = 'transparent'; 
+        if (horizontalHintsTop[i] === 0) {
+            horizontalHintCells[i].style.color = 'transparent';
         } else {
-            horizontalHintCells[i].style.color = ''; 
+            horizontalHintCells[i].style.color = '';
         }
-	}
+    }
 
-	let horizontalHintCells2 = document.querySelectorAll('#horizontalHints tr:nth-child(2) td');
-	for (let i = 0; i < horizontalHintCells2.length; i++) {
-		horizontalHintCells2[i].textContent = horizontalHintsBottom[i];
+    let horizontalHintCells2 = document.querySelectorAll('#horizontalHints tr:nth-child(2) td');
+    for (let i = 0; i < horizontalHintCells2.length; i++) {
+        horizontalHintCells2[i].textContent = horizontalHintsBottom[i];
 
-		if (horizontalHintsBottom[i] === 0) {
-            horizontalHintCells2[i].style.color = 'transparent'; 
+        if (horizontalHintsBottom[i] === 0) {
+            horizontalHintCells2[i].style.color = 'transparent';
         } else {
-            horizontalHintCells2[i].style.color = ''; 
+            horizontalHintCells2[i].style.color = '';
         }
-	}
+    }
 }
+
 
 
 themeSwitcher.addEventListener('change', function() {
@@ -587,4 +595,43 @@ function playFlagEmptyCellSound() {
 
 function playFlagXCellSound() {
     document.getElementById('flagXCellSound').play();
+}
+
+document.getElementById('continueButton').addEventListener('click', continueLastGame);
+
+// Функция сохранения состояния игры в localStorage
+function saveGameState() {
+    localStorage.setItem('gameState', JSON.stringify({
+        gameField: gameField,
+        originalGameField: originalGameField,
+        numberVerticalHints: numberVerticalHints,
+        numberVerticalHints2: numberVerticalHints2,
+        horizontalHintsTop: horizontalHintsTop,
+        horizontalHintsBottom: horizontalHintsBottom,
+        elapsedSeconds: elapsedSeconds
+    }));
+}
+
+// Функция загрузки состояния игры из localStorage
+function loadGameState() {
+    const savedState = localStorage.getItem('gameState');
+    if (savedState) {
+        const parsedState = JSON.parse(savedState);
+        gameField = parsedState.gameField;
+        originalGameField = parsedState.originalGameField;
+        numberVerticalHints = parsedState.numberVerticalHints;
+        numberVerticalHints2 = parsedState.numberVerticalHints2;
+        horizontalHintsTop = parsedState.horizontalHintsTop;
+        horizontalHintsBottom = parsedState.horizontalHintsBottom;
+        elapsedSeconds = parsedState.elapsedSeconds;
+        updateGameFieldAndHints();
+        updateElapsedTimeDisplay();
+    }
+}
+
+
+function continueLastGame() {
+    loadGameState();
+	updateGameFieldAndHints();  
+    addClickListenerToTable();
 }
