@@ -13,7 +13,7 @@ let gameField = [
 let originalGameFields = [
 
 	{
-		name: "Точка",
+		name: "Dot (for debug)",
 		field: [
 			[0, 0, 0, 0, 0],
 			[0, 0, 0, 0, 0],
@@ -32,7 +32,7 @@ let originalGameFields = [
 	//крест
 
 	{
-		name: "Крест",
+		name: "Cross",
 		field: [
 			[0, 1, 1, 1, 0],
 			[1, 1, 0, 1, 1],
@@ -51,7 +51,7 @@ let originalGameFields = [
 	//решетка
 
 	{
-		name: "Решетка",
+		name: "Sharp",
 		field: [
 			[0, 1, 0, 1, 0],
 			[1, 1, 1, 1, 1],
@@ -70,7 +70,7 @@ let originalGameFields = [
 	//часы
 
 	{
-		name: "Часы",
+		name: "Hourglass",
 		field: [
 			[1, 1, 1, 1, 1],
 			[0, 1, 1, 1, 0],
@@ -89,7 +89,7 @@ let originalGameFields = [
 	//коляска
 
 	{
-		name: "Коляска",
+		name: "Stroller",
 		field: [
 			[0, 1, 1, 0, 0],
 			[1, 1, 0, 0, 1],
@@ -108,7 +108,7 @@ let originalGameFields = [
 	//кiт
 
 	{
-		name: "Кот",
+		name: "Cat",
 		field: [
 			[0, 0, 1, 0, 1],
 			[0, 0, 1, 1, 1],
@@ -222,7 +222,7 @@ let handleClick = function(event) {
         handleRightClick(event);
     }
 
-	saveGameState();
+	//saveGameState();
 };
 
 let handleRightClick = function(event) {
@@ -261,7 +261,7 @@ let handleRightClick = function(event) {
     }
 
 	playFlagXCellSound();
-	saveGameState();
+	//saveGameState();
 };
 
 
@@ -326,7 +326,7 @@ function showWinModal(isSolved) {
     if (isSolved) {
         document.getElementById("winModalText").textContent = "Поздравляем, вы списали!";
     } else {
-        document.getElementById("winModalText").textContent = "Поздравляем, вы выиграли!";
+        document.getElementById("winModalText").textContent = "Great! You have solved the nonogram in";
     }
     winModal.style.display = "block";
 }
@@ -559,23 +559,30 @@ document.querySelector('.close').addEventListener('click', closeModal);
 
 
 function solveGame() {
-	playButtonClickSound();
+    playButtonClickSound();
     gameField = originalGameField.map(row => row.slice());
     updateGameFieldAndHints();
 
     const gameFieldCells = document.querySelectorAll('#gameField td');
+    const isDarkTheme = document.body.classList.contains('dark-theme');
+
     gameFieldCells.forEach((cell, index) => {
         const rowIndex = Math.floor(index / 5);
         const colIndex = index % 5;
 
-        cell.style.backgroundColor = originalGameField[rowIndex][colIndex] === 1 ? 'black' : 'white';
+        if (originalGameField[rowIndex][colIndex] === 1) {
+            cell.style.backgroundColor = isDarkTheme ? 'white' : 'black';
+        } else {
+            cell.style.backgroundColor = isDarkTheme ? 'black' : 'white';
+        }
     });
 
     clearInterval(timerInterval);
     showWinModal();
     table.removeEventListener('click', handleClick);
-	showWinModal(true);
+    showWinModal(true);
 }
+
 
 function playButtonClickSound() {
     document.getElementById('buttonClickSound').play();
@@ -599,9 +606,12 @@ function playFlagXCellSound() {
 
 document.getElementById('continueButton').addEventListener('click', continueLastGame);
 
+document.getElementById('saveButton').addEventListener('click', saveGameState);
+
+
 // Функция сохранения состояния игры в localStorage
 function saveGameState() {
-    localStorage.setItem('gameState', JSON.stringify({
+    localStorage.setItem('savedGame', JSON.stringify({
         gameField: gameField,
         originalGameField: originalGameField,
         numberVerticalHints: numberVerticalHints,
@@ -612,9 +622,8 @@ function saveGameState() {
     }));
 }
 
-// Функция загрузки состояния игры из localStorage
-function loadGameState() {
-    const savedState = localStorage.getItem('gameState');
+function continueLastGame() {
+    const savedState = localStorage.getItem('savedGame');
     if (savedState) {
         const parsedState = JSON.parse(savedState);
         gameField = parsedState.gameField;
@@ -626,12 +635,6 @@ function loadGameState() {
         elapsedSeconds = parsedState.elapsedSeconds;
         updateGameFieldAndHints();
         updateElapsedTimeDisplay();
+        addClickListenerToTable();
     }
-}
-
-
-function continueLastGame() {
-    loadGameState();
-	updateGameFieldAndHints();  
-    addClickListenerToTable();
 }

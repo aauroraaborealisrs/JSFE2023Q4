@@ -44,10 +44,11 @@ body {
 .container {
     margin: auto;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     /*outline: 1px solid black;*/
     width: fit-content;
+    padding-top: 100px;
 }
 
 .gameboard__container{
@@ -149,7 +150,7 @@ td.empty {
  height: 100%; 
  overflow: auto; 
  background-color: rgb(0,0,0); 
- background-color: rgba(0,0,0,0.4); 
+ background-color: rgba(0,0,0,0.8); 
 }
 
 .modal-content {
@@ -210,7 +211,6 @@ p{
 }
 
 
-/* Светлая тема */
 body {
  background-color: white;
  color: black;
@@ -224,10 +224,10 @@ body.dark-theme {
 body.dark-theme * {
     border-color: white !important;
     outline-color: white !important;
-
 }
 
-body.dark-theme .modal p, .slider {
+
+body.dark-theme .modal p {
     color: black;
 }
 
@@ -241,6 +241,12 @@ body.dark-theme .modal p, .slider {
     border-radius: 20px;
     background-color: #F0F0F0;
     cursor: pointer;
+}
+
+
+body.dark-theme .game__button, .switch {
+    background-color: #333;
+    color: #fff; 
 }
 
 .game__button {
@@ -260,4 +266,33 @@ body.dark-theme .modal p, .slider {
 
 .modal-content p {
     margin-bottom: 15px;
+}
+
+.buttons__container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 177px;
+    margin-left: 50px;
+    height: fit-content;
+}
+
+#timeDisplay {
+    margin: 20px 0;
+    width: fit-content;
+    margin-left: 13px;
+}
+
+@media (max-width: 700px) {
+    .container {
+        flex-direction: column;
+        padding-top: 40px;
+    }
+
+    .buttons__container{
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        margin-left: -6px;
+        width: 450px;
+    }
 }
