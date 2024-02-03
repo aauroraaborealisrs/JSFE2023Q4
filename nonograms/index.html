@@ -8,62 +8,6 @@
   <title>Nonogram</title>
 </head>
 <body>
-  <main class="container">
-
-    <div class="game__container">
-      <label class="switch">
-       <input type="checkbox" id="themeSwitcher">
-       <span class="slider round"> Switch theme</span>
-      </label>
-      
-        <div id="timeDisplay">Time: <span id="elapsedTimeDisplay">0</span></div>
-      
-        <div class="gameboard__container">
-        <div class="verthintscont">
-            <table id="verticalHints">
-            </table>
-        </div>
-        <div class="table__container">
-          <table id="horizontalHints">
-        </table>
-          <table id="gameField">
-          </table>
-        </div>
-      <div id="myModal" class="modal">
-      <div class="modal-content">
-          <span class="close">&times;</span>
-          <p>Select the picture:</p>
-          <button class = "modal-button__level" onclick="chooseRandomImage()">Random</button>
-      </div>
-      </div>
-      <div id="winModal" class="modal">
-      <div class="modal-content__win">
-          <p id="winModalText">Great! You have solved the nonogram in</p>
-          <p><span id="elapsedTime">0</span></p>
-          <button class="modal-button__newlevel" onclick="restartGame()">Play more!</button>
-      </div>
-      </div>
-      
-        </div>
-    </div>
-
-  <div class="buttons__container">
-    <button id="resetButton" class="game__button">Start again</button>
-    <button id="selectLevelButton" class="game__button">Choose level</button>
-    <button id="solveButton" class="game__button" onclick="solveGame()">Solution</button>
-    <button id="saveButton"  class="game__button">Save game</button>
-    <button id="continueButton" class="game__button">Continue last game</button>
-  </div>
-
-
-  <audio id="buttonClickSound" src="./sounds/buttonclick.mp3"></audio>
-  <audio id="flagBlackCellSound" src="./sounds/click.mp3"></audio>
-  <audio id="winGameSound" src="./sounds/win.mp3"></audio>
-  <audio id="flagEmptyCellSound" src="./sounds/flagEmptyCell.mp3"></audio>
-  <audio id="flagXCellSound" src="./sounds/flagXCell.mp3"></audio>
-
-
-</main>
   <script src="script.js"></script>
 </body>
 </html>
