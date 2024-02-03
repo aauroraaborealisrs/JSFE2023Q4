@@ -1,4 +1,272 @@
 document.addEventListener('DOMContentLoaded', function() {
+	const body = document.body;
+
+	// <main class="container">
+	const mainContainer = document.createElement('main');
+	mainContainer.className = 'container';
+	body.appendChild(mainContainer);
+
+	// <div class="game__container">
+	const gameContainer = document.createElement('div');
+	gameContainer.className = 'game__container';
+	mainContainer.appendChild(gameContainer);
+
+	// переключатель темы
+	const label = document.createElement('label');
+	label.className = 'switch';
+	const input = document.createElement('input');
+	input.type = 'checkbox';
+	input.id = 'themeSwitcher';
+	const span = document.createElement('span');
+	span.className = 'slider round';
+	span.textContent = ' Switch theme';
+	label.appendChild(input);
+	label.appendChild(span);
+	gameContainer.appendChild(label);
+
+	const themeSwitcher = document.getElementById('themeSwitcher');
+	themeSwitcher.addEventListener('change', function() {
+		playButtonClickSound();
+		updateCellColors();
+	});
+
+	themeSwitcher.addEventListener('change', function() {
+		setTimeout(updateCellColors, 0);
+	 if (this.checked) {
+		document.body.classList.add('dark-theme');
+	 } else {
+		document.body.classList.remove('dark-theme');
+	 }
+	});
+	
+
+	// отображение времени
+	const timeDisplay = document.createElement('div');
+	timeDisplay.id = 'timeDisplay';
+	timeDisplay.innerHTML = 'Time: <span id="elapsedTimeDisplay"> </span>';
+	gameContainer.appendChild(timeDisplay);
+
+	// контейнеры для игрового поля и подсказок
+	const gameboardContainer = document.createElement('div');
+	gameboardContainer.className = 'gameboard__container';
+	gameContainer.appendChild(gameboardContainer);
+
+	const verthintscont = document.createElement('div');
+	verthintscont.className = 'verthintscont';
+	const verticalHintsDom = document.createElement('table');
+	verticalHintsDom.id = 'verticalHints';
+	verthintscont.appendChild(verticalHintsDom);
+	gameboardContainer.appendChild(verthintscont);
+
+	// вертикальные
+let verticalHints = document.getElementById('verticalHints');
+let hintColumn = document.createElement('tr');
+let hintColumn2 = document.createElement('tr');
+
+// Create and append hint cells
+for (let i = 0; i < 5; i++) {
+    let hintCell = document.createElement('td');
+    hintColumn2.appendChild(hintCell);
+}
+
+verticalHints.appendChild(hintColumn2);
+
+// Create and append hint cells
+for (let i = 0; i < 5; i++) {
+    let hintCell = document.createElement('td');
+    hintColumn.appendChild(hintCell);
+}
+
+verticalHints.appendChild(hintColumn);
+
+// Function to fill in hint cells
+function updateVerticalHints() {
+    let hintCells = document.querySelectorAll('#verticalHints tr:first-child td');
+    for (let i = 0; i < hintCells.length; i++) {
+        hintCells[i].textContent = numberVerticalHints[i].toString();  // Convert to string
+
+        if (numberVerticalHints[i] === 0) {
+            hintCells[i].style.color = 'transparent';
+        } else {
+            hintCells[i].style.color = '';
+        }
+    }
+
+    let hintCells2 = document.querySelectorAll('#verticalHints tr:nth-child(2) td');
+    for (let i = 0; i < hintCells2.length; i++) {
+        hintCells2[i].textContent = numberVerticalHints2[i].toString();  // Convert to string
+
+        if (numberVerticalHints2[i] === 0) {
+            hintCells2[i].style.color = 'transparent';
+        } else {
+            hintCells2[i].style.color = '';
+        }
+    }
+}
+
+// Call the function to fill in hint cells
+updateVerticalHints();
+
+
+	const tableContainer = document.createElement('div');
+	tableContainer.className = 'table__container';
+	gameboardContainer.appendChild(tableContainer);
+
+	const horizontalHintsDom = document.createElement('table');
+	horizontalHintsDom.id = 'horizontalHints';
+	tableContainer.appendChild(horizontalHintsDom);
+
+	let horizontalHints = document.getElementById('horizontalHints');
+	let hintRow1 = document.createElement('tr');
+	let hintRow2 = document.createElement('tr');
+
+
+	for (let i = 0; i < 5; i++) {
+		let hintCell1 = document.createElement('td');
+		let hintCell2 = document.createElement('td');
+		hintRow1.appendChild(hintCell1);
+		hintRow2.appendChild(hintCell2);
+	}
+
+	horizontalHints.appendChild(hintRow1);
+	horizontalHints.appendChild(hintRow2);
+
+
+
+	const gameField = document.createElement('table');
+	gameField.id = 'gameField';
+	tableContainer.appendChild(gameField);
+
+	let table = document.getElementById('gameField');
+
+	table.addEventListener('contextmenu', function(event) {
+		event.preventDefault(); 
+	});
+	
+	table.addEventListener('mousedown', function(event) {
+		if (event.button === 2) {
+			handleRightClick(event);
+		}
+	});
+
+	table.addEventListener('click', handleClick);
+
+
+	// модальные окна и их содержимое
+	createModal(gameContainer, 'myModal', 'modal', 'Select the picture:', 'chooseRandomImage()', 'Random');
+	const modal = document.getElementById('myModal');
+	modal.style.display = 'block';
+
+	originalGameFields.forEach((gameField, index) => {
+        let button = document.createElement('button');
+        button.textContent = gameField.name;
+        button.setAttribute('class', 'modal-button__level');
+        button.onclick = function() {
+            chooseImage(index);
+        };
+        document.querySelector('.modal-content').appendChild(button);
+    });
+
+	const closeModalButton = modal.querySelector('.close');
+	closeModalButton.addEventListener('click', function() {
+		modal.style.display = 'none'; // Скрываем модальное окно
+	});
+	createModal(gameContainer, 'winModal', 'modal', ' ', 'restartGame()', 'Play more!', true);
+
+	// Добавляем контейнер кнопок
+	const buttonsContainer = document.createElement('div');
+	buttonsContainer.className = 'buttons__container';
+	mainContainer.appendChild(buttonsContainer);
+
+	// кнопки	
+	addButton(buttonsContainer, 'resetButton', 'Start again');
+	document.getElementById('resetButton').addEventListener('click', resetGame);
+
+	addButton(buttonsContainer, 'selectLevelButton', 'Choose level');
+	document.getElementById('selectLevelButton').addEventListener('click', openLevelSelectionModal);
+
+	addButton(buttonsContainer, 'solveButton', 'Solution', 'solveGame()');
+
+	addButton(buttonsContainer, 'saveButton', 'Save game');
+	document.getElementById('saveButton').addEventListener('click', saveGameState);
+
+	addButton(buttonsContainer, 'continueButton', 'Continue last game');
+	document.getElementById('continueButton').addEventListener('click', continueLastGame);
+
+	function openLevelSelectionModal() {
+		playButtonClickSound();
+		document.getElementById("myModal").style.display = "block";
+	}
+
+	
+	document.querySelector('.close').addEventListener('click', closeModal);
+
+
+	addAudio(mainContainer, 'buttonClickSound', './sounds/buttonclick.mp3');
+	addAudio(mainContainer, 'flagBlackCellSound', './sounds/click.mp3');
+	addAudio(mainContainer, 'winGameSound', './sounds/win.mp3');
+	addAudio(mainContainer, 'flagEmptyCellSound', './sounds/flagEmptyCell.mp3');
+	addAudio(mainContainer, 'flagXCellSound', './sounds/flagXCell.mp3');
+});
+
+function createModal(parent, id, className, text, onclick, buttonText, isWinModal = false) {
+	const modal = document.createElement('div');
+	modal.id = id;
+	modal.className = className;
+	const modalContent = document.createElement('div');
+	modalContent.className = isWinModal ? 'modal-content__win' : 'modal-content';
+	const spanClose = document.createElement('span');
+	spanClose.className = 'close';
+	spanClose.textContent = '×';
+	spanClose.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+	const pModal = document.createElement('p');
+	pModal.textContent = text;
+	if (isWinModal) {
+		pModal.id = 'winModalText';
+	}
+	const button = document.createElement('button');
+	button.className = 'modal-button__level';
+	button.textContent = buttonText;
+	if (onclick) button.setAttribute('onclick', onclick);
+	modalContent.appendChild(spanClose);
+	modalContent.appendChild(pModal);
+
+	// Добавляем элемент elapsedTime для winModal
+	if (isWinModal) {
+		const elapsedTimeParagraph = document.createElement('p');
+		const elapsedTimeSpan = document.createElement('span');
+		elapsedTimeSpan.id = 'elapsedTime';
+		elapsedTimeSpan.textContent = '';
+		elapsedTimeParagraph.appendChild(elapsedTimeSpan);
+		modalContent.appendChild(elapsedTimeParagraph);
+	}
+
+	modalContent.appendChild(button);
+	modal.appendChild(modalContent);
+	parent.appendChild(modal);
+}
+
+function addButton(parent, id, text, onclick = '') {
+	const button = document.createElement('button');
+	button.id = id;
+	button.className = 'game__button';
+	button.textContent = text;
+	if (onclick) button.setAttribute('onclick', onclick);
+	parent.appendChild(button);
+}
+
+function addAudio(parent, id, src) {
+	const audio = document.createElement('audio');
+	audio.id = id;
+	audio.src = src;
+	parent.appendChild(audio);
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
     continueLastGame();
 });
 
@@ -142,16 +410,6 @@ let timerInterval;
 
 let table = document.getElementById('gameField');
 
-for (let i = 0; i < gameField.length; i++) {
-	let row = document.createElement('tr');
-	for (let j = 0; j < gameField[i].length; j++) {
-		let cell = document.createElement('td');
-		cell.textContent = gameField[i][j];
-		row.appendChild(cell);
-	}
-	table.appendChild(row);
-}
-
 
 function invertColor(color) {
     return color === 'black' ? 'white' : 'black';
@@ -173,13 +431,6 @@ function updateCellColors() {
     });
 }
 
-
-
-const themeSwitcher = document.getElementById('themeSwitcher');
-themeSwitcher.addEventListener('change', function() {
-	playButtonClickSound();
-    updateCellColors();
-});
 
 // Обработка клика на ячейку
 let handleClick = function(event) {
@@ -222,11 +473,10 @@ let handleClick = function(event) {
         handleRightClick(event);
     }
 
-	//saveGameState();
 };
 
 let handleRightClick = function(event) {
-    event.preventDefault(); // Отменяем стандартное контекстное меню
+    event.preventDefault(); 
 
     let target = event.target;
     while (target != null && target.tagName != 'TD') {
@@ -261,20 +511,7 @@ let handleRightClick = function(event) {
     }
 
 	playFlagXCellSound();
-	//saveGameState();
 };
-
-
-table.addEventListener('contextmenu', function(event) {
-    event.preventDefault(); 
-});
-
-table.addEventListener('mousedown', function(event) {
-    if (event.button === 2) {
-        handleRightClick(event);
-    }
-});
-
 
 
 
@@ -287,8 +524,6 @@ function updateElapsedTimeDisplay() {
 	document.getElementById('elapsedTimeDisplay').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
-
-table.addEventListener('click', handleClick);
 
 function checkSolution() {
     for (let i = 0; i < gameField.length; i++) {
@@ -316,19 +551,24 @@ function checkSolution() {
 	showWinModal();
 	playWinGameSound();
     table.removeEventListener('click', handleClick);
-	//elapsedSeconds = 0;
 	updateElapsedTimeDisplay();
 	return true;
 }
 
+
 function showWinModal(isSolved) {
-    const winModal = document.getElementById("winModal");
-    if (isSolved) {
-        document.getElementById("winModalText").textContent = "Поздравляем, вы списали!";
-    } else {
-        document.getElementById("winModalText").textContent = "Great! You have solved the nonogram in";
-    }
-    winModal.style.display = "block";
+	const winModal = document.getElementById("winModal");
+	const winModalText = document.getElementById("winModalText");
+	const elapsedTimeParagraph = document.getElementById("elapsedTime").parentNode; 
+
+	if (isSolved) {
+		winModalText.textContent = "Поздравляем, вы списали!";
+		elapsedTimeParagraph.style.display = "none"; 
+	} else {
+		winModalText.textContent = "Great! You have solved the nonogram in";
+		elapsedTimeParagraph.style.display = "block"; 
+	}
+	winModal.style.display = "block";
 }
 
 function restartGame() {
@@ -529,16 +769,6 @@ function updateGameFieldAndHints() {
 
 
 
-themeSwitcher.addEventListener('change', function() {
-	setTimeout(updateCellColors, 0);
- if (this.checked) {
-	document.body.classList.add('dark-theme');
- } else {
-	document.body.classList.remove('dark-theme');
- }
-});
-
-
 function resetGame() {
 	playButtonClickSound();
 	gameField = Array.from({ length: 5 }, () => Array(5).fill(0));
@@ -546,16 +776,10 @@ function resetGame() {
 	addClickListenerToTable();
 }
 
-document.getElementById('resetButton').addEventListener('click', resetGame);
-
 function openLevelSelectionModal() {
 	playButtonClickSound();
     document.getElementById("myModal").style.display = "block";
 }
-
-document.getElementById('selectLevelButton').addEventListener('click', openLevelSelectionModal);
-
-document.querySelector('.close').addEventListener('click', closeModal);
 
 
 function solveGame() {
@@ -578,9 +802,8 @@ function solveGame() {
     });
 
     clearInterval(timerInterval);
-    showWinModal();
+	showWinModal(true);
     table.removeEventListener('click', handleClick);
-    showWinModal(true);
 }
 
 
@@ -604,10 +827,6 @@ function playFlagXCellSound() {
     document.getElementById('flagXCellSound').play();
 }
 
-document.getElementById('continueButton').addEventListener('click', continueLastGame);
-
-document.getElementById('saveButton').addEventListener('click', saveGameState);
-
 
 // Функция сохранения состояния игры в localStorage
 function saveGameState() {
@@ -618,7 +837,7 @@ function saveGameState() {
         numberVerticalHints2: numberVerticalHints2,
         horizontalHintsTop: horizontalHintsTop,
         horizontalHintsBottom: horizontalHintsBottom,
-        elapsedSeconds: elapsedSeconds
+        elapsedSeconds: elapsedSeconds,
     }));
 }
 
