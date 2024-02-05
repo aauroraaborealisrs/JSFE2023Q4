@@ -6,6 +6,21 @@ document.addEventListener('DOMContentLoaded', function() {
 	mainContainer.className = 'container';
 	body.appendChild(mainContainer);
 
+	const WinsContainer = document.createElement('div');
+    WinsContainer.id = 'WinsContainer';
+    mainContainer.appendChild(WinsContainer);
+
+	const topWinsContainer = document.createElement('div');
+    topWinsContainer.id = 'topWinsContainer';
+    WinsContainer.appendChild(topWinsContainer);
+
+	const topWinstext = document.createElement('span');
+	topWinstext.className = 'topwintext';
+	topWinstext.innerHTML = 'Top-5 Wins';
+	WinsContainer.appendChild(topWinstext);
+
+    updateTopWins();
+
 	// <div class="game__container">
 	const gameContainer = document.createElement('div');
 	gameContainer.className = 'game__container';
@@ -58,51 +73,51 @@ document.addEventListener('DOMContentLoaded', function() {
 	verthintscont.appendChild(verticalHintsDom);
 	gameboardContainer.appendChild(verthintscont);
 
-	// вертикальные
-let verticalHints = document.getElementById('verticalHints');
-let hintColumn = document.createElement('tr');
-let hintColumn2 = document.createElement('tr');
+		// вертикальные
+	let verticalHints = document.getElementById('verticalHints');
+	let hintColumn = document.createElement('tr');
+	let hintColumn2 = document.createElement('tr');
 
-// Create and append hint cells
-for (let i = 0; i < 5; i++) {
-    let hintCell = document.createElement('td');
-    hintColumn2.appendChild(hintCell);
-}
+	// Create and append hint cells
+	for (let i = 0; i < 5; i++) {
+		let hintCell = document.createElement('td');
+		hintColumn2.appendChild(hintCell);
+	}
 
-verticalHints.appendChild(hintColumn2);
+	verticalHints.appendChild(hintColumn2);
 
-// Create and append hint cells
-for (let i = 0; i < 5; i++) {
-    let hintCell = document.createElement('td');
-    hintColumn.appendChild(hintCell);
-}
+	// Create and append hint cells
+	for (let i = 0; i < 5; i++) {
+		let hintCell = document.createElement('td');
+		hintColumn.appendChild(hintCell);
+	}
 
-verticalHints.appendChild(hintColumn);
+	verticalHints.appendChild(hintColumn);
 
-// Function to fill in hint cells
-function updateVerticalHints() {
-    let hintCells = document.querySelectorAll('#verticalHints tr:first-child td');
-    for (let i = 0; i < hintCells.length; i++) {
-        hintCells[i].textContent = numberVerticalHints[i].toString();  // Convert to string
+	// Function to fill in hint cells
+	function updateVerticalHints() {
+		let hintCells = document.querySelectorAll('#verticalHints tr:first-child td');
+		for (let i = 0; i < hintCells.length; i++) {
+			hintCells[i].textContent = numberVerticalHints[i].toString();  // Convert to string
 
-        if (numberVerticalHints[i] === 0) {
-            hintCells[i].style.color = 'transparent';
-        } else {
-            hintCells[i].style.color = '';
-        }
-    }
+			if (numberVerticalHints[i] === 0) {
+				hintCells[i].style.color = 'transparent';
+			} else {
+				hintCells[i].style.color = '';
+			}
+		}
 
-    let hintCells2 = document.querySelectorAll('#verticalHints tr:nth-child(2) td');
-    for (let i = 0; i < hintCells2.length; i++) {
-        hintCells2[i].textContent = numberVerticalHints2[i].toString();  // Convert to string
+		let hintCells2 = document.querySelectorAll('#verticalHints tr:nth-child(2) td');
+		for (let i = 0; i < hintCells2.length; i++) {
+			hintCells2[i].textContent = numberVerticalHints2[i].toString();  // Convert to string
 
-        if (numberVerticalHints2[i] === 0) {
-            hintCells2[i].style.color = 'transparent';
-        } else {
-            hintCells2[i].style.color = '';
-        }
-    }
-}
+			if (numberVerticalHints2[i] === 0) {
+				hintCells2[i].style.color = 'transparent';
+			} else {
+				hintCells2[i].style.color = '';
+			}
+		}
+	}
 
 // Call the function to fill in hint cells
 updateVerticalHints();
@@ -207,6 +222,7 @@ updateVerticalHints();
 	addAudio(mainContainer, 'winGameSound', './sounds/win.mp3');
 	addAudio(mainContainer, 'flagEmptyCellSound', './sounds/flagEmptyCell.mp3');
 	addAudio(mainContainer, 'flagXCellSound', './sounds/flagXCell.mp3');
+
 });
 
 function createModal(parent, id, className, text, onclick, buttonText, isWinModal = false) {
@@ -392,6 +408,43 @@ let originalGameFields = [
 		]
 	},
 
+		//смайлик
+
+		{
+			name: "Smile",
+			field: [
+				[0, 0, 0, 0, 0],
+				[0, 1, 0, 1, 0],
+				[0, 0, 1, 0, 0],
+				[1, 0, 0, 0, 1],
+				[0, 1, 1, 1, 0]
+			],
+			hints: [
+				[ 0, 1, 0, 1, 0], // левый
+				[ 0, 1, 1, 1, 3], // право
+				[ 0, 1, 1, 1, 0], // верх
+				[ 1, 1, 1, 1, 1] // низ
+			]
+		},
+	
+		
+		{
+			name: "Donut",
+			field: [
+				[0, 0, 0, 0, 0],
+				[0, 1, 1, 1, 0],
+				[0, 1, 0, 1, 0],
+				[0, 1, 1, 1, 0],
+				[0, 0, 0, 0, 0]
+			],
+			hints: [
+				[ 0, 0, 1, 0, 0], // левый
+				[ 0, 3, 1, 3, 0], // право
+				[ 0, 0, 1, 0, 0], // верх
+				[ 0, 3, 1, 3, 0] // низ
+			]
+		},
+
 ];
 
 
@@ -526,33 +579,41 @@ function updateElapsedTimeDisplay() {
 
 
 function checkSolution() {
-    for (let i = 0; i < gameField.length; i++) {
-        for (let j = 0; j < gameField[i].length; j++) {
-            if (gameField[i][j] !== originalGameField[i][j]) {
-                console.log("Несовпадение в позиции:", i, j);
-                console.log("gameField:", gameField);
-                console.log("originalGameField:", originalGameField);
-                return;
+    for (let i = 0; i < originalGameFields.length; i++) {
+        let isMatch = true;
+        for (let j = 0; j < gameField.length; j++) {
+            for (let k = 0; k < gameField[j].length; k++) {
+                if (gameField[j][k] !== originalGameFields[i].field[j][k]) {
+                    isMatch = false;
+                    break;
+                }
+            }
+            if (!isMatch) {
+                break;
             }
         }
+        if (isMatch) {
+            let elapsedTime = Date.now() - startTime;
+            let seconds = Math.floor(elapsedTime / 1000);
+
+            let minutes = Math.floor(seconds / 60);
+            let remainingSeconds = seconds % 60;
+            document.getElementById('elapsedTime').textContent = `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+
+            clearInterval(timerInterval);
+            startTime = null;
+            timerInterval = null;
+
+            console.log("Saving win for level:", originalGameFields[i].name);
+            saveWin(elapsedTime, originalGameFields[i].name);
+
+            showWinModal();
+            playWinGameSound();
+            table.removeEventListener('click', handleClick);
+            updateElapsedTimeDisplay();
+            return true;
+        }
     }
-
-    let elapsedTime = Date.now() - startTime;
-    let seconds = Math.floor(elapsedTime / 1000); 
-
-    let minutes = Math.floor(seconds / 60);
-    let remainingSeconds = seconds % 60;
-    document.getElementById('elapsedTime').textContent = `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-
-	clearInterval(timerInterval);
-	startTime = null;
-	timerInterval = null;
-
-	showWinModal();
-	playWinGameSound();
-    table.removeEventListener('click', handleClick);
-	updateElapsedTimeDisplay();
-	return true;
 }
 
 
@@ -855,5 +916,47 @@ function continueLastGame() {
         updateGameFieldAndHints();
         updateElapsedTimeDisplay();
         addClickListenerToTable();
+		updateTopWins();
     }
+}
+
+
+
+function saveWin(time, levelName) {
+    console.log("Saving win:", { time: time, levelName: levelName });
+    let wins = JSON.parse(localStorage.getItem('wins')) || [];
+    wins.push({ time: time, levelName: levelName });
+    localStorage.setItem('wins', JSON.stringify(wins));
+    updateTopWins();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateTopWins();
+});
+
+function updateTopWins() {
+    let wins = JSON.parse(localStorage.getItem('wins')) || [];
+    wins = wins.slice(-5); 
+    wins.sort((a, b) => a.time - b.time); 
+
+    let topWinsContainer = document.getElementById('topWinsContainer');
+
+    topWinsContainer.innerHTML = '';
+
+    wins.forEach((win, index) => {
+        let winElement = document.createElement('div');
+        let formattedTime = formatTime(win.time);
+        winElement.textContent = `${index + 1}. ${win.levelName} - 5x5 - ${formattedTime}`;
+        topWinsContainer.appendChild(winElement);
+		console.log(wins, win);
+    });
+}
+
+
+function formatTime(milliseconds) {
+	let seconds = Math.floor(milliseconds / 1000);
+	let minutes = Math.floor(seconds / 60);
+	seconds = seconds % 60;
+	res = `${minutes}:${seconds}`;
+	return res;
 }
