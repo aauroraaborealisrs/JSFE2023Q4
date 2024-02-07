@@ -73,53 +73,53 @@ document.addEventListener('DOMContentLoaded', function() {
 	verthintscont.appendChild(verticalHintsDom);
 	gameboardContainer.appendChild(verthintscont);
 
-		// вертикальные
-	let verticalHints = document.getElementById('verticalHints');
-	let hintColumn = document.createElement('tr');
-	let hintColumn2 = document.createElement('tr');
+	// вертикальные
+let verticalHints = document.getElementById('verticalHints');
+let hintColumn = document.createElement('tr');
+let hintColumn2 = document.createElement('tr');
 
-	// Create and append hint cells
-	for (let i = 0; i < 5; i++) {
-		let hintCell = document.createElement('td');
-		hintColumn2.appendChild(hintCell);
-	}
+// Create and append hint cells
+for (let i = 0; i < 5; i++) {
+    let hintCell = document.createElement('td');
+    hintColumn2.appendChild(hintCell);
+}
 
-	verticalHints.appendChild(hintColumn2);
+verticalHints.appendChild(hintColumn2);
 
-	// Create and append hint cells
-	for (let i = 0; i < 5; i++) {
-		let hintCell = document.createElement('td');
-		hintColumn.appendChild(hintCell);
-	}
+// Create and append hint cells
+for (let i = 0; i < 5; i++) {
+    let hintCell = document.createElement('td');
+    hintColumn.appendChild(hintCell);
+}
 
-	verticalHints.appendChild(hintColumn);
+verticalHints.appendChild(hintColumn);
 
-	// Function to fill in hint cells
-	function updateVerticalHints() {
-		let hintCells = document.querySelectorAll('#verticalHints tr:first-child td');
-		for (let i = 0; i < hintCells.length; i++) {
-			hintCells[i].textContent = numberVerticalHints[i].toString();  // Convert to string
+// Function to fill in hint cells
+function updateVerticalHints() {
+    let hintCells = document.querySelectorAll('#verticalHints tr:first-child td');
+    for (let i = 0; i < hintCells.length; i++) {
+        hintCells[i].textContent = numberVerticalHints[i].toString();  // Convert to string
 
-			if (numberVerticalHints[i] === 0) {
-				hintCells[i].style.color = 'transparent';
-			} else {
-				hintCells[i].style.color = '';
-			}
-		}
+        if (numberVerticalHints[i] === 0) {
+            hintCells[i].style.color = 'transparent';
+        } else {
+            hintCells[i].style.color = '';
+        }
+    }
 
-		let hintCells2 = document.querySelectorAll('#verticalHints tr:nth-child(2) td');
-		for (let i = 0; i < hintCells2.length; i++) {
-			hintCells2[i].textContent = numberVerticalHints2[i].toString();  // Convert to string
+    let hintCells2 = document.querySelectorAll('#verticalHints tr:nth-child(2) td');
+    for (let i = 0; i < hintCells2.length; i++) {
+        hintCells2[i].textContent = numberVerticalHints2[i].toString();  // Convert to string
 
-			if (numberVerticalHints2[i] === 0) {
-				hintCells2[i].style.color = 'transparent';
-			} else {
-				hintCells2[i].style.color = '';
-			}
-		}
-	}
+        if (numberVerticalHints2[i] === 0) {
+            hintCells2[i].style.color = 'transparent';
+        } else {
+            hintCells2[i].style.color = '';
+        }
+    }
+}
 
-// Call the function to fill in hint cells
+
 updateVerticalHints();
 
 
@@ -182,19 +182,16 @@ updateVerticalHints();
         document.querySelector('.modal-content').appendChild(button);
     });
 
-	const closeModalButton = modal.querySelector('.close');
-	closeModalButton.addEventListener('click', function() {
-		modal.style.display = 'none'; // Скрываем модальное окно
-	});
 	createModal(gameContainer, 'winModal', 'modal', ' ', 'restartGame()', 'Play more!', true);
 
-	// Добавляем контейнер кнопок
 	const buttonsContainer = document.createElement('div');
 	buttonsContainer.className = 'buttons__container';
 	mainContainer.appendChild(buttonsContainer);
 
 	// кнопки	
-	addButton(buttonsContainer, 'resetButton', 'Start again');
+	addSoundSwitcherButton();
+	
+	addButton(buttonsContainer, 'resetButton', 'Reset game');
 	document.getElementById('resetButton').addEventListener('click', resetGame);
 
 	addButton(buttonsContainer, 'selectLevelButton', 'Choose level');
@@ -213,8 +210,11 @@ updateVerticalHints();
 		document.getElementById("myModal").style.display = "block";
 	}
 
-	
-	document.querySelector('.close').addEventListener('click', closeModal);
+	const levelTitle = document.createElement('div');
+	levelTitle.id = 'levelTitle';
+	levelTitle.className = 'level-title';
+	levelTitle.textContent = 'Current Level: ' + currentGameField.name; 
+	gameContainer.appendChild(levelTitle);
 
 
 	addAudio(mainContainer, 'buttonClickSound', './sounds/buttonclick.mp3');
@@ -225,18 +225,14 @@ updateVerticalHints();
 
 });
 
+
+
 function createModal(parent, id, className, text, onclick, buttonText, isWinModal = false) {
 	const modal = document.createElement('div');
 	modal.id = id;
 	modal.className = className;
 	const modalContent = document.createElement('div');
 	modalContent.className = isWinModal ? 'modal-content__win' : 'modal-content';
-	const spanClose = document.createElement('span');
-	spanClose.className = 'close';
-	spanClose.textContent = '×';
-	spanClose.addEventListener('click', function() {
-        modal.style.display = 'none';
-    });
 	const pModal = document.createElement('p');
 	pModal.textContent = text;
 	if (isWinModal) {
@@ -246,8 +242,8 @@ function createModal(parent, id, className, text, onclick, buttonText, isWinModa
 	button.className = 'modal-button__level';
 	button.textContent = buttonText;
 	if (onclick) button.setAttribute('onclick', onclick);
-	modalContent.appendChild(spanClose);
 	modalContent.appendChild(pModal);
+	modalContent.appendChild(button);
 
 	// Добавляем элемент elapsedTime для winModal
 	if (isWinModal) {
@@ -263,6 +259,7 @@ function createModal(parent, id, className, text, onclick, buttonText, isWinModa
 	modal.appendChild(modalContent);
 	parent.appendChild(modal);
 }
+
 
 function addButton(parent, id, text, onclick = '') {
 	const button = document.createElement('button');
@@ -408,42 +405,42 @@ let originalGameFields = [
 		]
 	},
 
-		//смайлик
+	//смайлик
 
-		{
-			name: "Smile",
-			field: [
-				[0, 0, 0, 0, 0],
-				[0, 1, 0, 1, 0],
-				[0, 0, 1, 0, 0],
-				[1, 0, 0, 0, 1],
-				[0, 1, 1, 1, 0]
-			],
-			hints: [
-				[ 0, 1, 0, 1, 0], // левый
-				[ 0, 1, 1, 1, 3], // право
-				[ 0, 1, 1, 1, 0], // верх
-				[ 1, 1, 1, 1, 1] // низ
-			]
-		},
+	{
+		name: "Smile",
+		field: [
+			[0, 0, 0, 0, 0],
+			[0, 1, 0, 1, 0],
+			[0, 0, 1, 0, 0],
+			[1, 0, 0, 0, 1],
+			[0, 1, 1, 1, 0]
+		],
+		hints: [
+			[ 0, 1, 0, 1, 0], // левый
+			[ 0, 1, 1, 1, 3], // право
+			[ 0, 1, 1, 1, 0], // верх
+			[ 1, 1, 1, 1, 1] // низ
+		]
+	},
+
 	
-		
-		{
-			name: "Donut",
-			field: [
-				[0, 0, 0, 0, 0],
-				[0, 1, 1, 1, 0],
-				[0, 1, 0, 1, 0],
-				[0, 1, 1, 1, 0],
-				[0, 0, 0, 0, 0]
-			],
-			hints: [
-				[ 0, 0, 1, 0, 0], // левый
-				[ 0, 3, 1, 3, 0], // право
-				[ 0, 0, 1, 0, 0], // верх
-				[ 0, 3, 1, 3, 0] // низ
-			]
-		},
+	{
+		name: "Donut",
+		field: [
+			[0, 0, 0, 0, 0],
+			[0, 1, 1, 1, 0],
+			[0, 1, 0, 1, 0],
+			[0, 1, 1, 1, 0],
+			[0, 0, 0, 0, 0]
+		],
+		hints: [
+			[ 0, 0, 1, 0, 0], // левый
+			[ 0, 3, 1, 3, 0], // право
+			[ 0, 0, 1, 0, 0], // верх
+			[ 0, 3, 1, 3, 0] // низ
+		]
+	},
 
 ];
 
@@ -529,44 +526,38 @@ let handleClick = function(event) {
 };
 
 let handleRightClick = function(event) {
-    event.preventDefault(); 
+	event.preventDefault();   
 
-    let target = event.target;
-    while (target != null && target.tagName != 'TD') {
-        target = target.parentNode;
-    }
-    if (target == null) return;
-
-    let colIndex = Array.prototype.indexOf.call(target.parentNode.children, target);
-    let rowIndex = Array.from(target.parentNode.parentNode.children).indexOf(target.parentNode);
-
-	if (gameField[rowIndex][colIndex] === 0) {
-		gameField[rowIndex][colIndex] = 'X';
-	} else if (gameField[rowIndex][colIndex] === 'X') {
-		gameField[rowIndex][colIndex] = '';
-	} else {
-		gameField[rowIndex][colIndex] = 0;
+	let target = event.target;
+	while (target != null && target.tagName != 'TD') {
+		target = target.parentNode;
 	}
-	
+	if (target == null) return;
+
+	let colIndex = Array.prototype.indexOf.call(target.parentNode.children, target);
+	let rowIndex = Array.from(target.parentNode.parentNode.children).indexOf(target.parentNode);
+
+	let isFilledWithCross = gameField[rowIndex][colIndex] === 'X';
+
+	gameField[rowIndex][colIndex] = isFilledWithCross ?   0 : 'X';
+
 	target.textContent = gameField[rowIndex][colIndex];
-	target.style.color = gameField[rowIndex][colIndex] === 0 ? 'transparent' : '';
+	target.style.color = gameField[rowIndex][colIndex] ===   0 ? 'transparent' : '';
 
-    updateCellColors();
+	updateCellColors();
 
-    setTimeout(checkSolution, 100);
+	setTimeout(checkSolution,   100);
 
-    if (!startTime) {
-        startTime = Date.now();
-        timerInterval = setInterval(() => {
-            elapsedSeconds++;
-            updateElapsedTimeDisplay();
-        }, 1000);
-    }
+	if (!startTime) {
+		startTime = Date.now();
+		timerInterval = setInterval(() => {
+			elapsedSeconds++;
+			updateElapsedTimeDisplay();
+		},   1000);
+	}
 
 	playFlagXCellSound();
 };
-
-
 
 let elapsedSeconds = 0;
 updateElapsedTimeDisplay();
@@ -576,7 +567,6 @@ function updateElapsedTimeDisplay() {
 	let seconds = elapsedSeconds % 60;
 	document.getElementById('elapsedTimeDisplay').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
-
 
 function checkSolution() {
     for (let i = 0; i < originalGameFields.length; i++) {
@@ -736,6 +726,8 @@ function chooseImage(index) {
 
 	updateGameFieldAndHints();
 	addClickListenerToTable(); 
+
+	levelTitle.textContent = 'Current Level: ' + originalGameFields[index].name;
 }
 
 function chooseRandomImage() {
@@ -757,6 +749,8 @@ function chooseRandomImage() {
 
 	updateGameFieldAndHints();
 	addClickListenerToTable();
+
+	levelTitle.textContent = 'Current Level: ' + currentGameField.name;
 }
 
 function addClickListenerToTable() {
@@ -776,7 +770,7 @@ function updateGameFieldAndHints() {
                 cell.textContent = '';
             } else {
                 cell.textContent = gameField[i][j];
-                cell.style.backgroundColor = gameField[i][j] === 1 ? 'black' : 'white';  // Добавьте эту строку
+                cell.style.backgroundColor = gameField[i][j] === 1 ? 'black' : 'white';  
             }
             row.appendChild(cell);
         }
@@ -903,24 +897,26 @@ function saveGameState() {
 }
 
 function continueLastGame() {
-    const savedState = localStorage.getItem('savedGame');
-    if (savedState) {
-        const parsedState = JSON.parse(savedState);
-        gameField = parsedState.gameField;
-        originalGameField = parsedState.originalGameField;
-        numberVerticalHints = parsedState.numberVerticalHints;
-        numberVerticalHints2 = parsedState.numberVerticalHints2;
-        horizontalHintsTop = parsedState.horizontalHintsTop;
-        horizontalHintsBottom = parsedState.horizontalHintsBottom;
-        elapsedSeconds = parsedState.elapsedSeconds;
-        updateGameFieldAndHints();
-        updateElapsedTimeDisplay();
-        addClickListenerToTable();
+	const savedState = localStorage.getItem('savedGame');
+	if (savedState) {
+		const parsedState = JSON.parse(savedState);
+		gameField = parsedState.gameField;
+		originalGameField = parsedState.originalGameField;
+		numberVerticalHints = parsedState.numberVerticalHints;
+		numberVerticalHints2 = parsedState.numberVerticalHints2;
+		horizontalHintsTop = parsedState.horizontalHintsTop;
+		horizontalHintsBottom = parsedState.horizontalHintsBottom;
+		elapsedSeconds = parsedState.elapsedSeconds;
+		updateGameFieldAndHints();
+		updateElapsedTimeDisplay();
+		addClickListenerToTable();
 		updateTopWins();
-    }
+
+		const savedLevelIndex = originalGameFields.findIndex(level => JSON.stringify(level.field) === JSON.stringify(originalGameField));
+		const savedLevelName = originalGameFields[savedLevelIndex].name;
+		levelTitle.textContent = 'Current Level: ' + savedLevelName;
+	}
 }
-
-
 
 function saveWin(time, levelName) {
     console.log("Saving win:", { time: time, levelName: levelName });
@@ -939,7 +935,7 @@ function updateTopWins() {
     wins = wins.slice(-5); 
     wins.sort((a, b) => a.time - b.time); 
 
-    let topWinsContainer = document.getElementById('topWinsContainer');
+    let topWinsContainer = document.getElementById('topWinsContainer') /*|| createTopWinsContainer()*/;
 
     topWinsContainer.innerHTML = '';
 
@@ -959,4 +955,26 @@ function formatTime(milliseconds) {
 	seconds = seconds % 60;
 	res = `${minutes}:${seconds}`;
 	return res;
+}
+
+
+function addSoundSwitcherButton() {
+    const buttonsContainer = document.querySelector('.buttons__container');
+    const soundSwitcherButton = document.createElement('button');
+    soundSwitcherButton.id = 'soundSwitcher';
+    soundSwitcherButton.className = 'game__button';
+    soundSwitcherButton.textContent = 'Sounds disable'; 
+    soundSwitcherButton.addEventListener('click', function() {
+        const isSoundenable = this.textContent === 'Sounds enable'; 
+        const audioElements = document.querySelectorAll('audio');
+        audioElements.forEach(audio => {
+            audio.muted = !isSoundenable;
+            if (!isSoundenable) {
+                audio.pause();
+                audio.currentTime = 0;
+            }
+        });
+        this.textContent = isSoundenable ? 'Sounds disable' : 'Sounds enable'; 
+    });
+    buttonsContainer.appendChild(soundSwitcherButton);
 }

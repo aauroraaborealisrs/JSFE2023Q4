@@ -267,11 +267,6 @@ body.dark-theme .switch {
     color: #fff; 
 }
 
-/*body.dark-theme .modal-content__win, .modal-content {
-    background-color: grey;
-}*/
-
-
 
 .game__button {
     border-radius: 20px;
@@ -322,6 +317,13 @@ body.dark-theme .switch {
     width: fit-content;
     padding-left: 70px;
     padding-bottom: 10px;
+}
+
+
+.level-title{
+    height: fit-content;
+    width: fit-content;
+    padding-top: 20px;
 }
 
 @media (max-width: 970px) and (min-width: 901px) {
