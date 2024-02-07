@@ -267,6 +267,11 @@ body.dark-theme .switch {
     color: #fff; 
 }
 
+/*body.dark-theme .modal-content__win, .modal-content {
+    background-color: grey;
+}*/
+
+
 
 .game__button {
     border-radius: 20px;

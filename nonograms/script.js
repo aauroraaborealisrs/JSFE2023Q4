@@ -381,7 +381,7 @@ let originalGameFields = [
 		hints: [
 			[ 0, 2, 0, 0, 1], // левый
 			[ 2, 1, 4, 2, 1], // право
-			[ 2, 0, 1, 1, 0], // верх
+			[ 2, 0, 1, 2, 0], // верх
 			[ 1, 4, 2, 1, 1] // низ
 		]
 	},
@@ -524,6 +524,7 @@ let handleClick = function(event) {
     }
 
 };
+
 
 let handleRightClick = function(event) {
 	event.preventDefault();   
