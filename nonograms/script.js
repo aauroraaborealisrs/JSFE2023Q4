@@ -245,7 +245,6 @@ function createModal(parent, id, className, text, onclick, buttonText, isWinModa
 	modalContent.appendChild(pModal);
 	modalContent.appendChild(button);
 
-	// Добавляем элемент elapsedTime для winModal
 	if (isWinModal) {
 		const elapsedTimeParagraph = document.createElement('p');
 		const elapsedTimeSpan = document.createElement('span');
@@ -570,41 +569,44 @@ function updateElapsedTimeDisplay() {
 }
 
 function checkSolution() {
-    for (let i = 0; i < originalGameFields.length; i++) {
-        let isMatch = true;
-        for (let j = 0; j < gameField.length; j++) {
-            for (let k = 0; k < gameField[j].length; k++) {
-                if (gameField[j][k] !== originalGameFields[i].field[j][k]) {
-                    isMatch = false;
-                    break;
-                }
-            }
-            if (!isMatch) {
-                break;
-            }
-        }
-        if (isMatch) {
-            let elapsedTime = Date.now() - startTime;
-            let seconds = Math.floor(elapsedTime / 1000);
+	let isMatch = true;
+	for (let j =  0; j < gameField.length; j++) {
+		for (let k =  0; k < gameField[j].length; k++) {
+			if (gameField[j][k] !== currentGameField.field[j][k]) {
+				isMatch = false;
+				break;
+			}
+		}
+		if (!isMatch) {
+			break;
+		}
+	}
+	if (isMatch) {
+		let elapsedTime = Date.now() - startTime;
+		let seconds = Math.floor(elapsedTime / 1000);
+		
+		let minutes = Math.floor(seconds / 60);
+		let remainingSeconds = seconds % 60;
+		if (minutes > 0) {
+			document.getElementById('elapsedTime').textContent = `${minutes} minute(s) ${remainingSeconds} second(s)`;
+		} else {
+			document.getElementById('elapsedTime').textContent = `${remainingSeconds} second(s)`;
+		}		
 
-            let minutes = Math.floor(seconds / 60);
-            let remainingSeconds = seconds % 60;
-            document.getElementById('elapsedTime').textContent = `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+		clearInterval(timerInterval);
+		startTime = null;
+		timerInterval = null;
 
-            clearInterval(timerInterval);
-            startTime = null;
-            timerInterval = null;
+		console.log("Saving win for level:", currentGameField.name);
+		saveWin(elapsedTime, currentGameField.name);
 
-            console.log("Saving win for level:", originalGameFields[i].name);
-            saveWin(elapsedTime, originalGameFields[i].name);
-
-            showWinModal();
-            playWinGameSound();
-            table.removeEventListener('click', handleClick);
-            updateElapsedTimeDisplay();
-            return true;
-        }
-    }
+		showWinModal();
+		playWinGameSound();
+		table.removeEventListener('click', handleClick);
+		updateElapsedTimeDisplay();
+		return true;
+	}
+	return false;
 }
 
 
@@ -710,26 +712,31 @@ originalGameFields.forEach((gameField, index) => {
 
 
 function chooseImage(index) {
-	closeModal();
-	let currentGameField = originalGameFields[index];
-	gameField = Array.from({ length: 5 }, () => Array(5).fill(0)); 
-	originalGameField = currentGameField.field.map(row => row.slice());
-	numberVerticalHints = currentGameField.hints[0];
-	numberVerticalHints2 = currentGameField.hints[1];
-	horizontalHintsTop = currentGameField.hints[2];
-	horizontalHintsBottom = currentGameField.hints[3];
+    console.log('chooseImage called with index:', index); 
+    closeModal();
+    currentGameField = originalGameFields[index]; 
+    gameField = Array.from({ length: 5 }, () => Array(5).fill(0));   
+    originalGameField = currentGameField.field.map(row => row.slice());
+    numberVerticalHints = currentGameField.hints[0];
+    numberVerticalHints2 = currentGameField.hints[1];
+    horizontalHintsTop = currentGameField.hints[2];
+    horizontalHintsBottom = currentGameField.hints[3];
 
-	elapsedSeconds = 0;
-	startTime = null;
+    elapsedSeconds = 0;
+    startTime = null;
 
     updateElapsedTimeDisplay();
     clearInterval(timerInterval);
 
-	updateGameFieldAndHints();
-	addClickListenerToTable(); 
+    updateGameFieldAndHints();
 
-	levelTitle.textContent = 'Current Level: ' + originalGameFields[index].name;
+    addClickListenerToTable();   
+
+    levelTitle.textContent = 'Current Level: ' + currentGameField.name; 
+    console.log('Current game field:', currentGameField); 
+    console.log('Original game field:', originalGameField); 
 }
+
 
 function chooseRandomImage() {
 	closeModal();
@@ -951,11 +958,11 @@ function updateTopWins() {
 
 
 function formatTime(milliseconds) {
-	let seconds = Math.floor(milliseconds / 1000);
-	let minutes = Math.floor(seconds / 60);
-	seconds = seconds % 60;
-	res = `${minutes}:${seconds}`;
-	return res;
+	let seconds = Math.floor(milliseconds /  1000);
+	let minutes = Math.floor(seconds /  60);
+	seconds = seconds %  60;
+	let formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+	return formattedTime;
 }
 
 
