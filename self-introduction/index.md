@@ -1,5 +1,9 @@
 [Ссылка на видео](https://www.youtube.com/watch?v=MoD7PVi0oyI)
 
+[Discord](https://discordapp.com/users/735587554560049223/)
+
+Telegtam: @aauroraaborealis
+
 Hello, I'm Kate Sharai, a third-year software engineering student with a passion for frontend development. 
 
 I've always been a creative and imaginative individual, envisioning my future profession to be intertwined with this aspect of myself. However, in 2020, I stumbled upon augmented reality, where I could blend my passion for art with technology. Inspired by its possibilities, I redirected my focus to coding, pursuing a degree in software engineering.
