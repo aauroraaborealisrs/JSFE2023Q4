@@ -10,7 +10,7 @@ Here is a collection of badges I earned from completing Microsoft Learn's TypeSc
 4. **Develop Typed Functions in TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/aauroraaborealis-0777/FZ3ZMH5X?sharingId=7D8BAE7EDEBE68A)
 5. **Declare and Instantiate Classes in TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/aauroraaborealis-0777/N7UEXN5F?sharingId=7D8BAE7EDEBE68A)
 6. **Generics in TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/aauroraaborealis-0777/DGEHZY2J?sharingId=7D8BAE7EDEBE68A)
-7. **Work with External Libraries in TypeScript**: [Badge](badge-link)
+7. **Work with External Libraries in TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/aauroraaborealis-0777/9N5V6ZHU?sharingId=7D8BAE7EDEBE68A)
 8. **Organize Code with Namespaces in TypeScript**: [Badge](badge-link)
 
 ## Reflections
@@ -35,6 +35,10 @@ In this module, everything was quite clear to me as I had prior knowledge from a
 
 This module proved to be incredibly engaging and enlightening for me. It literally clarified all my doubts and gaps in understanding classes. Previously, I didn't grasp the purpose of using the static keyword, but thanks to the example with counting the number of cars, it became clear that static applies to the entire class, not to a specific instance, hence it doesn't use ‘this’. Also, I finally realized the significance of using underscores (_) in property names, as well as the distinction between accessing through private and protected accessors. It was the best explanation on this topic I've come across.
 
-### Generics in TypeScript
+### Define generics in TypeScript
 
 This topic was completely new to me, and the syntax with `<T>` seemed quite unusual. Perhaps it was the most challenging module for me because everything was unfamiliar. Generics is quite an intriguing concept that I've heard about in other programming languages but haven't delved into much. However, it was particularly interesting to learn about it in TypeScript because of its unique approaches to typing. From what I gathered, generics are essentially placeholders for values of a single type, but that type can vary as long as all the arguments passed to it correspond. In the module, I explored concepts such as declaring generic interfaces, both as function and class types, as well as defining generic classes. It was genuinely fascinating to see the extensive application of generics and how they genuinely simplify development. Although I haven't fully grasped the topic yet, I hope it becomes clearer with practice.
+
+### Access external libraries from TypeScript
+
+This module was interesting and useful. I was aware of the existence of modules and understood the principle of their operation, but I had never worked with them or created them myself before. Now it's clearer how to export modules. I was particularly surprised by the ability to export the entire module into a single variable at first, but in practice, it turned out to be very convenient. In the future, I will often need to use them in practice, so I am grateful to this module for finally starting to work with it.
