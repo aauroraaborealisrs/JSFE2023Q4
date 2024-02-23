@@ -4,14 +4,16 @@
 
 Here is a collection of badges I earned from completing Microsoft Learn's TypeScript modules:
 
-1. **Getting Started with TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/ru-ru/aauroraaborealis-0777/3XLEG5QH?sharingId=7D8BAE7EDEBE68A)
+1. **Getting Started with TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/aauroraaborealis-0777/3XLEG5QH?sharingId=7D8BAE7EDEBE68A)
 2. **Declare Variable Types in TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/aauroraaborealis-0777/3XLKQWRH?sharingId=7D8BAE7EDEBE68A)
 3. **Implement Interfaces in TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/aauroraaborealis-0777/WAC3DGKN?sharingId=7D8BAE7EDEBE68A)
 4. **Develop Typed Functions in TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/aauroraaborealis-0777/FZ3ZMH5X?sharingId=7D8BAE7EDEBE68A)
 5. **Declare and Instantiate Classes in TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/aauroraaborealis-0777/N7UEXN5F?sharingId=7D8BAE7EDEBE68A)
 6. **Generics in TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/aauroraaborealis-0777/DGEHZY2J?sharingId=7D8BAE7EDEBE68A)
 7. **Work with External Libraries in TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/aauroraaborealis-0777/9N5V6ZHU?sharingId=7D8BAE7EDEBE68A)
-8. **Organize Code with Namespaces in TypeScript**: [Badge](badge-link)
+8. **Organize Code with Namespaces in TypeScript**: [Badge](https://learn.microsoft.com/api/achievements/share/en-us/aauroraaborealis-0777/N7UB38HF?sharingId=7D8BAE7EDEBE68A)
+
+**Badge for completing the entire course** : [Badge](https://learn.microsoft.com/api/achievements/share/en-us/aauroraaborealis-0777/WA9KUHHN?sharingId=7D8BAE7EDEBE68A)
 
 ## Reflections
 
@@ -42,3 +44,7 @@ This topic was completely new to me, and the syntax with `<T>` seemed quite unus
 ### Access external libraries from TypeScript
 
 This module was interesting and useful. I was aware of the existence of modules and understood the principle of their operation, but I had never worked with them or created them myself before. Now it's clearer how to export modules. I was particularly surprised by the ability to export the entire module into a single variable at first, but in practice, it turned out to be very convenient. In the future, I will often need to use them in practice, so I am grateful to this module for finally starting to work with it.
+
+### Organize code using TypeScript namespaces
+
+This module was also engaging and informative. While I had previously encountered the concept of namespaces in languages like C, I didn't fully grasp their purpose. This module clarified things for me, especially with the comparison table between modules and namespaces. Namespaces seem like an interesting and visually clear way to organize code into logical parts, but from the articles in the module, I learned that it's better to use modules and avoid mixing modules and namespaces in the same project.
