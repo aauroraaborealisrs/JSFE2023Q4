@@ -1,26 +1,7 @@
 import News from './news/news';
 import Sources from './sources/sources';
+import { Data} from '../../types/index';
 
-interface NewsItem {
-    urlToImage: string;
-    author: string | null;
-    source: { name: string };
-    publishedAt: string;
-    title: string;
-    description: string;
-    url: string;
-    content: string;
-}
-
-interface SourceItem {
-    id: string;
-    name: string;
-}
-
-interface Data {
-    articles?: NewsItem[];
-    sources?: SourceItem[];
-}
 
 export class AppView {
     private news: News;
