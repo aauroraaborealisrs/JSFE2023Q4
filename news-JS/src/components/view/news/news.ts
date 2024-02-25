@@ -8,6 +8,7 @@ interface NewsItem {
     title: string;
     description: string;
     url: string;
+    content: string;
 }
 
 class News {
