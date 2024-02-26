@@ -1,4 +1,4 @@
-export interface Source {
+export interface NewsSource {
     id: string;
     name: string;
     description: string;
@@ -6,25 +6,52 @@ export interface Source {
     category: string;
     language: string;
     country: string;
-  }
-
-export interface NewsItem {
-    urlToImage: string;
-    author: string | null;
-    source: { name: string };
+    author?: string;
+    source: { name: string; id: string };
     publishedAt: string;
     title: string;
+    urlToImage: string;
+}
+
+// export interface Article {
+//     author: string;
+//     publishedAt: string;
+//     source: {
+//         id: string;
+//         name: string;
+//     };
+//     title: string;
+//     url: string;
+// }
+
+export interface Article {
+    id: string; 
+    name: string;
     description: string;
     url: string;
-    content: string;
+    category: string;
+    language: string;
+    country: string;
+    author: string;
+    source: {
+        id: string;
+        name: string;
+    };
+    publishedAt: string;
+    title: string;
+    urlToImage: string;
 }
 
-export interface SourceItem {
-  id: string;
-  name: string;
+export interface ApiResponse {
+    status: string;
+    sources: NewsSource[];
+    articles: Article[];
 }
 
-export interface Data {
-  articles?: NewsItem[];
-  sources?: SourceItem[];
+export interface NewsData {
+    articles?: Article[];
+}
+
+export interface SourcesData {
+    sources?: NewsSource[];
 }

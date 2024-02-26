@@ -1,39 +1,23 @@
 import './sources.css';
-
-interface SourceItem {
-    id: string;
-    name: string;
-}
+import { NewsSource } from 'types/index';
 
 class Sources {
-    draw(data: SourceItem[]) {
+    draw(data: NewsSource[]): void {
         const fragment = document.createDocumentFragment();
-        const sourceItemTemp = document.querySelector<HTMLTemplateElement>('#sourceItemTemp');
-
-        if (!sourceItemTemp) {
-            console.error('Element with ID "sourceItemTemp" not found');
-            return;
-        }
+        const sourceItemTemp = document.querySelector('#sourceItemTemp') as HTMLTemplateElement;
 
         data.forEach((item) => {
             const sourceClone = sourceItemTemp.content.cloneNode(true) as DocumentFragment;
 
-            const sourceNameElement = sourceClone.querySelector('.source__item-name');
-            if (sourceNameElement) {
-                sourceNameElement.textContent = item.name;
-            }
-
-            const sourceItemElement = sourceClone.querySelector('.source__item');
-            if (sourceItemElement) {
-                sourceItemElement.setAttribute('data-source-id', item.id);
-            }
+            (sourceClone.querySelector('.source__item-name') as HTMLElement).textContent = item.name;
+            (sourceClone.querySelector('.source__item') as HTMLElement).setAttribute('data-source-id', item.id);
 
             fragment.append(sourceClone);
         });
 
-        const sourcesContainer = document.querySelector('.sources');
-        if (sourcesContainer) {
-            sourcesContainer.append(fragment);
+        const sourcesElement = document.querySelector('.sources') as HTMLElement;
+        if (sourcesElement) {
+            sourcesElement.append(fragment);
         }
     }
 }

@@ -1,11 +1,13 @@
 body {
-    color: #fff;
-    background: #17181c;
-    font-family: sans-serif;
+    color: black;
+    background: whitesmoke;
+    font-family: serif;
 }
 
 header {
     padding: 10px 30px;
+    display: flex;
+    justify-content: center;
 }
 
 header h1 {

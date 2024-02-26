@@ -2,8 +2,8 @@ import Loader from './loader';
 
 class AppLoader extends Loader {
     constructor() {
-        super(process.env.API_URL!, {
-            apiKey: '08354b6d9e134f3b82c8a715f14853e9',
+        super(process.env.API_URL || '', {
+            apiKey: '63cac18bd4ee4f75a2ea2b1a787a5dcb',
         });
     }
 }
