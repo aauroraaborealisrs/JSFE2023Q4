@@ -23,8 +23,6 @@
 .source__item:focus {
     color: white;
     background: #474948;
-    /*box-shadow: 0 0.5em 0.5em -0.4em #3fcc59;
-    transform: translateY(-0.25em);*/
 }
 
 .source__item-name {

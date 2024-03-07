@@ -1,14 +1,6 @@
 import News from './news/news';
 import Sources from './sources/sources';
-import { NewsData, SourcesData } from 'types/index';
-
-// interface NewsData {
-//     articles?: NewsSource[];
-// }
-
-// interface SourcesData {
-//     sources?: NewsSource[];
-// }
+import { INewsData, ISourcesData } from 'types/index';
 
 export class AppView {
     private news: News;
@@ -19,14 +11,14 @@ export class AppView {
         this.sources = new Sources();
     }
 
-    drawNews(data: NewsData): void {
-        console.log('Drawing news with data:', data); // Добавляем   логирование
+    drawNews(data: INewsData): void {
+        console.log('Drawing news with data:', data);
         const values = data?.articles || [];
         this.news.draw(values);
     }
 
-    drawSources(data: SourcesData): void {
-        console.log('Drawing sources with data:', data); // Добавляем   логирование
+    drawSources(data: ISourcesData): void {
+        console.log('Drawing sources with data:', data);
         const values = data?.sources || [];
         this.sources.draw(values);
     }

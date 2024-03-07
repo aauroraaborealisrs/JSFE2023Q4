@@ -110,16 +110,6 @@
     position: relative;
 }
 
-/* .news__item p:first-of-type:before {
-    content: '';
-    position: absolute;
-    height: 5px;
-    background: #474948;
-    width: 35px;
-    top: -0.75rem;
-    border-radius: 3px;
-} */
-
 .news__item:hover .news__meta-details {
     left: 0%;
 }
@@ -140,9 +130,6 @@
     }
 
     .news__item .news__description:before {
-        /* -webkit-transform: skewX(-3deg);
-        transform: skewX(-3deg);
-        content: ''; */
         background: #fff;
         width: 30px;
         position: absolute;

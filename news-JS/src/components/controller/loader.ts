@@ -1,14 +1,14 @@
-import { ApiResponse } from 'types/index';
+import { IApiResponse } from 'types/index';
 
 interface RequestOptions {
     [key: string]: string;
 }
 
 enum HttpStatusCode {
-    OK =  200,
-    BadRequest =  400,
-    Unauthorized =  401,
-    NotFound =  404,
+    OK = 200,
+    BadRequest = 400,
+    Unauthorized = 401,
+    NotFound = 404,
 }
 
 class Loader {
@@ -22,7 +22,7 @@ class Loader {
 
     getResp(
         { endpoint, options = {} }: { endpoint: string; options?: RequestOptions },
-        callback: (data: ApiResponse) => void = () => {
+        callback: (data: IApiResponse) => void = () => {
             console.error('No callback for GET response');
         }
     ): void {
@@ -32,7 +32,7 @@ class Loader {
     private errorHandler(res: Response): Response {
         if (!res.ok) {
             if (res.status === HttpStatusCode.Unauthorized || res.status === HttpStatusCode.NotFound)
-            console.log(`Sorry, but there is ${res.status} error: ${res.statusText}`);
+                console.log(`Sorry, but there is ${res.status} error: ${res.statusText}`);
             throw Error(res.statusText);
         }
 
@@ -53,7 +53,7 @@ class Loader {
     private load(
         method: string,
         endpoint: string,
-        callback: (data: ApiResponse) => void,
+        callback: (data: IApiResponse) => void,
         options: RequestOptions = {}
     ): void {
         fetch(this.makeUrl(options, endpoint), { method })

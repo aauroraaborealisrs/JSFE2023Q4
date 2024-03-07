@@ -21,8 +21,8 @@ const baseConfig = {
             },
             {
                 test: /\.(png|jpe?g|gif|svg)$/i,
-                type: 'asset/resource'
-            }            
+                type: 'asset/resource',
+            },
         ],
     },
     resolve: {
@@ -42,12 +42,12 @@ const baseConfig = {
         new EslingPlugin({ extensions: 'ts' }),
         new CopyWebpackPlugin({
             patterns: [
-                { 
-                from: path.resolve(__dirname, 'src/img'), 
-                to: path.resolve(__dirname, 'dist/assets') 
-            },
+                {
+                    from: path.resolve(__dirname, 'src/img'),
+                    to: path.resolve(__dirname, 'dist/assets'),
+                },
             ],
-        })
+        }),
     ],
 };
 

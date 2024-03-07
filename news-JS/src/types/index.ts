@@ -1,4 +1,4 @@
-export interface NewsSource {
+export interface INewsSource {
     id: string;
     name: string;
     description: string;
@@ -13,45 +13,16 @@ export interface NewsSource {
     urlToImage: string;
 }
 
-// export interface Article {
-//     author: string;
-//     publishedAt: string;
-//     source: {
-//         id: string;
-//         name: string;
-//     };
-//     title: string;
-//     url: string;
-// }
-
-export interface Article {
-    id: string; 
-    name: string;
-    description: string;
-    url: string;
-    category: string;
-    language: string;
-    country: string;
-    author: string;
-    source: {
-        id: string;
-        name: string;
-    };
-    publishedAt: string;
-    title: string;
-    urlToImage: string;
-}
-
-export interface ApiResponse {
+export interface IApiResponse {
     status: string;
-    sources: NewsSource[];
-    articles: Article[];
+    sources: INewsSource[];
+    articles: INewsSource[];
 }
 
-export interface NewsData {
-    articles?: Article[];
+export interface INewsData {
+    articles?: INewsSource[];
 }
 
-export interface SourcesData {
-    sources?: NewsSource[];
+export interface ISourcesData {
+    sources?: INewsSource[];
 }
