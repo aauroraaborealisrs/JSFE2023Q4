@@ -1,0 +1,101 @@
+body {
+    color: black;
+    background: whitesmoke;
+    font-family: serif;
+}
+
+a {
+    color: inherit; 
+    text-decoration: none; 
+    font-weight: normal; 
+}
+
+a:hover {
+    color: #555555; 
+}
+
+header {
+    padding: 10px 30px;
+    display: flex;
+    justify-content: center;
+}
+
+header h1 {
+    font-size: 40px;
+    font-weight: 800;
+}
+
+footer {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+footer .copyright {
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+}
+footer .copyright a {
+    color: #444;
+}
+footer .copyright a:hover {
+    color: #555;
+}
+footer .copyright:before {
+    content: '©';
+}
+
+.rs {
+    display: flex;
+    width: 400px;
+}
+
+.cred__container {
+    width:  100%;
+    display: flex;
+}
+
+.cred__container a {
+    display: inline-block;
+    width:  100%;
+    text-align: center; 
+}
+
+.rs-img{
+    height: 40px;
+    width: 100px;
+}
+
+@media (max-width:  560px) {
+    .footer {
+        font-size: 14px;
+    }
+}
+
+@media (max-width:  500px) {
+    .footer {
+        font-size: 12px;
+    }
+    
+    footer .copyright {
+        font-size: 12px;
+    }
+}
+
+@media (max-width:  400px) {
+
+    .cred__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer {
+        font-size: 12px;
+    }
+
+    footer .copyright {
+        font-size: 12px;
+    }
+}
