@@ -1,5 +1,5 @@
-const a: number = 5;
+import LoginForm from './components/login/login';
 
-for (let i = 0; i < a; i += 1) {
-  //console.log(i);
-}
+document.body.innerHTML = '<div id="app"></div>';
+
+const loginForm = new LoginForm();
