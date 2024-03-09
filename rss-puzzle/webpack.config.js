@@ -1,13 +1,13 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
- mode: 'development', // Или 'production', в зависимости от ваших потребностей
- entry: './src/index.ts',
- output: {
+  mode: 'development', // Или 'production', в зависимости от ваших потребностей
+  entry: './src/index.ts',
+  output: {
     filename: 'bundle.js',
     path: __dirname + '/dist',
- },
- module: {
+  },
+  module: {
     rules: [
       {
         test: /\.css$/,
@@ -19,15 +19,15 @@ module.exports = {
         exclude: /node_modules/,
       },
     ],
- },
- resolve: {
+  },
+  resolve: {
     extensions: ['.tsx', '.ts', '.js'],
- },
- plugins: [
+  },
+  plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html',
       inject: 'body',
     }),
- ],
+  ],
 };
