@@ -3,4 +3,4 @@
 
 cd rss-puzzle
 npm run lint
-validate-branch-name
+npx validate-branch-name
