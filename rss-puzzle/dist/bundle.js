@@ -1,1 +1,1 @@
-(()=>{for(var o=0;o<5;o++)console.log(o)})();
+(() => { for (let r = 0; r < 5; r += 1); })();
