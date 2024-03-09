@@ -1,7 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  mode: 'development', // Или 'production', в зависимости от ваших потребностей
+  mode: 'production', 
   entry: './src/index.ts',
   output: {
     filename: 'bundle.js',
