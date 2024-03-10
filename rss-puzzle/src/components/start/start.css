@@ -1,0 +1,31 @@
+
+#start-screen {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ height: 90vh;
+ color: #000000;
+ text-align: center;
+}
+
+.app-name {
+ font-size: 2em;
+ font-family: 'Your Game Font', sans-serif;
+ margin-bottom: 20px;
+}
+
+.game-description {
+ font-size: 1em;
+ margin-bottom: 30px;
+}
+
+.start-button {
+ padding: 10px 20px;
+ font-size: 1.2em;
+ background-color: black;
+ color: #fff;
+ border: none;
+ border-radius: 5px;
+ cursor: pointer;
+}
