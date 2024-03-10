@@ -55,6 +55,35 @@ class LoginForm {
         const submitButton: HTMLButtonElement | null = document.querySelector('.submit-button');
         const firstNameError = document.getElementById('firstNameError');
         const surnameError = document.getElementById('surnameError');
+        
+        const form = document.getElementById('login-form');
+
+        if (form) {
+                    form.addEventListener('submit', (event) => {
+                        event.preventDefault(); 
+        
+                        const firstNameInput = document.getElementById('firstName') as HTMLInputElement;
+                        const surnameInput = document.getElementById('surname') as HTMLInputElement;
+        
+                        const firstNameValid = checkInputValidity(firstNameInput);
+                        const surnameValid = checkInputValidity(surnameInput);
+        
+                        
+                        if (firstNameValid && surnameValid) {
+                            const userData = {
+                                firstName: firstNameInput.value,
+                                surname: surnameInput.value
+                            };
+                
+                            localStorage.setItem('userData', JSON.stringify(userData));
+                
+                            console.log(`User Data: ${localStorage.getItem('userData')}`);
+                        } else {
+                            console.log('Validation failed. Data not saved.');
+                        }
+                    });
+                }
+ 
 
         const checkInputs = () => {
             let allFilled = true;
@@ -126,13 +155,15 @@ class LoginForm {
             });
         
         
-            if (allFilled && firstNameValid && surnameValid && submitButton) {
-                submitButton.style.backgroundColor = 'black';
-                submitButton.style.color = 'white';
-            } else if (submitButton) {
-                submitButton.style.backgroundColor = 'darkgrey';
-                submitButton.style.color = 'black';
-            }
+        if (allFilled && firstNameValid && surnameValid && submitButton) {
+            submitButton.style.backgroundColor = 'black';
+            submitButton.style.color = 'white';
+            submitButton.disabled = false; 
+        } else if (submitButton) {
+            submitButton.style.backgroundColor = 'darkgrey';
+            submitButton.style.color = 'black';
+            submitButton.disabled = true; 
+        }
         };
 
         inputs.forEach(input => {
