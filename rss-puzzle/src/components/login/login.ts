@@ -1,4 +1,5 @@
 import './login.css';
+import StartScreen from '../start/start';
 
 function checkInputValidity(input: HTMLInputElement) {
   const regex = /^[A-Za-z-]+$/;
@@ -84,6 +85,8 @@ class LoginForm {
           localStorage.setItem('userData', JSON.stringify(userData));
 
           console.log(`User Data: ${localStorage.getItem('userData')}`);
+
+          const startScreen = new StartScreen();
         } else {
           console.log('Validation failed. Data not saved.');
         }
