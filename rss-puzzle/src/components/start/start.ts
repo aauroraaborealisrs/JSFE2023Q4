@@ -2,12 +2,12 @@ import './start.css';
 import MainPage from '../main/main';
 
 function getUserGreeting() {
- const userData = localStorage.getItem('userData');
- if (userData) {
+  const userData = localStorage.getItem('userData');
+  if (userData) {
     const { firstName, surname } = JSON.parse(userData);
     return `${firstName} ${surname}`;
- }
- return null;
+  }
+  return null;
 }
 
 class StartScreen {
@@ -17,7 +17,6 @@ class StartScreen {
   }
 
   render() {
-
     const userGreeting = getUserGreeting();
     let greetingMessage = '';
     if (userGreeting) {
