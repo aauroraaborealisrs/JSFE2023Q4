@@ -1,11 +1,11 @@
 import './start.css';
 
 class StartScreen {
- constructor() {
+  constructor() {
     this.render();
- }
+  }
 
- render() {
+  render() {
     const startScreen = `
         <div id="start-screen">
         <header class="start__header">
@@ -17,7 +17,7 @@ class StartScreen {
     </div>
     `;
     document.getElementById('app').innerHTML = startScreen;
- }
+  }
 }
 
 export default StartScreen;
