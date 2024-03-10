@@ -28,3 +28,16 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
+.start-button:hover {
+  transform: scale(1.1); 
+  background-color: #333; 
+  transition: transform 0.5s ease, background-color 0.3s ease; 
+ }
+ 
+ .start-button:active {
+   transform: scale(1);
+   background-color: #555;
+   transition: transform 1s ease;
+  }
+ 
