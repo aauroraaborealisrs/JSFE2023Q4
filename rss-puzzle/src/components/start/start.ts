@@ -1,5 +1,6 @@
 import './start.css';
 import MainPage from '../main/main';
+import LoginForm from '../login/login';
 
 function getUserGreeting() {
   const userData = localStorage.getItem('userData');
@@ -9,6 +10,10 @@ function getUserGreeting() {
   }
   return null;
 }
+
+function isLoggedIn() {
+  return localStorage.getItem('userData') !== null;
+ }
 
 class StartScreen {
   constructor() {
@@ -31,6 +36,7 @@ class StartScreen {
             Unlock English grammar mastery one puzzle piece at a time with our innovative learning app!
           </p>
         </header>
+        <button class="logout-button">Logout</button>
         ${greetingMessage}
         <button class="start-button">Start Learning</button>
       </div>
@@ -44,7 +50,16 @@ class StartScreen {
       startButton.addEventListener('click', () => {
         const mainPage = new MainPage();
       });
+
     }
+
+      const logOutButton = document.querySelector('.logout-button');
+      if(logOutButton){
+        logOutButton.addEventListener('click', () => {
+          localStorage.removeItem('userData');
+          const loginForm = new LoginForm();
+        });
+      }
   }
 }
 
