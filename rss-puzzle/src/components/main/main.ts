@@ -1,11 +1,11 @@
 import './mainpage.css';
 
 class MainPage {
- constructor() {
+  constructor() {
     this.render();
- }
+  }
 
- render() {
+  render() {
     const mainPage = `
         <div id="main-page">
         <h1>Welcome to the Main Page</h1>
@@ -13,7 +13,7 @@ class MainPage {
         </div>
     `;
     document.getElementById('app').innerHTML = mainPage;
- }
+  }
 }
 
 export default MainPage;

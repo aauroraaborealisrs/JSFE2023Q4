@@ -4,7 +4,7 @@ import MainPage from '../main/main';
 class StartScreen {
   constructor() {
     this.render();
-    this.addEventListeners(); 
+    this.addEventListeners();
   }
 
   render() {
