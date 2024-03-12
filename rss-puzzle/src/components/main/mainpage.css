@@ -1,29 +1,28 @@
 #sentence-container {
-    display: flex;
+  display: flex;
 }
 
-.word{
-    background-color: cadetblue;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 0 5px;
-    cursor: pointer;
+.word {
+  background-color: cadetblue;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 0 5px;
+  cursor: pointer;
 }
 
-.word:hover{
-    background-color: rgb(80, 173, 42);
+.word:hover {
+  background-color: rgb(80, 173, 42);
 }
 
 #main-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 30vh;
-    /* width: fit-content; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30vh;
 }
 
-#result-block{
-    background-color: rgb(232, 232, 232);
-    display: flex;
-    border-radius: 5px;
+#result-block {
+  background-color: rgb(232, 232, 232);
+  display: flex;
+  border-radius: 5px;
 }

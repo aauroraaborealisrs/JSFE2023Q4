@@ -5,8 +5,6 @@ class MainPage {
     this.render();
   }
   render() {
-
-
     const mainPage = `
         <div id="main-page">
         <div id="sentence-container"></div>
@@ -22,17 +20,14 @@ class MainPage {
         displaySentence(randomSentence);
       });
 
-
-      const resultBlock = document.createElement('div');
-      resultBlock.id = 'result-block';
-      resultBlock.style.border = '1px solid black';
-      resultBlock.style.padding = '10px';
-      resultBlock.style.marginTop = '20px';
-      document.getElementById('main-page').appendChild(resultBlock);
-
+    const resultBlock = document.createElement('div');
+    resultBlock.id = 'result-block';
+    resultBlock.style.border = '1px solid black';
+    resultBlock.style.padding = '10px';
+    resultBlock.style.marginTop = '20px';
+    document.getElementById('main-page').appendChild(resultBlock);
   }
 }
-
 
 interface Word {
   textExample: string;
@@ -64,32 +59,30 @@ async function fetchWordData() {
 }
 
 function displaySentence(sentence: string) {
- const sentenceContainer = document.getElementById('sentence-container');
- if (sentenceContainer) {
-      const words = sentence.split(' ');
-      // Перемешиваем слова в случайном порядке
-      words.sort(() => Math.random() - 0.5);
-      sentenceContainer.innerHTML = '';
-      words.forEach(word => {
-        const wordDiv = document.createElement('div');
-        wordDiv.textContent = word;
-        wordDiv.classList.add('word');
-        wordDiv.addEventListener('click', handleWordClick);
-        sentenceContainer.appendChild(wordDiv);
-      });
- } else {
-      console.error('Element with ID "sentence-container" not found');
- }
+  const sentenceContainer = document.getElementById('sentence-container');
+  if (sentenceContainer) {
+    const words = sentence.split(' ');
+    words.sort(() => Math.random() - 0.5);
+    sentenceContainer.innerHTML = '';
+    words.forEach((word) => {
+      const wordDiv = document.createElement('div');
+      wordDiv.textContent = word;
+      wordDiv.classList.add('word');
+      wordDiv.addEventListener('click', handleWordClick);
+      sentenceContainer.appendChild(wordDiv);
+    });
+  } else {
+    console.error('Element with ID "sentence-container" not found');
+  }
 }
 
 function handleWordClick(e: MouseEvent) {
   const wordDiv = e.target as Node;
- const resultBlock = document.getElementById('result-block');
- if (resultBlock && wordDiv) {
+  const resultBlock = document.getElementById('result-block');
+  if (resultBlock && wordDiv) {
     resultBlock.appendChild(wordDiv);
- }
+  }
 }
-
 
 function extractSentences(wordData: WordData): string[] {
   const sentences: string[] = [];
