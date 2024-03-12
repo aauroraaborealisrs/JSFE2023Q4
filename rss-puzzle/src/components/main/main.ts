@@ -68,6 +68,7 @@ function displaySentence(sentence: string) {
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
+      wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
       wordDiv.addEventListener('click', handleWordClick);
       sentenceContainer.appendChild(wordDiv);
     });
@@ -77,10 +78,34 @@ function displaySentence(sentence: string) {
 }
 
 function handleWordClick(e: MouseEvent) {
-  const wordDiv = e.target as Node;
+  const wordDiv = e.target as HTMLElement;
   const resultBlock = document.getElementById('result-block');
   if (resultBlock && wordDiv) {
-    resultBlock.appendChild(wordDiv);
+    // Сохраняем исходный размер блока слова перед его перемещением
+    const originalSize = wordDiv.offsetWidth;
+    wordDiv.setAttribute('data-original-size', originalSize.toString());
+
+    if (resultBlock.contains(wordDiv)) {
+      const originalParent = wordDiv.getAttribute('data-original-parent');
+      if (originalParent) {
+        const originalParentElement = document.getElementById(originalParent);
+        if (originalParentElement) {
+          originalParentElement.appendChild(wordDiv);
+        }
+      }
+    } else {
+      wordDiv.setAttribute(
+        'data-original-parent',
+        wordDiv.parentElement?.id || '',
+      );
+      resultBlock.appendChild(wordDiv);
+    }
+
+    // После перемещения слова в другой контейнер, применяем сохраненный размер
+    const savedSize = wordDiv.getAttribute('data-original-size');
+    if (savedSize) {
+      wordDiv.style.width = savedSize + 'px';
+    }
   }
 }
 

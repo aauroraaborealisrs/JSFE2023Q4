@@ -1,5 +1,9 @@
 #sentence-container {
   display: flex;
+  width: 743px;
+  justify-content: space-between;
+  justify-items: center;
+  align-items: center;
 }
 
 .word {
@@ -25,4 +29,6 @@
   background-color: rgb(232, 232, 232);
   display: flex;
   border-radius: 5px;
+  width: 743px;
+  height: 39px;
 }
