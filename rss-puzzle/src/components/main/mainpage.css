@@ -7,12 +7,19 @@
 }
 
 .word {
+  flex-grow: 1;
+  /* flex-basis: 0; */
   background-color: cadetblue;
   border-radius: 5px;
   padding: 10px;
-  margin: 0 5px;
+  /* margin: 0 5px; */
   cursor: pointer;
+  /* width: 72px; */
 }
+
+/* #sentence-container > div:not([data-original-size]) {
+ flex-grow: 1;
+} */
 
 .word:hover {
   background-color: rgb(80, 173, 42);
