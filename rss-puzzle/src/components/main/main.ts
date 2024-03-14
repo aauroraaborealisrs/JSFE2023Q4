@@ -1,8 +1,9 @@
 import './mainpage.css';
 
+let currentSentenceIndex = 0;
+
 class MainPage {
   sentences: string[] = [];
-  currentSentenceIndex: number = 0;
   constructor() {
     this.render();
   }
@@ -11,22 +12,16 @@ class MainPage {
         <div id="main-page">
         <div id="sentence-container"></div>
         </div>
+        <button id="next-sentence-button">Next Sentence</button>
     `;
     document.getElementById('app').innerHTML = mainPage;
 
-    // fetchWordData()
-    //   .then(extractSentences)
-    //   .then((sentences) => {
-    //     const randomIndex = Math.floor(Math.random() * sentences.length);
-    //     const randomSentence = sentences[randomIndex];
-    //     displaySentence(randomSentence);
-    //   });
-
     fetchWordData()
-     .then(data => {
-        this.sentences = extractSentences(data);
-        this.displayNextSentence(); // Отобразите первое предложение сразу после загрузки
-     });
+    .then(extractSentences)
+    .then((fetchedSentences) => {
+        this.sentences = fetchedSentences;
+        displaySentence(this.sentences);
+    });
 
     const resultBlock = document.createElement('div');
     resultBlock.id = 'result-block';
@@ -34,43 +29,12 @@ class MainPage {
     resultBlock.style.padding = '10px';
     resultBlock.style.marginTop = '20px';
     document.getElementById('main-page').appendChild(resultBlock);
-
-     // Ваш текущий код для рендеринга
     
-     const continueButton = document.createElement('button');
-     continueButton.textContent = 'Continue';
-     continueButton.disabled = true; // Заблокируйте кнопку по умолчанию
-     continueButton.addEventListener('click', () => this.displayNextSentence());
-     document.getElementById('main-page').appendChild(continueButton);
+    document.getElementById('next-sentence-button').addEventListener('click', () => {
+      nextSentence(this.sentences);
+    });
+
   }
-
-  displayNextSentence() {
-    if (this.currentSentenceIndex < this.sentences.length) {
-       const sentence = this.sentences[this.currentSentenceIndex];
-       displaySentence(sentence);
-       this.currentSentenceIndex++;
-    } else {
-       console.log('No more sentences');
-    }
-   }
-
-   checkSentenceCompletion() {
-    const sentenceContainer = document.getElementById('sentence-container');
-    const currentSentence = Array.from(sentenceContainer.children)
-       .map(wordDiv => wordDiv.textContent)
-       .join(' ');
-   
-    if (currentSentence === this.sentences[this.currentSentenceIndex]) {
-       this.enableContinueButton();
-    }
-   }
-
-   enableContinueButton() {
-    const continueButton = document.getElementById('continue-button') as HTMLButtonElement;
-    if (continueButton) {
-       continueButton.disabled = false;
-    }
-   }
 }
 
 interface Word {
@@ -102,11 +66,29 @@ async function fetchWordData() {
   }
 }
 
-function displaySentence(sentence: string) {
-  const sentenceContainer = document.getElementById('sentence-container');
-  if (sentenceContainer) {
-    const words = sentence.split(' ');
-    words.sort(() => Math.random() - 0.5);
+// function displaySentence(sentence: string) {
+//   const sentenceContainer = document.getElementById('sentence-container');
+//   if (sentenceContainer) {
+//     const words = sentence.split(' ');
+//     words.sort(() => Math.random() - 0.5);
+//     sentenceContainer.innerHTML = '';
+//     words.forEach((word) => {
+//       const wordDiv = document.createElement('div');
+//       wordDiv.textContent = word;
+//       wordDiv.classList.add('word');
+//       wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
+//       wordDiv.addEventListener('click', handleWordClick);
+//       sentenceContainer.appendChild(wordDiv);
+//     });
+//   } else {
+//     console.error('Element with ID "sentence-container" not found');
+//   }
+// }
+
+function displaySentence(sentences: string[]) {
+ const sentenceContainer = document.getElementById('sentence-container');
+ if (sentenceContainer) {
+    const words = sentences[currentSentenceIndex].split(' ');
     sentenceContainer.innerHTML = '';
     words.forEach((word) => {
       const wordDiv = document.createElement('div');
@@ -116,11 +98,19 @@ function displaySentence(sentence: string) {
       wordDiv.addEventListener('click', handleWordClick);
       sentenceContainer.appendChild(wordDiv);
     });
-  } else {
+ } else {
     console.error('Element with ID "sentence-container" not found');
-  }
+ }
 }
 
+function nextSentence(sentences: string[]) {
+ currentSentenceIndex++;
+ if (currentSentenceIndex < sentences.length) {
+    displaySentence(sentences);
+ } else {
+    console.log('No more sentences to display');
+ }
+}
 
 function handleWordClick(e: MouseEvent) {
   const wordDiv = e.target as HTMLElement;
