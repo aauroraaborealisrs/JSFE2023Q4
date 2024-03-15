@@ -44,10 +44,12 @@ class MainPage {
       'next-sentence-button',
     ) as HTMLButtonElement;
     nextButton.disabled = true;
+    nextButton.style.visibility = 'hidden';
 
     nextButton.addEventListener('click', () => {
       if (resultBlock) {
         nextButton.disabled = true;
+        nextButton.style.visibility = 'hidden';
         resultBlock.innerHTML = '';
       }
     });
@@ -158,6 +160,10 @@ function autoComplete() {
       resultBlock.appendChild(wordDiv);
     });
 
+    const checkButton = document.getElementById('check-sentence-button');
+
+    checkButton.style.visibility = 'hidden';
+
     const nextButton = document.getElementById(
       'next-sentence-button',
     ) as HTMLButtonElement;
@@ -173,10 +179,11 @@ function nextSentence(sentences: string[]) {
   const nextButton = document.getElementById(
     'next-sentence-button',
   ) as HTMLButtonElement;
+  nextButton.style.visibility = 'visible';
   checkButton.disabled = true;
   checkButton.textContent = 'Check';
   checkButton.style.backgroundColor = '#ccc';
-  nextButton.style.visibility = 'hidden';
+  checkButton.style.visibility = 'visible';
 
   if (currentSentenceIndex < sentences.length) {
     displaySentence(sentences);
