@@ -63,6 +63,7 @@ class MainPage {
       'auto-complete-button',
     ) as HTMLButtonElement;
     autoCompleteButton.addEventListener('click', autoComplete);
+    console.log('навешаны обработчики на контейнер');
   }
 
   getSentences(): string[] {
@@ -82,7 +83,7 @@ interface WordData {
   rounds: Round[];
 }
 
-// Функция для загрузки данных из JSON-файла
+// Функц��я для загрузки данных из JSON-файла
 async function fetchWordData() {
   try {
     const response = await fetch(
@@ -327,6 +328,61 @@ function checkResultOrder(originalSentence: string) {
 
   console.log('Порядок слов совпадает');
   return true;
+}
+
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.type === 'childList') {
+      const words = document.querySelectorAll('.word');
+      console.log(`Найдено слов: ${words.length}`);
+
+      words.forEach((word) => {
+        word.setAttribute('draggable', 'true');
+        word.id = `word-${word.textContent}`;
+        word.addEventListener('dragstart', drag);
+        console.log('Навешаны обработчики на слова по идее');
+      });
+
+      const resultBlock = document.getElementById('result-block');
+      const sentenceContainer = document.getElementById('sentence-container');
+
+      if (resultBlock) {
+        resultBlock.addEventListener('dragover', allowDrop);
+        resultBlock.addEventListener('drop', drop);
+        console.log('навешаны обработчики на результат');
+      }
+
+      if (sentenceContainer) {
+        console.log('навешаны обработчики на контейнер');
+      }
+    }
+  });
+});
+
+observer.observe(document.body, { childList: true, subtree: true });
+
+function drop(event: DragEvent) {
+  console.log('я в дропе');
+
+  event.preventDefault();
+  const itemId = event.dataTransfer.getData('text/plain'); // Получаем данные из буфера передачи
+  console.log(itemId);
+  const draggedElement = document.getElementById(itemId);
+  if (draggedElement) {
+    (event.target as HTMLElement).appendChild(draggedElement); // Перемещаем элемент в целевой контейнер
+  }
+}
+
+function drag(event: DragEvent) {
+  console.log('я в драге');
+  event.dataTransfer.setData('text/plain', (event.target as HTMLElement).id); // Устанавливаем данные в буфер передачи
+}
+
+function allowDrop(event: DragEvent) {
+  console.log('я в аллоудропе');
+
+  event.preventDefault();
+  console.log('[event');
 }
 
 export default MainPage;
