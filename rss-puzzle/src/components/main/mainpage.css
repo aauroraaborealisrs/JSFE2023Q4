@@ -83,7 +83,7 @@
   cursor: pointer;
 }
 
-#completed-sentences-container{
+#completed-sentences-container {
   display: flex;
   flex-wrap: wrap;
   width: 743px;
@@ -93,8 +93,7 @@
   margin-bottom: 50px;
 }
 
-
-.sentence-line{
+.sentence-line {
   display: flex;
   width: 743px;
   height: fit-content;

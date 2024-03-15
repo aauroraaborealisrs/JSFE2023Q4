@@ -185,24 +185,27 @@ function nextSentence(sentences: string[]) {
     console.log('No more sentences to display');
   }
 
-  const completedSentencesContainer = document.getElementById('completed-sentences-container');
-    const resultBlock = document.getElementById('result-block');
-    if (completedSentencesContainer && resultBlock) {
-      const newLineDiv = document.createElement('div');
-      newLineDiv.classList.add('sentence-line');
-      while (resultBlock.firstChild) {
-        newLineDiv.appendChild(resultBlock.firstChild);
-      }
+  const completedSentencesContainer = document.getElementById(
+    'completed-sentences-container',
+  );
+  const resultBlock = document.getElementById('result-block');
+  if (completedSentencesContainer && resultBlock) {
+    const newLineDiv = document.createElement('div');
+    newLineDiv.classList.add('sentence-line');
+    while (resultBlock.firstChild) {
+      newLineDiv.appendChild(resultBlock.firstChild);
+    }
 
-      completedSentencesContainer.appendChild(newLineDiv);
+    completedSentencesContainer.appendChild(newLineDiv);
 
-
-      if (completedSentencesContainer.children.length > 9) {
-        while (completedSentencesContainer.firstChild) {
-          completedSentencesContainer.removeChild(completedSentencesContainer.firstChild);
-        }
+    if (completedSentencesContainer.children.length > 9) {
+      while (completedSentencesContainer.firstChild) {
+        completedSentencesContainer.removeChild(
+          completedSentencesContainer.firstChild,
+        );
       }
     }
+  }
 }
 
 //обработка клика на слово
