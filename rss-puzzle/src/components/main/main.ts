@@ -2,7 +2,7 @@ import './mainpage.css';
 
 let currentSentenceIndex = 0;
 let currentSentence: string = '';
-let originalSentence = ''; // Declare this variable at the top of your script
+let originalSentence = '';
 
 class MainPage {
   sentences: string[] = [];
@@ -56,8 +56,8 @@ class MainPage {
       'check-sentence-button',
     ) as HTMLButtonElement;
     checkButton.disabled = true;
+    nextButton.style.visibility = 'hidden';
 
-    // Add event listener to the 'Auto-Complete' button
     const autoCompleteButton = document.getElementById(
       'auto-complete-button',
     ) as HTMLButtonElement;
@@ -103,7 +103,7 @@ function displaySentence(sentences: string[]) {
   const sentenceContainer = document.getElementById('sentence-container');
   if (sentenceContainer) {
     currentSentence = sentences[currentSentenceIndex];
-    originalSentence = currentSentence; // Store the original sentence
+    originalSentence = currentSentence;
     let words = sentences[currentSentenceIndex].split(' ');
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
@@ -139,16 +139,18 @@ function shuffleArray<T>(array: T[]): T[] {
 function autoComplete() {
   const resultBlock = document.getElementById('result-block');
   const sentenceContainer = document.getElementById('sentence-container');
+  const nextButton = document.getElementById(
+    'next-sentence-button',
+  ) as HTMLButtonElement;
+  nextButton.style.visibility = 'visible';
+  nextButton.style.backgroundColor = 'black';
 
   if (resultBlock) {
-    // Clear the result block
     resultBlock.innerHTML = '';
     sentenceContainer.innerHTML = '';
 
-    // Split the original sentence into words
     const wordsInOriginal = originalSentence.split(' ');
 
-    // Add the words back to the result block in the correct order
     wordsInOriginal.forEach((word) => {
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
@@ -168,9 +170,13 @@ function nextSentence(sentences: string[]) {
   const checkButton = document.getElementById(
     'check-sentence-button',
   ) as HTMLButtonElement;
+  const nextButton = document.getElementById(
+    'next-sentence-button',
+  ) as HTMLButtonElement;
   checkButton.disabled = true;
   checkButton.textContent = 'Check';
   checkButton.style.backgroundColor = '#ccc';
+  nextButton.style.visibility = 'hidden';
 
   if (currentSentenceIndex < sentences.length) {
     displaySentence(sentences);
@@ -218,6 +224,10 @@ function handleWordClick(e: MouseEvent) {
   const sentenceContainer = document.getElementById('sentence-container');
   if (sentenceContainer.children.length !== 0) {
     checkButton.disabled = true;
+    const nextButton = document.getElementById(
+      'next-sentence-button',
+    ) as HTMLButtonElement;
+    nextButton.style.visibility = 'hidden';
     checkButton.style.backgroundColor = '#ccc';
   } else {
     checkButton.style.backgroundColor = 'black';
@@ -257,9 +267,12 @@ function checkSentenceContainer() {
         checkButton.textContent = 'Correct';
         nextButton.disabled = false;
         checkButton.style.backgroundColor = 'green';
+        nextButton.style.visibility = 'visible';
+        nextButton.style.backgroundColor = 'green';
       } else {
         checkButton.textContent = 'Incorrect. Try again';
         checkButton.style.backgroundColor = 'red';
+        nextButton.style.visibility = 'hidden';
       }
     });
   }
