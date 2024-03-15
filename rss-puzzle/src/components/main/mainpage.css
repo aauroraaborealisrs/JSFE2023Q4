@@ -45,8 +45,27 @@
   order: 1;
 }
 
+#check-sentence-button {
+  margin-top: 30px;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  background-color: black;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  order: 1;
+}
+
 #next-sentence-button:disabled {
   background-color: #ccc;
   color: #666;
   cursor: not-allowed;
 }
+
+#check-sentence-button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
