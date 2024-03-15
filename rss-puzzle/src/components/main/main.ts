@@ -1,6 +1,9 @@
 import './mainpage.css';
 
+let currentSentenceIndex = 0;
+let currentSentence: string = '';
 class MainPage {
+  sentences: string[] = [];
   constructor() {
     this.render();
   }
@@ -8,16 +11,16 @@ class MainPage {
     const mainPage = `
         <div id="main-page">
         <div id="sentence-container"></div>
+        <button id="next-sentence-button">Continue</button>
         </div>
     `;
     document.getElementById('app').innerHTML = mainPage;
 
     fetchWordData()
       .then(extractSentences)
-      .then((sentences) => {
-        const randomIndex = Math.floor(Math.random() * sentences.length);
-        const randomSentence = sentences[randomIndex];
-        displaySentence(randomSentence);
+      .then((fetchedSentences) => {
+        this.sentences = fetchedSentences;
+        displaySentence(this.sentences);
       });
 
     const resultBlock = document.createElement('div');
@@ -26,6 +29,27 @@ class MainPage {
     resultBlock.style.padding = '10px';
     resultBlock.style.marginTop = '20px';
     document.getElementById('main-page').appendChild(resultBlock);
+
+    document
+      .getElementById('next-sentence-button')
+      .addEventListener('click', () => {
+        nextSentence(this.sentences);
+      });
+
+    const nextButton = document.getElementById(
+      'next-sentence-button',
+    ) as HTMLButtonElement;
+    nextButton.disabled = true;
+
+    nextButton.addEventListener('click', () => {
+      if (resultBlock) {
+        nextButton.disabled = true;
+        resultBlock.innerHTML = '';
+      }
+    });
+  }
+  getSentences(): string[] {
+    return this.sentences;
   }
 }
 
@@ -58,13 +82,15 @@ async function fetchWordData() {
   }
 }
 
-function displaySentence(sentence: string) {
+//отображает предложение
+function displaySentence(sentences: string[]) {
   const sentenceContainer = document.getElementById('sentence-container');
   if (sentenceContainer) {
-    const words = sentence.split(' ');
-    words.sort(() => Math.random() - 0.5);
+    currentSentence = sentences[currentSentenceIndex];
+    let words = sentences[currentSentenceIndex].split(' ');
+    let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
-    words.forEach((word) => {
+    shuffledWords.forEach((word) => {
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
@@ -77,11 +103,36 @@ function displaySentence(sentence: string) {
   }
 }
 
+// Функция для перемешивания массива
+function shuffleArray<T>(array: T[]): T[] {
+  let currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
+  let arrayCopy = array.slice();
+  while (0 !== currentIndex) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = arrayCopy[currentIndex];
+    arrayCopy[currentIndex] = arrayCopy[randomIndex];
+    arrayCopy[randomIndex] = temporaryValue;
+  }
+  return arrayCopy;
+}
+
+function nextSentence(sentences: string[]) {
+  currentSentenceIndex++;
+  if (currentSentenceIndex < sentences.length) {
+    displaySentence(sentences);
+  } else {
+    console.log('No more sentences to display');
+  }
+}
+
+//обработка клика на слово
 function handleWordClick(e: MouseEvent) {
   const wordDiv = e.target as HTMLElement;
   const resultBlock = document.getElementById('result-block');
   if (resultBlock && wordDiv) {
-    // Сохраняем исходный размер блока слова перед его перемещением
     const originalSize = wordDiv.offsetWidth;
     wordDiv.setAttribute('data-original-size', originalSize.toString());
 
@@ -99,9 +150,9 @@ function handleWordClick(e: MouseEvent) {
         wordDiv.parentElement?.id || '',
       );
       resultBlock.appendChild(wordDiv);
+      checkSentenceContainer();
     }
 
-    // После перемещения слова в другой контейнер, применяем сохраненный размер
     const savedSize = wordDiv.getAttribute('data-original-size');
     if (savedSize) {
       wordDiv.style.width = savedSize + 'px';
@@ -109,6 +160,7 @@ function handleWordClick(e: MouseEvent) {
   }
 }
 
+//берет предложения
 function extractSentences(wordData: WordData): string[] {
   const sentences: string[] = [];
 
@@ -119,6 +171,49 @@ function extractSentences(wordData: WordData): string[] {
   });
   console.log(sentences);
   return sentences;
+}
+
+//ПРОВЕРКА ПРАВИЛЬНО ЛИ СОБРАЛ ПРЕДЛОЖЕНИЕ
+
+function checkSentenceContainer() {
+  console.log(`ВОТ ТЕКУЩЕЕ ПРДЛОЖЕНИЕ ${currentSentence}`);
+  const check = checkResultOrder(currentSentence);
+  const sentenceContainer = document.getElementById('sentence-container');
+  if (check && sentenceContainer && sentenceContainer.children.length === 0) {
+    console.log('sentence-container пустой');
+    const nextButton = document.getElementById(
+      'next-sentence-button',
+    ) as HTMLButtonElement;
+    nextButton.disabled = false;
+  }
+}
+
+function checkResultOrder(originalSentence: string) {
+  const resultBlock = document.getElementById('result-block');
+  if (!resultBlock) {
+    console.error('Element with ID "result-block" not found');
+    return false;
+  }
+
+  const wordsInResult = Array.from(resultBlock.children).map(
+    (child) => child.textContent,
+  );
+  const wordsInOriginal = originalSentence.split(' ');
+
+  if (wordsInResult.length !== wordsInOriginal.length) {
+    console.log('Количество слов не совпадает');
+    return false;
+  }
+
+  for (let i = 0; i < wordsInResult.length; i++) {
+    if (wordsInResult[i] !== wordsInOriginal[i]) {
+      console.log('Порядок слов не совпадает');
+      return false;
+    }
+  }
+
+  console.log('Порядок слов совпадает');
+  return true;
 }
 
 export default MainPage;
