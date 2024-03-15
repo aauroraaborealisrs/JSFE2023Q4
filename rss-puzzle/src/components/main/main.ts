@@ -49,7 +49,9 @@ class MainPage {
       }
     });
 
-    const checkButton = document.getElementById('check-sentence-button') as HTMLButtonElement;
+    const checkButton = document.getElementById(
+      'check-sentence-button',
+    ) as HTMLButtonElement;
     checkButton.disabled = true;
   }
   getSentences(): string[] {
@@ -125,9 +127,12 @@ function shuffleArray<T>(array: T[]): T[] {
 
 function nextSentence(sentences: string[]) {
   currentSentenceIndex++;
-  const checkButton = document.getElementById('check-sentence-button') as HTMLButtonElement;
+  const checkButton = document.getElementById(
+    'check-sentence-button',
+  ) as HTMLButtonElement;
   checkButton.disabled = true;
   checkButton.textContent = 'Check';
+  checkButton.style.backgroundColor = '#ccc';
 
   if (currentSentenceIndex < sentences.length) {
     displaySentence(sentences);
@@ -140,13 +145,15 @@ function nextSentence(sentences: string[]) {
 function handleWordClick(e: MouseEvent) {
   const wordDiv = e.target as HTMLElement;
   const resultBlock = document.getElementById('result-block');
-  const checkButton = document.getElementById('check-sentence-button') as HTMLButtonElement;
-
+  const checkButton = document.getElementById(
+    'check-sentence-button',
+  ) as HTMLButtonElement;
 
   if (resultBlock && wordDiv) {
     const originalSize = wordDiv.offsetWidth;
     wordDiv.setAttribute('data-original-size', originalSize.toString());
     checkButton.textContent = 'Check';
+
     if (resultBlock.contains(wordDiv)) {
       const originalParent = wordDiv.getAttribute('data-original-parent');
       if (originalParent) {
@@ -173,9 +180,10 @@ function handleWordClick(e: MouseEvent) {
   const sentenceContainer = document.getElementById('sentence-container');
   if (sentenceContainer.children.length !== 0) {
     checkButton.disabled = true;
+    checkButton.style.backgroundColor = '#ccc';
+  } else {
+    checkButton.style.backgroundColor = 'black';
   }
-  
-
 }
 
 //берет предложения
@@ -191,51 +199,33 @@ function extractSentences(wordData: WordData): string[] {
   return sentences;
 }
 
-// const checkButton = document.getElementById('check-sentence-button') as HTMLButtonElement;
-// checkButton.addEventListener('click', () => {
-//  const check = checkResultOrder(currentSentence);
-//  const sentenceContainer = document.getElementById('sentence-container');
-//  if (check) {
-//     checkButton.textContent = 'Correct';
-//  } else {
-//     checkButton.textContent = 'Incorrect. Try again';
-//  }
-
-//  // Проверяем, изменилось ли количество детей в sentenceContainer
-//  if (sentenceContainer && sentenceContainer.children.length !== currentSentence.split(' ').length) {
-//     // Если изменилось, возвращаем текст кнопки обратно на "Check"
-//     checkButton.textContent = 'Check';
-//  }
-// });
-
-
 //ПРОВЕРКА ПРАВИЛЬНО ЛИ СОБРАЛ ПРЕДЛОЖЕНИЕ
 
 function checkSentenceContainer() {
   const check = checkResultOrder(currentSentence);
-  const checkButton = document.getElementById('check-sentence-button') as HTMLButtonElement;
+  const checkButton = document.getElementById(
+    'check-sentence-button',
+  ) as HTMLButtonElement;
   const sentenceContainer = document.getElementById('sentence-container');
   if (sentenceContainer && sentenceContainer.children.length === 0) {
     console.log('sentence-container пустой');
-    const nextButton = document.getElementById('next-sentence-button') as HTMLButtonElement;
+    const nextButton = document.getElementById(
+      'next-sentence-button',
+    ) as HTMLButtonElement;
     checkButton.disabled = false;
-  //   if(check){
-  //     nextButton.disabled = false;
-  // }
 
-  checkButton.addEventListener('click', () => {
-    if (check) {
-       checkButton.textContent = 'Correct';
-       nextButton.disabled = false;
-
-    } else {
-       checkButton.textContent = 'Incorrect. Try again';
-    }
-  });
+    checkButton.addEventListener('click', () => {
+      if (check) {
+        checkButton.textContent = 'Correct';
+        nextButton.disabled = false;
+        checkButton.style.backgroundColor = 'green';
+      } else {
+        checkButton.textContent = 'Incorrect. Try again';
+        checkButton.style.backgroundColor = 'red';
+      }
+    });
+  }
 }
-}
-
-
 
 function checkResultOrder(originalSentence: string) {
   const resultBlock = document.getElementById('result-block');
@@ -263,9 +253,6 @@ function checkResultOrder(originalSentence: string) {
 
   console.log('Порядок слов совпадает');
   return true;
-
 }
-
-
 
 export default MainPage;

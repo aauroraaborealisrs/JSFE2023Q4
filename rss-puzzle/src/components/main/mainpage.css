@@ -42,7 +42,7 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  order: 1;
+  order: 2;
 }
 
 #check-sentence-button {
@@ -68,4 +68,3 @@
   color: #666;
   cursor: not-allowed;
 }
-
