@@ -9,9 +9,19 @@
 .word {
   background-color: cadetblue;
   border-radius: 5px;
-  padding: 10px;
-  margin: 0 5px;
+  /* padding: 10px; */
+  /* margin: 0 5px; */
   cursor: pointer;
+  width: 83px !important;
+  /* width: fit-content; */
+  height: 43px !important;
+  -webkit-mask: url('middle.svg') no-repeat; 
+  mask: url('middle.svg') no-repeat;
+  text-align: center; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  margin-left: -17px;
 }
 
 .word:hover {
@@ -31,6 +41,7 @@
   border-radius: 5px;
   width: 743px;
   height: 39px;
+  padding: 0 20px;
 }
 
 #next-sentence-button {

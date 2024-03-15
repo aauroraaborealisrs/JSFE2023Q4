@@ -30,7 +30,7 @@ class MainPage {
     const resultBlock = document.createElement('div');
     resultBlock.id = 'result-block';
     resultBlock.style.border = '1px solid black';
-    resultBlock.style.padding = '10px';
+    // resultBlock.style.padding = '10px';
     resultBlock.style.marginTop = '20px';
     document.getElementById('main-page').appendChild(resultBlock);
 
@@ -157,6 +157,11 @@ function autoComplete() {
       wordDiv.classList.add('word');
       resultBlock.appendChild(wordDiv);
     });
+
+    const checkButton = document.getElementById(
+      'check-sentence-button');
+
+      checkButton.style.visibility = 'hidden';
 
     const nextButton = document.getElementById(
       'next-sentence-button',
