@@ -2,6 +2,8 @@ import './mainpage.css';
 
 let currentSentenceIndex = 0;
 let currentSentence: string = '';
+let originalSentence = ''; // Declare this variable at the top of your script
+
 class MainPage {
   sentences: string[] = [];
   constructor() {
@@ -10,6 +12,7 @@ class MainPage {
   render() {
     const mainPage = `
         <div id="main-page">
+        <button id="auto-complete-button">Auto-Complete</button>
         <div id="sentence-container"></div>
         <button id="next-sentence-button">Continue</button>
         <button id="check-sentence-button">Check</button>
@@ -53,7 +56,14 @@ class MainPage {
       'check-sentence-button',
     ) as HTMLButtonElement;
     checkButton.disabled = true;
+
+    // Add event listener to the 'Auto-Complete' button
+    const autoCompleteButton = document.getElementById(
+      'auto-complete-button',
+    ) as HTMLButtonElement;
+    autoCompleteButton.addEventListener('click', autoComplete);
   }
+
   getSentences(): string[] {
     return this.sentences;
   }
@@ -93,6 +103,7 @@ function displaySentence(sentences: string[]) {
   const sentenceContainer = document.getElementById('sentence-container');
   if (sentenceContainer) {
     currentSentence = sentences[currentSentenceIndex];
+    originalSentence = currentSentence; // Store the original sentence
     let words = sentences[currentSentenceIndex].split(' ');
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
@@ -123,6 +134,33 @@ function shuffleArray<T>(array: T[]): T[] {
     arrayCopy[randomIndex] = temporaryValue;
   }
   return arrayCopy;
+}
+
+function autoComplete() {
+  const resultBlock = document.getElementById('result-block');
+  const sentenceContainer = document.getElementById('sentence-container');
+
+  if (resultBlock) {
+    // Clear the result block
+    resultBlock.innerHTML = '';
+    sentenceContainer.innerHTML = '';
+
+    // Split the original sentence into words
+    const wordsInOriginal = originalSentence.split(' ');
+
+    // Add the words back to the result block in the correct order
+    wordsInOriginal.forEach((word) => {
+      const wordDiv = document.createElement('div');
+      wordDiv.textContent = word;
+      wordDiv.classList.add('word');
+      resultBlock.appendChild(wordDiv);
+    });
+
+    const nextButton = document.getElementById(
+      'next-sentence-button',
+    ) as HTMLButtonElement;
+    nextButton.disabled = false;
+  }
 }
 
 function nextSentence(sentences: string[]) {

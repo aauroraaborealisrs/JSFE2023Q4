@@ -68,3 +68,14 @@
   color: #666;
   cursor: not-allowed;
 }
+
+#auto-complete-button {
+  margin-bottom: 30px;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  background-color: rgb(107, 71, 161);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
