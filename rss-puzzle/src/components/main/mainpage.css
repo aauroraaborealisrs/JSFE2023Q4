@@ -33,7 +33,7 @@
   height: 39px;
 }
 
-/* #next-sentence-button {
+#next-sentence-button {
   margin-top: 30px;
   padding: 10px 20px;
   font-size: 1.2em;
@@ -42,4 +42,11 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-} */
+  order: 1;
+}
+
+#next-sentence-button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
