@@ -12,6 +12,7 @@
   padding: 10px;
   margin: 0 5px;
   cursor: pointer;
+  height: fit-content;
 }
 
 .word:hover {
@@ -80,4 +81,22 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+#completed-sentences-container{
+  display: flex;
+  flex-wrap: wrap;
+  width: 743px;
+  height: 388px;
+  background-color: aquamarine;
+  align-content: flex-start;
+  margin-bottom: 50px;
+}
+
+
+.sentence-line{
+  display: flex;
+  width: 743px;
+  height: fit-content;
+  justify-content: space-between;
 }
