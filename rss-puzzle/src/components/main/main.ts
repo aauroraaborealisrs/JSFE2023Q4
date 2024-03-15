@@ -57,13 +57,12 @@ class MainPage {
     ) as HTMLButtonElement;
     checkButton.disabled = true;
 
-        // Add event listener to the 'Auto-Complete' button
-    const autoCompleteButton = document.getElementById('auto-complete-button') as HTMLButtonElement;
+    // Add event listener to the 'Auto-Complete' button
+    const autoCompleteButton = document.getElementById(
+      'auto-complete-button',
+    ) as HTMLButtonElement;
     autoCompleteButton.addEventListener('click', autoComplete);
-
   }
-
-  
 
   getSentences(): string[] {
     return this.sentences;
@@ -98,8 +97,6 @@ async function fetchWordData() {
     console.error('Error fetching word data:', error);
   }
 }
-
-
 
 //отображает предложение
 function displaySentence(sentences: string[]) {
@@ -139,16 +136,14 @@ function shuffleArray<T>(array: T[]): T[] {
   return arrayCopy;
 }
 
-
 function autoComplete() {
- const resultBlock = document.getElementById('result-block');
- const sentenceContainer = document.getElementById('sentence-container');
+  const resultBlock = document.getElementById('result-block');
+  const sentenceContainer = document.getElementById('sentence-container');
 
- if (resultBlock) {
+  if (resultBlock) {
     // Clear the result block
     resultBlock.innerHTML = '';
     sentenceContainer.innerHTML = '';
-
 
     // Split the original sentence into words
     const wordsInOriginal = originalSentence.split(' ');
@@ -165,7 +160,7 @@ function autoComplete() {
       'next-sentence-button',
     ) as HTMLButtonElement;
     nextButton.disabled = false;
- }
+  }
 }
 
 function nextSentence(sentences: string[]) {
