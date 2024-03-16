@@ -111,7 +111,7 @@ function displaySentence(sentences: string[]) {
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
-      wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
+      // wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
       wordDiv.addEventListener('click', handleWordClick);
       sentenceContainer.appendChild(wordDiv);
     });
@@ -200,7 +200,7 @@ function handleWordClick(e: MouseEvent) {
 
   if (resultBlock && wordDiv) {
     const originalSize = wordDiv.offsetWidth;
-    wordDiv.setAttribute('data-original-size', originalSize.toString());
+    // wordDiv.setAttribute('data-original-size', originalSize.toString());
     checkButton.textContent = 'Check';
 
     if (resultBlock.contains(wordDiv)) {
@@ -220,10 +220,10 @@ function handleWordClick(e: MouseEvent) {
       checkSentenceContainer();
     }
 
-    const savedSize = wordDiv.getAttribute('data-original-size');
-    if (savedSize) {
-      wordDiv.style.width = savedSize + 'px';
-    }
+    // const savedSize = wordDiv.getAttribute('data-original-size');
+    // if (savedSize) {
+    //   wordDiv.style.width = savedSize + 'px';
+    // }
   }
 
   const sentenceContainer = document.getElementById('sentence-container');
