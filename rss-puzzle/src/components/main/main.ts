@@ -3,6 +3,7 @@ import './mainpage.css';
 let currentSentenceIndex = 0;
 let currentSentence: string = '';
 let originalSentence = '';
+let wordData: WordData;
 
 class MainPage {
   sentences: string[] = [];
@@ -12,6 +13,7 @@ class MainPage {
   render() {
     const mainPage = `
         <div id="main-page">
+        <div id="translation"></div>
         <button id="auto-complete-button">Auto-Complete</button>
         <div id="sentence-container"></div>
         <button id="next-sentence-button">Continue</button>
@@ -20,25 +22,56 @@ class MainPage {
     `;
     document.getElementById('app').innerHTML = mainPage;
 
+    // fetchWordData()
+    //   .then(extractSentences)
+    //   .then((fetchedSentences) => {
+    //     this.sentences = fetchedSentences;
+    //     displaySentence(this.sentences);
+    //     displayTranslation(this.sentences);
+    //   })
+    //   .then(extractTranslations);
+
+    // fetchWordData()
+    // .then((data) => {
+    //   wordData = data;
+    //   return extractSentences(wordData);
+    // })
+    // .then((fetchedSentences) => {
+    //   this.sentences = fetchedSentences;
+    //   displaySentence(wordData);
+    //   return extractTranslations(); // передаем wordData
+    // })
+    // .then((translations) => {
+    //   displayTranslation(translations);
+    // });
+  
     fetchWordData()
-      .then(extractSentences)
-      .then((fetchedSentences) => {
-        this.sentences = fetchedSentences;
-        displaySentence(this.sentences);
-      });
+  .then((data) => {
+    wordData = data;
+    return extractSentences(wordData);
+  })
+  .then((fetchedSentences) => {
+    this.sentences = fetchedSentences;
+    displaySentence(wordData);
+    return extractTranslations();
+  })
+  .then((translations) => {
+    displayTranslation(wordData);
+  });
 
-    const resultBlock = document.createElement('div');
-    resultBlock.id = 'result-block';
-    resultBlock.style.border = '1px solid black';
-    resultBlock.style.padding = '10px';
-    resultBlock.style.marginTop = '20px';
-    document.getElementById('main-page').appendChild(resultBlock);
-
-    document
-      .getElementById('next-sentence-button')
-      .addEventListener('click', () => {
-        nextSentence(this.sentences);
-      });
+  const resultBlock = document.createElement('div');
+  resultBlock.id = 'result-block';
+  resultBlock.style.border = '1px solid black';
+  resultBlock.style.padding = '10px';
+  resultBlock.style.marginTop = '20px';
+  document.getElementById('main-page').appendChild(resultBlock);
+  
+  document
+    .getElementById('next-sentence-button')
+    .addEventListener('click', () => {
+      nextSentence(wordData); // передаем wordData
+    });
+  
 
     const nextButton = document.getElementById(
       'next-sentence-button',
@@ -64,7 +97,9 @@ class MainPage {
       'auto-complete-button',
     ) as HTMLButtonElement;
     autoCompleteButton.addEventListener('click', autoComplete);
+
   }
+  
 
   getSentences(): string[] {
     return this.sentences;
@@ -73,6 +108,7 @@ class MainPage {
 
 interface Word {
   textExample: string;
+  textExampleTranslate: string; 
 }
 
 interface Round {
@@ -92,21 +128,44 @@ async function fetchWordData() {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await response.json();
-    console.log('Fetched data:', data);
-    return data;
+    wordData = await response.json();
+    console.log('Fetched data:', wordData);
+    
+    return wordData;
+    
   } catch (error) {
     console.error('Error fetching word data:', error);
   }
 }
 
 //отображает предложение
-function displaySentence(sentences: string[]) {
+// function displaySentence(sentences: string[]) {
+//   const sentenceContainer = document.getElementById('sentence-container');
+//   if (sentenceContainer) {
+//     currentSentence = sentences[currentSentenceIndex];
+//     originalSentence = currentSentence;
+//     let words = sentences[currentSentenceIndex].split(' ');
+//     let shuffledWords = shuffleArray([...words]);
+//     sentenceContainer.innerHTML = '';
+//     shuffledWords.forEach((word) => {
+//       const wordDiv = document.createElement('div');
+//       wordDiv.textContent = word;
+//       wordDiv.classList.add('word');
+//       wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
+//       wordDiv.addEventListener('click', handleWordClick);
+//       sentenceContainer.appendChild(wordDiv);
+//         });
+//   } else {
+//     console.error('Element with ID "sentence-container" not found');
+//   }
+// }
+
+function displaySentence(wordData: WordData) {
   const sentenceContainer = document.getElementById('sentence-container');
   if (sentenceContainer) {
-    currentSentence = sentences[currentSentenceIndex];
+    currentSentence = wordData.rounds[currentSentenceIndex]?.words[0]?.textExample || '';
     originalSentence = currentSentence;
-    let words = sentences[currentSentenceIndex].split(' ');
+    let words = currentSentence.split(' ');
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
     shuffledWords.forEach((word) => {
@@ -116,6 +175,7 @@ function displaySentence(sentences: string[]) {
       wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
       wordDiv.addEventListener('click', handleWordClick);
       sentenceContainer.appendChild(wordDiv);
+      
     });
   } else {
     console.error('Element with ID "sentence-container" not found');
@@ -171,7 +231,28 @@ function autoComplete() {
   }
 }
 
-function nextSentence(sentences: string[]) {
+// function nextSentence(sentences: string[]) {
+//   currentSentenceIndex++;
+//   const checkButton = document.getElementById(
+//     'check-sentence-button',
+//   ) as HTMLButtonElement;
+//   const nextButton = document.getElementById(
+//     'next-sentence-button',
+//   ) as HTMLButtonElement;
+//   nextButton.style.visibility = 'visible';
+//   checkButton.disabled = true;
+//   checkButton.textContent = 'Check';
+//   checkButton.style.backgroundColor = '#ccc';
+//   checkButton.style.visibility = 'visible';
+
+//   if (currentSentenceIndex < sentences.length) {
+//     displaySentence(sentences);
+//   } else {
+//     console.log('No more sentences to display');
+//   }
+// }
+
+function nextSentence(wordData: WordData) {
   currentSentenceIndex++;
   const checkButton = document.getElementById(
     'check-sentence-button',
@@ -185,8 +266,9 @@ function nextSentence(sentences: string[]) {
   checkButton.style.backgroundColor = '#ccc';
   checkButton.style.visibility = 'visible';
 
-  if (currentSentenceIndex < sentences.length) {
-    displaySentence(sentences);
+  if (currentSentenceIndex < wordData.rounds.length) {
+    displaySentence(wordData);
+    displayTranslation(wordData);
   } else {
     console.log('No more sentences to display');
   }
@@ -254,6 +336,59 @@ function extractSentences(wordData: WordData): string[] {
   return sentences;
 }
 
+function extractTranslations(): string[] {
+  const translations: string[] = [];
+
+  wordData.rounds.forEach((round) => {
+    round.words.forEach((word) => {
+      translations.push(word.textExampleTranslate);
+    });
+  });
+
+  console.log(translations);
+  return translations;
+}
+
+
+// function displayTranslation(translations: string[]) {
+
+//  const translationSpan = document.createElement('span');
+
+//   const translation =  translations[currentSentenceIndex];
+//   console.log(translation);
+
+//  translationSpan.textContent = translation;
+//  // Находим элемент, в который будем вставлять перевод
+//  const translationContainer = document.getElementById('translation');
+//  if (translationContainer) {
+//     // Очищаем контейнер перед вставкой нового перевода
+//     translationContainer.innerHTML = '';
+//     // Вставляем созданный элемент span в контейнер
+//     translationContainer.appendChild(translationSpan);
+//  } else {
+//     console.error('Element with ID "translation" not found');
+//  }
+// }
+
+function displayTranslation(wordData: WordData) {
+  const translationSpan = document.createElement('span');
+  
+  const translation = wordData.rounds[currentSentenceIndex]?.words[0]?.textExampleTranslate || '';
+  console.log(translation);
+  
+  translationSpan.textContent = translation;
+  
+  const translationContainer = document.getElementById('translation');
+  if (translationContainer) {
+    translationContainer.innerHTML = '';
+    translationContainer.appendChild(translationSpan);
+  } else {
+    console.error('Element with ID "translation" not found');
+  }
+}
+
+
+
 //ПРОВЕРКА ПРАВИЛЬНО ЛИ СОБРАЛ ПРЕДЛОЖЕНИЕ
 
 function checkSentenceContainer() {
@@ -312,5 +447,6 @@ function checkResultOrder(originalSentence: string) {
   console.log('Порядок слов совпадает');
   return true;
 }
+
 
 export default MainPage;
