@@ -335,54 +335,41 @@ const observer = new MutationObserver((mutations) => {
     if (mutation.type === 'childList') {
       const words = document.querySelectorAll('.word');
       console.log(`Найдено слов: ${words.length}`);
+      const resultBlock = document.getElementById('result-block');
+      console.log(`Найден: ${resultBlock}`);
+      const sentenceContainer = document.getElementById('sentence-container');
+      console.log(`Найден: ${sentenceContainer}`);
 
       words.forEach((word) => {
         word.setAttribute('draggable', 'true');
         word.id = `word-${word.textContent}`;
-        word.addEventListener('dragstart', drag);
-        console.log('Навешаны обработчики на слова по идее');
+        word.addEventListener('dragstart', function (e) {
+          let selected = e.target;
+          console.log(selected);
+
+          resultBlock.addEventListener('dragover', function (e) {
+            e.preventDefault();
+          });
+
+          resultBlock.addEventListener('drop', function (e) {
+            resultBlock.appendChild(selected as Node);
+            selected = null;
+          });
+
+          sentenceContainer.addEventListener('dragover', function (e) {
+            e.preventDefault();
+          });
+
+          sentenceContainer.addEventListener('drop', function (e) {
+            sentenceContainer.appendChild(selected as Node);
+            selected = null;
+          });
+        });
       });
-
-      const resultBlock = document.getElementById('result-block');
-      const sentenceContainer = document.getElementById('sentence-container');
-
-      if (resultBlock) {
-        resultBlock.addEventListener('dragover', allowDrop);
-        resultBlock.addEventListener('drop', drop);
-        console.log('навешаны обработчики на результат');
-      }
-
-      if (sentenceContainer) {
-        console.log('навешаны обработчики на контейнер');
-      }
     }
   });
 });
 
 observer.observe(document.body, { childList: true, subtree: true });
-
-function drop(event: DragEvent) {
-  console.log('я в дропе');
-
-  event.preventDefault();
-  const itemId = event.dataTransfer.getData('text/plain'); // Получаем данные из буфера передачи
-  console.log(itemId);
-  const draggedElement = document.getElementById(itemId);
-  if (draggedElement) {
-    (event.target as HTMLElement).appendChild(draggedElement); // Перемещаем элемент в целевой контейнер
-  }
-}
-
-function drag(event: DragEvent) {
-  console.log('я в драге');
-  event.dataTransfer.setData('text/plain', (event.target as HTMLElement).id); // Устанавливаем данные в буфер передачи
-}
-
-function allowDrop(event: DragEvent) {
-  console.log('я в аллоудропе');
-
-  event.preventDefault();
-  console.log('[event');
-}
 
 export default MainPage;
