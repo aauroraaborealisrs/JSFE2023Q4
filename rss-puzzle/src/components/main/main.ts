@@ -4,6 +4,7 @@ let currentSentenceIndex = 0;
 let currentSentence: string = '';
 let originalSentence = '';
 let wordData: WordData;
+let currentRound = 0;
 
 class MainPage {
   sentences: string[] = [];
@@ -44,34 +45,33 @@ class MainPage {
     // .then((translations) => {
     //   displayTranslation(translations);
     // });
-  
-    fetchWordData()
-  .then((data) => {
-    wordData = data;
-    return extractSentences(wordData);
-  })
-  .then((fetchedSentences) => {
-    this.sentences = fetchedSentences;
-    displaySentence(wordData);
-    return extractTranslations();
-  })
-  .then((translations) => {
-    displayTranslation(wordData);
-  });
 
-  const resultBlock = document.createElement('div');
-  resultBlock.id = 'result-block';
-  resultBlock.style.border = '1px solid black';
-  resultBlock.style.padding = '10px';
-  resultBlock.style.marginTop = '20px';
-  document.getElementById('main-page').appendChild(resultBlock);
-  
-  document
-    .getElementById('next-sentence-button')
-    .addEventListener('click', () => {
-      nextSentence(wordData); // передаем wordData
-    });
-  
+    fetchWordData()
+      .then((data) => {
+        wordData = data;
+        return extractSentences(wordData);
+      })
+      .then((fetchedSentences) => {
+        this.sentences = fetchedSentences;
+        displaySentence(wordData);
+        return extractTranslations();
+      })
+      .then((translations) => {
+        displayTranslation(wordData);
+      });
+
+    const resultBlock = document.createElement('div');
+    resultBlock.id = 'result-block';
+    resultBlock.style.border = '1px solid black';
+    resultBlock.style.padding = '10px';
+    resultBlock.style.marginTop = '20px';
+    document.getElementById('main-page').appendChild(resultBlock);
+
+    document
+      .getElementById('next-sentence-button')
+      .addEventListener('click', () => {
+        nextSentence(wordData); // передаем wordData
+      });
 
     const nextButton = document.getElementById(
       'next-sentence-button',
@@ -97,9 +97,7 @@ class MainPage {
       'auto-complete-button',
     ) as HTMLButtonElement;
     autoCompleteButton.addEventListener('click', autoComplete);
-
   }
-  
 
   getSentences(): string[] {
     return this.sentences;
@@ -108,7 +106,7 @@ class MainPage {
 
 interface Word {
   textExample: string;
-  textExampleTranslate: string; 
+  textExampleTranslate: string;
 }
 
 interface Round {
@@ -130,9 +128,8 @@ async function fetchWordData() {
     }
     wordData = await response.json();
     console.log('Fetched data:', wordData);
-    
+
     return wordData;
-    
   } catch (error) {
     console.error('Error fetching word data:', error);
   }
@@ -160,10 +157,17 @@ async function fetchWordData() {
 //   }
 // }
 
+// Предполагается, что currentSentenceIndex теперь будет индексом для перебора всех слов в wordData
+
+
+
+
+
 function displaySentence(wordData: WordData) {
   const sentenceContainer = document.getElementById('sentence-container');
   if (sentenceContainer) {
-    currentSentence = wordData.rounds[currentSentenceIndex]?.words[0]?.textExample || '';
+    currentSentence = wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample || '';
+
     originalSentence = currentSentence;
     let words = currentSentence.split(' ');
     let shuffledWords = shuffleArray([...words]);
@@ -175,7 +179,6 @@ function displaySentence(wordData: WordData) {
       wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
       wordDiv.addEventListener('click', handleWordClick);
       sentenceContainer.appendChild(wordDiv);
-      
     });
   } else {
     console.error('Element with ID "sentence-container" not found');
@@ -254,6 +257,10 @@ function autoComplete() {
 
 function nextSentence(wordData: WordData) {
   currentSentenceIndex++;
+  if (currentSentenceIndex%10 == 0){
+    currentRound++;
+    currentSentenceIndex = 0;
+  }
   const checkButton = document.getElementById(
     'check-sentence-button',
   ) as HTMLButtonElement;
@@ -349,7 +356,6 @@ function extractTranslations(): string[] {
   return translations;
 }
 
-
 // function displayTranslation(translations: string[]) {
 
 //  const translationSpan = document.createElement('span');
@@ -372,12 +378,12 @@ function extractTranslations(): string[] {
 
 function displayTranslation(wordData: WordData) {
   const translationSpan = document.createElement('span');
-  
-  const translation = wordData.rounds[currentSentenceIndex]?.words[0]?.textExampleTranslate || '';
+  console.log(currentSentenceIndex, currentRound )
+  const translation = wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExampleTranslate || '';
   console.log(translation);
-  
+
   translationSpan.textContent = translation;
-  
+
   const translationContainer = document.getElementById('translation');
   if (translationContainer) {
     translationContainer.innerHTML = '';
@@ -386,8 +392,6 @@ function displayTranslation(wordData: WordData) {
     console.error('Element with ID "translation" not found');
   }
 }
-
-
 
 //ПРОВЕРКА ПРАВИЛЬНО ЛИ СОБРАЛ ПРЕДЛОЖЕНИЕ
 
@@ -447,6 +451,5 @@ function checkResultOrder(originalSentence: string) {
   console.log('Порядок слов совпадает');
   return true;
 }
-
 
 export default MainPage;
