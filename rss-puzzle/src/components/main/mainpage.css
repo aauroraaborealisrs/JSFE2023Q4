@@ -6,13 +6,13 @@
   align-items: center;
 }
 
-.word {
+/* .word {
   background-color: cadetblue;
   border-radius: 5px;
   padding: 10px;
   margin: 0 5px;
   cursor: pointer;
-}
+} */
 
 .word:hover {
   background-color: rgb(80, 173, 42);
@@ -90,7 +90,7 @@
   display: flex;
   flex-wrap: wrap;
   width: 743px;
-  height: 388px;
+  height: 430px;
   background-color: aquamarine;
   align-content: flex-start;
   margin-bottom: 50px;
@@ -101,4 +101,24 @@
   width: 743px;
   height: fit-content;
   justify-content: space-between;
+}
+
+.word {
+  background-color: cadetblue;
+  border-radius: 5px;
+  /* padding: 10px; */
+  /* margin: 0 5px; */
+  cursor: pointer;
+  width: 148px !important;
+  /* width: fit-content; */
+  height: 43px !important;
+  background: url('test2.png') no-repeat;
+  background-size: 100% 100%;
+  /* mask: url('middle.svg') no-repeat; */
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: -14px;
+  padding-right: 14px;
 }

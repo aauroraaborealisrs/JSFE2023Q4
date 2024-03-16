@@ -224,7 +224,7 @@ function nextSentence(wordData: WordData) {
 
     completedSentencesContainer.appendChild(newLineDiv);
 
-    if (completedSentencesContainer.children.length > 9) {
+    if (currentSentenceIndex % 10 == 0) {
       while (completedSentencesContainer.firstChild) {
         completedSentencesContainer.removeChild(
           completedSentencesContainer.firstChild,
