@@ -23,29 +23,6 @@ class MainPage {
     `;
     document.getElementById('app').innerHTML = mainPage;
 
-    // fetchWordData()
-    //   .then(extractSentences)
-    //   .then((fetchedSentences) => {
-    //     this.sentences = fetchedSentences;
-    //     displaySentence(this.sentences);
-    //     displayTranslation(this.sentences);
-    //   })
-    //   .then(extractTranslations);
-
-    // fetchWordData()
-    // .then((data) => {
-    //   wordData = data;
-    //   return extractSentences(wordData);
-    // })
-    // .then((fetchedSentences) => {
-    //   this.sentences = fetchedSentences;
-    //   displaySentence(wordData);
-    //   return extractTranslations(); // передаем wordData
-    // })
-    // .then((translations) => {
-    //   displayTranslation(translations);
-    // });
-
     fetchWordData()
       .then((data) => {
         wordData = data;
@@ -70,7 +47,7 @@ class MainPage {
     document
       .getElementById('next-sentence-button')
       .addEventListener('click', () => {
-        nextSentence(wordData); // передаем wordData
+        nextSentence(wordData);
       });
 
     const nextButton = document.getElementById(
@@ -135,38 +112,12 @@ async function fetchWordData() {
   }
 }
 
-//отображает предложение
-// function displaySentence(sentences: string[]) {
-//   const sentenceContainer = document.getElementById('sentence-container');
-//   if (sentenceContainer) {
-//     currentSentence = sentences[currentSentenceIndex];
-//     originalSentence = currentSentence;
-//     let words = sentences[currentSentenceIndex].split(' ');
-//     let shuffledWords = shuffleArray([...words]);
-//     sentenceContainer.innerHTML = '';
-//     shuffledWords.forEach((word) => {
-//       const wordDiv = document.createElement('div');
-//       wordDiv.textContent = word;
-//       wordDiv.classList.add('word');
-//       wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
-//       wordDiv.addEventListener('click', handleWordClick);
-//       sentenceContainer.appendChild(wordDiv);
-//         });
-//   } else {
-//     console.error('Element with ID "sentence-container" not found');
-//   }
-// }
-
-// Предполагается, что currentSentenceIndex теперь будет индексом для перебора всех слов в wordData
-
-
-
-
-
 function displaySentence(wordData: WordData) {
   const sentenceContainer = document.getElementById('sentence-container');
   if (sentenceContainer) {
-    currentSentence = wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample || '';
+    currentSentence =
+      wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample ||
+      '';
 
     originalSentence = currentSentence;
     let words = currentSentence.split(' ');
@@ -234,30 +185,9 @@ function autoComplete() {
   }
 }
 
-// function nextSentence(sentences: string[]) {
-//   currentSentenceIndex++;
-//   const checkButton = document.getElementById(
-//     'check-sentence-button',
-//   ) as HTMLButtonElement;
-//   const nextButton = document.getElementById(
-//     'next-sentence-button',
-//   ) as HTMLButtonElement;
-//   nextButton.style.visibility = 'visible';
-//   checkButton.disabled = true;
-//   checkButton.textContent = 'Check';
-//   checkButton.style.backgroundColor = '#ccc';
-//   checkButton.style.visibility = 'visible';
-
-//   if (currentSentenceIndex < sentences.length) {
-//     displaySentence(sentences);
-//   } else {
-//     console.log('No more sentences to display');
-//   }
-// }
-
 function nextSentence(wordData: WordData) {
   currentSentenceIndex++;
-  if (currentSentenceIndex%10 == 0){
+  if (currentSentenceIndex % 10 == 0) {
     currentRound++;
     currentSentenceIndex = 0;
   }
@@ -356,30 +286,13 @@ function extractTranslations(): string[] {
   return translations;
 }
 
-// function displayTranslation(translations: string[]) {
-
-//  const translationSpan = document.createElement('span');
-
-//   const translation =  translations[currentSentenceIndex];
-//   console.log(translation);
-
-//  translationSpan.textContent = translation;
-//  // Находим элемент, в который будем вставлять перевод
-//  const translationContainer = document.getElementById('translation');
-//  if (translationContainer) {
-//     // Очищаем контейнер перед вставкой нового перевода
-//     translationContainer.innerHTML = '';
-//     // Вставляем созданный элемент span в контейнер
-//     translationContainer.appendChild(translationSpan);
-//  } else {
-//     console.error('Element with ID "translation" not found');
-//  }
-// }
-
 function displayTranslation(wordData: WordData) {
   const translationSpan = document.createElement('span');
-  console.log(currentSentenceIndex, currentRound )
-  const translation = wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExampleTranslate || '';
+  translationSpan.classList.add('translation-hint');
+  console.log(currentSentenceIndex, currentRound);
+  const translation =
+    wordData.rounds[currentRound]?.words[currentSentenceIndex]
+      ?.textExampleTranslate || '';
   console.log(translation);
 
   translationSpan.textContent = translation;
