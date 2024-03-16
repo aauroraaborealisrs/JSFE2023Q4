@@ -3,6 +3,8 @@ import './mainpage.css';
 let currentSentenceIndex = 0;
 let currentSentence: string = '';
 let originalSentence = '';
+let wordData: WordData;
+let currentRound = 0;
 
 class MainPage {
   sentences: string[] = [];
@@ -12,6 +14,7 @@ class MainPage {
   render() {
     const mainPage = `
         <div id="main-page">
+        <div id="translation"></div>
         <button id="auto-complete-button">Auto-Complete</button>
         <div id="sentence-container"></div>
         <button id="next-sentence-button">Continue</button>
@@ -21,10 +24,17 @@ class MainPage {
     document.getElementById('app').innerHTML = mainPage;
 
     fetchWordData()
-      .then(extractSentences)
+      .then((data) => {
+        wordData = data;
+        return extractSentences(wordData);
+      })
       .then((fetchedSentences) => {
         this.sentences = fetchedSentences;
-        displaySentence(this.sentences);
+        displaySentence(wordData);
+        return extractTranslations();
+      })
+      .then((translations) => {
+        displayTranslation(wordData);
       });
 
     const resultBlock = document.createElement('div');
@@ -37,7 +47,7 @@ class MainPage {
     document
       .getElementById('next-sentence-button')
       .addEventListener('click', () => {
-        nextSentence(this.sentences);
+        nextSentence(wordData);
       });
 
     const nextButton = document.getElementById(
@@ -73,6 +83,7 @@ class MainPage {
 
 interface Word {
   textExample: string;
+  textExampleTranslate: string;
 }
 
 interface Round {
@@ -92,21 +103,24 @@ async function fetchWordData() {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await response.json();
-    console.log('Fetched data:', data);
-    return data;
+    wordData = await response.json();
+    console.log('Fetched data:', wordData);
+
+    return wordData;
   } catch (error) {
     console.error('Error fetching word data:', error);
   }
 }
 
-//отображает предложение
-function displaySentence(sentences: string[]) {
+function displaySentence(wordData: WordData) {
   const sentenceContainer = document.getElementById('sentence-container');
   if (sentenceContainer) {
-    currentSentence = sentences[currentSentenceIndex];
+    currentSentence =
+      wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample ||
+      '';
+
     originalSentence = currentSentence;
-    let words = sentences[currentSentenceIndex].split(' ');
+    let words = currentSentence.split(' ');
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
     shuffledWords.forEach((word) => {
@@ -171,8 +185,12 @@ function autoComplete() {
   }
 }
 
-function nextSentence(sentences: string[]) {
+function nextSentence(wordData: WordData) {
   currentSentenceIndex++;
+  if (currentSentenceIndex % 10 == 0) {
+    currentRound++;
+    currentSentenceIndex = 0;
+  }
   const checkButton = document.getElementById(
     'check-sentence-button',
   ) as HTMLButtonElement;
@@ -185,8 +203,9 @@ function nextSentence(sentences: string[]) {
   checkButton.style.backgroundColor = '#ccc';
   checkButton.style.visibility = 'visible';
 
-  if (currentSentenceIndex < sentences.length) {
-    displaySentence(sentences);
+  if (currentSentenceIndex < wordData.rounds.length) {
+    displaySentence(wordData);
+    displayTranslation(wordData);
   } else {
     console.log('No more sentences to display');
   }
@@ -252,6 +271,39 @@ function extractSentences(wordData: WordData): string[] {
   });
   console.log(sentences);
   return sentences;
+}
+
+function extractTranslations(): string[] {
+  const translations: string[] = [];
+
+  wordData.rounds.forEach((round) => {
+    round.words.forEach((word) => {
+      translations.push(word.textExampleTranslate);
+    });
+  });
+
+  console.log(translations);
+  return translations;
+}
+
+function displayTranslation(wordData: WordData) {
+  const translationSpan = document.createElement('span');
+  translationSpan.classList.add('translation-hint');
+  console.log(currentSentenceIndex, currentRound);
+  const translation =
+    wordData.rounds[currentRound]?.words[currentSentenceIndex]
+      ?.textExampleTranslate || '';
+  console.log(translation);
+
+  translationSpan.textContent = translation;
+
+  const translationContainer = document.getElementById('translation');
+  if (translationContainer) {
+    translationContainer.innerHTML = '';
+    translationContainer.appendChild(translationSpan);
+  } else {
+    console.error('Element with ID "translation" not found');
+  }
 }
 
 //ПРОВЕРКА ПРАВИЛЬНО ЛИ СОБРАЛ ПРЕДЛОЖЕНИЕ

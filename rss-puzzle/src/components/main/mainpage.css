@@ -81,3 +81,7 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
+#translation {
+  margin-bottom: 40px;
+}
