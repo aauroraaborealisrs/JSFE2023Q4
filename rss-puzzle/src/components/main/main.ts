@@ -119,12 +119,19 @@ function displaySentence(wordData: WordData) {
     currentSentence =
       wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample ||
       '';
+      // wordData.rounds[2]?.words[5]
+      // ?.textExample || '';
 
     originalSentence = currentSentence;
     let words = currentSentence.split(' ');
 
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
+
+    const isFewWords = words.length <= 4;
+    const isFiveWords = words.length == 5;
+
+
     shuffledWords.forEach((word) => {
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
@@ -137,6 +144,12 @@ function displaySentence(wordData: WordData) {
       }
       if (word === words[words.length - 1]) {
         wordDiv.classList.add('last-word'); 
+      }
+      if (isFewWords) {
+        wordDiv.classList.add('few-words'); 
+      }
+      if (isFiveWords) {
+        wordDiv.classList.add('five-words'); 
       }
 
       sentenceContainer.appendChild(wordDiv);
@@ -178,6 +191,9 @@ function autoComplete() {
 
     const wordsInOriginal = originalSentence.split(' ');
 
+    const isFewWords = wordsInOriginal.length <= 4;
+    const isFiveWords = wordsInOriginal.length == 5;
+
     wordsInOriginal.forEach((word) => {
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
@@ -189,6 +205,12 @@ function autoComplete() {
       }
       if (word === wordsInOriginal[wordsInOriginal.length - 1]) {
         wordDiv.classList.add('last-word'); 
+      }
+      if (isFewWords) {
+        wordDiv.classList.add('few-words'); 
+      }
+      if (isFiveWords) {
+        wordDiv.classList.add('five-words'); 
       }
     });
 
@@ -333,6 +355,8 @@ function displayTranslation(wordData: WordData) {
   const translation =
     wordData.rounds[currentRound]?.words[currentSentenceIndex]
       ?.textExampleTranslate || '';
+    // wordData.rounds[2]?.words[5]
+    // ?.textExampleTranslate || '';
   console.log(translation);
 
   translationSpan.textContent = translation;
