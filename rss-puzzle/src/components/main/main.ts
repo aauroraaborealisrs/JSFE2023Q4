@@ -158,10 +158,9 @@ function autoComplete() {
       resultBlock.appendChild(wordDiv);
     });
 
-    const checkButton = document.getElementById(
-      'check-sentence-button');
+    const checkButton = document.getElementById('check-sentence-button');
 
-      checkButton.style.visibility = 'hidden';
+    checkButton.style.visibility = 'hidden';
 
     const nextButton = document.getElementById(
       'next-sentence-button',

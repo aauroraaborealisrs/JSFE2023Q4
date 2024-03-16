@@ -56,9 +56,6 @@
   padding-right:  14px;
 } */
 
-
-
-
 .word {
   background-color: cadetblue;
   border-radius: 5px;
@@ -71,12 +68,12 @@
   background: url('test2.png') no-repeat;
   background-size: 100% 100%;
   /* mask: url('middle.svg') no-repeat; */
-  text-align: center; 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-left: -14px;
-  padding-right:  14px;
+  padding-right: 14px;
 }
 
 .clipped-div {
@@ -93,9 +90,7 @@
   background-color: red;
   -webkit-mask: url('test1.svg') no-repeat;
   mask: url('test1.svg') no-repeat;
-
 }
-
 
 .word:hover {
   background-color: rgb(80, 173, 42);
