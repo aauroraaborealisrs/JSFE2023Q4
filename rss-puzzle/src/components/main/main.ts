@@ -122,6 +122,7 @@ function displaySentence(wordData: WordData) {
 
     originalSentence = currentSentence;
     let words = currentSentence.split(' ');
+
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
     shuffledWords.forEach((word) => {
@@ -130,8 +131,17 @@ function displaySentence(wordData: WordData) {
       wordDiv.classList.add('word');
       wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
       wordDiv.addEventListener('click', handleWordClick);
+
+      if (word === words[0]) {
+        wordDiv.classList.add('first-word'); 
+      }
+      if (word === words[words.length - 1]) {
+        wordDiv.classList.add('last-word'); 
+      }
+
       sentenceContainer.appendChild(wordDiv);
     });
+
   } else {
     console.error('Element with ID "sentence-container" not found');
   }
@@ -173,6 +183,13 @@ function autoComplete() {
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
       resultBlock.appendChild(wordDiv);
+
+      if (word === wordsInOriginal[0]) {
+        wordDiv.classList.add('first-word'); 
+      }
+      if (word === wordsInOriginal[wordsInOriginal.length - 1]) {
+        wordDiv.classList.add('last-word'); 
+      }
     });
 
     const checkButton = document.getElementById('check-sentence-button');

@@ -105,14 +105,13 @@
 
 .word {
   background-color: cadetblue;
-  border-radius: 5px;
   /* padding: 10px; */
   /* margin: 0 5px; */
   cursor: pointer;
   width: 148px !important;
   /* width: fit-content; */
   height: 43px !important;
-  background: url('test2.png') no-repeat;
+  background: url('middle.png') no-repeat;
   background-size: 100% 100%;
   /* mask: url('middle.svg') no-repeat; */
   text-align: center;
@@ -121,4 +120,14 @@
   align-items: center;
   margin-left: -14px;
   padding-right: 14px;
+}
+
+.last-word{
+  background: url('end.png') no-repeat;
+  background-size: 100% 100%;
+}
+
+.first-word{
+  background: url('start.png') no-repeat;
+  background-size: 100% 100%;
 }
