@@ -85,3 +85,20 @@
 #translation {
   margin-bottom: 40px;
 }
+
+#completed-sentences-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 743px;
+  height: 388px;
+  background-color: aquamarine;
+  align-content: flex-start;
+  margin-bottom: 50px;
+}
+
+.sentence-line {
+  display: flex;
+  width: 743px;
+  height: fit-content;
+  justify-content: space-between;
+}

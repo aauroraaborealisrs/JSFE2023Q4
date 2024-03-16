@@ -15,6 +15,7 @@ class MainPage {
     const mainPage = `
         <div id="main-page">
         <div id="translation"></div>
+        <div id="completed-sentences-container"></div>
         <button id="auto-complete-button">Auto-Complete</button>
         <div id="sentence-container"></div>
         <button id="next-sentence-button">Continue</button>
@@ -208,6 +209,28 @@ function nextSentence(wordData: WordData) {
     displayTranslation(wordData);
   } else {
     console.log('No more sentences to display');
+  }
+
+  const completedSentencesContainer = document.getElementById(
+    'completed-sentences-container',
+  );
+  const resultBlock = document.getElementById('result-block');
+  if (completedSentencesContainer && resultBlock) {
+    const newLineDiv = document.createElement('div');
+    newLineDiv.classList.add('sentence-line');
+    while (resultBlock.firstChild) {
+      newLineDiv.appendChild(resultBlock.firstChild);
+    }
+
+    completedSentencesContainer.appendChild(newLineDiv);
+
+    if (completedSentencesContainer.children.length > 9) {
+      while (completedSentencesContainer.firstChild) {
+        completedSentencesContainer.removeChild(
+          completedSentencesContainer.firstChild,
+        );
+      }
+    }
   }
 }
 
