@@ -116,8 +116,12 @@ async function fetchWordData() {
 
 //разбивает предложение на слова и показывает их
 
+
+
 function displaySentence(wordData: WordData) {
   const sentenceContainer = document.getElementById('sentence-container');
+  const resultBlock = document.getElementById('result-block');
+
   if (sentenceContainer) {
     currentSentence =
       wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample ||
@@ -137,6 +141,8 @@ function displaySentence(wordData: WordData) {
     shuffledWords.forEach((word) => {
       const wordPlaceholder = document.createElement('div');
       wordPlaceholder.classList.add('wordPlaceholder');
+      // const resultPlaceholder = document.createElement('div');
+      // resultPlaceholder.classList.add('resultPlaceholder');
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
@@ -158,12 +164,45 @@ function displaySentence(wordData: WordData) {
       }
 
       sentenceContainer.appendChild(wordPlaceholder);
+      // resultBlock.appendChild(resultPlaceholder);
       wordPlaceholder.appendChild(wordDiv);
+
     });
+
+    createResultPlaceholders();
+
   } else {
     console.error('Element with ID "sentence-container" not found');
   }
+  
 }
+
+
+function createResultPlaceholders(){
+  const resultBlock = document.getElementById('result-block');
+  currentSentence =  wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample || '';
+  let words = currentSentence.split(' ');
+
+  if(resultBlock){
+  words.forEach((word) => {
+    const resultPlaceholder = document.createElement('div');
+    resultPlaceholder.classList.add('resultPlaceholder');
+    resultBlock.appendChild(resultPlaceholder);
+
+    const resultPlaceholders = resultBlock.querySelectorAll('.resultPlaceholder');
+    const count = resultPlaceholders.length;
+
+    console.log(`Количество элементов с классом 'resultPlaceholder': ${count}`);
+    console.log("я в форыче твоем")
+
+  });
+
+  console.log("вызвана твоя тупая функция")
+
+}
+
+}
+
 
 // Функция для перемешивания массива
 function shuffleArray<T>(array: T[]): T[] {
@@ -230,6 +269,7 @@ function autoComplete() {
     ) as HTMLButtonElement;
     nextButton.disabled = false;
   }
+  
 }
 
 //показывает следующее предложение
@@ -263,24 +303,40 @@ function nextSentence(wordData: WordData) {
     'completed-sentences-container',
   );
   const resultBlock = document.getElementById('result-block');
+  const resultPlaceholders = resultBlock.querySelectorAll('.resultPlaceholder');
+
   if (completedSentencesContainer && resultBlock) {
     const newLineDiv = document.createElement('div');
     newLineDiv.classList.add('sentence-line');
     while (resultBlock.firstChild) {
       newLineDiv.appendChild(resultBlock.firstChild);
     }
+    resultPlaceholders.forEach((placeholder) => {
+      placeholder.remove();
+  });
 
     completedSentencesContainer.appendChild(newLineDiv);
 
-    if (currentSentenceIndex % 10 == 0) {
-      while (completedSentencesContainer.firstChild) {
-        completedSentencesContainer.removeChild(
-          completedSentencesContainer.firstChild,
-        );
-      }
-    }
-  }
+    // if (currentSentenceIndex % 10 == 0) {
+    //   console.log("все жетско удалено")
+    //   while (completedSentencesContainer.firstChild) {
+    //     completedSentencesContainer.removeChild(
+    //       completedSentencesContainer.firstChild,
+    //     );
+    //   }
+    // }
 
+    if (currentSentenceIndex % 10 == 0) {
+     console.log("все жетско удалено");
+     const sentenceLines = completedSentencesContainer.querySelectorAll('.sentence-line');
+     sentenceLines.forEach(line => {
+        completedSentencesContainer.removeChild(line);
+     });
+    }
+
+    createResultPlaceholders()
+
+  }
   waitForElements();
 }
 
@@ -295,6 +351,12 @@ function handleWordClick(e: MouseEvent) {
     checkButton.textContent = 'Check';
 
     if (resultBlock.contains(wordDiv)) {
+
+      const resultPlaceholder = document.createElement('div');
+      resultPlaceholder.classList.add('resultPlaceholder');
+      resultBlock.appendChild(resultPlaceholder);
+      console.log("я добавил")
+
       const wordPlaceholders = Array.from(
         document.querySelectorAll('#sentence-container .wordPlaceholder'),
       );
@@ -310,6 +372,14 @@ function handleWordClick(e: MouseEvent) {
         wordDiv.parentElement?.id || '',
       );
       resultBlock.appendChild(wordDiv);
+
+
+
+      const resultPlaceholders = resultBlock.querySelectorAll('.resultPlaceholder');
+      if (resultPlaceholders.length > 0) {
+        resultBlock.removeChild(resultPlaceholders[resultPlaceholders.length - 1]);
+        console.log("я удалил")
+      }
       checkSentenceContainer();
     }
   }
@@ -460,6 +530,7 @@ function waitForElements() {
   // const SentenceBlock = document.getElementById('sentence-container');
 
   const placeholders = document.querySelectorAll('.wordPlaceholder');
+  const resultsPlaceholders = document.querySelectorAll('.resultPlaceholder');
 
   if (words.length > 0 && containers.length > 0) {
     // console.log(words);
@@ -468,12 +539,16 @@ function waitForElements() {
     // console.log(SentenceBlock);
 
     if (resultBlock) {
-      resultBlock.ondragover = allowDrop;
+
+      // resultBlock.ondragover = allowDrop;
+
+      resultsPlaceholders.forEach((resultsPlaceholder) => {
+        (resultsPlaceholder as HTMLElement).ondragover = allowDrop;
+      });
 
       placeholders.forEach((placeholder) => {
-       (placeholder as HTMLElement).ondragover = allowDrop;
+        (placeholder as HTMLElement).ondragover = allowDrop;
       });
-      
 
       // SentenceBlock.ondragover = allowDrop;
     } else {
@@ -489,11 +564,15 @@ function waitForElements() {
       (word as HTMLElement).ondragstart = drag;
     });
 
-    resultBlock.ondrop = drop;
+    // resultBlock.ondrop = drop;
+
+    resultsPlaceholders.forEach((resultsPlaceholder) => {
+      (resultsPlaceholder as HTMLElement).ondrop = drop;
+    });
 
     placeholders.forEach((placeholder) => {
       (placeholder as HTMLElement).ondrop = drop;
-     });
+    });
 
     // SentenceBlock.ondrop = drop;
   } else {
@@ -511,31 +590,28 @@ function drag(event: DragEvent) {
   console.log(`я в drag вот id ${(event.target as HTMLElement).id}`);
 }
 
-
 function drop(event: DragEvent) {
   let itemId = event.dataTransfer.getData('id');
 
   const item = document.getElementById(itemId);
   const target = event.target as HTMLElement;
 
-  console.log(target)
+  console.log(target);
 
-      if (target.classList.contains('word')) {
-          console.error('Элемент с классом "word" не может быть целевым элементом');
-                  item.classList.add('not-droppable');
-        setTimeout(() => {
-          item.classList.remove('not-droppable');
-        }, 1000); 
-          return; 
-      }
+  if (target.classList.contains('word')) {
+    console.error('Элемент с классом "word" не может быть целевым элементом');
+    item.classList.add('not-droppable');
+    setTimeout(() => {
+      item.classList.remove('not-droppable');
+    }, 1000);
+    return;
+  }
 
-  console.log(`БРОСАЮ ${item} с ${itemId}`)
+  console.log(`БРОСАЮ ${item} с ${itemId}`);
 
   if (!target.contains(item)) {
-
     target.append(item);
-    console.log(target)
-
+    console.log(target);
   } else {
     console.error('Куда сам на себя тянешь');
   }
