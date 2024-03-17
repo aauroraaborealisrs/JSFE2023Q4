@@ -30,6 +30,7 @@
   border-radius: 5px;
   width: 743px;
   height: 39px;
+  order: 11;
 }
 
 #next-sentence-button {

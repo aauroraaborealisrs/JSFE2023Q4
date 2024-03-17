@@ -15,7 +15,9 @@ class MainPage {
     const mainPage = `
         <div id="main-page">
         <div id="translation"></div>
-        <div id="completed-sentences-container"></div>
+        <div id="completed-sentences-container">
+        <div id="result-block"></div>
+        </div>
         <button id="auto-complete-button">Auto-Complete</button>
         <div id="sentence-container" class="container"></div>
         <button id="next-sentence-button">Continue</button>
@@ -38,13 +40,11 @@ class MainPage {
         displayTranslation(wordData);
       });
 
-    const resultBlock = document.createElement('div');
+    const resultBlock = document.getElementById('result-block');
+
     resultBlock.id = 'result-block';
     resultBlock.classList.add('container');
-    resultBlock.style.border = '1px solid black';
-    resultBlock.style.padding = '10px';
-    resultBlock.style.marginTop = '20px';
-    document.getElementById('main-page').appendChild(resultBlock);
+    // document.getElementById('main-page').appendChild(resultBlock);
 
     document
       .getElementById('next-sentence-button')
