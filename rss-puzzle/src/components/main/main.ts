@@ -15,7 +15,9 @@ class MainPage {
     const mainPage = `
         <div id="main-page">
         <div id="translation"></div>
-        <div id="completed-sentences-container"></div>
+        <div id="completed-sentences-container">
+        <div id="result-block"></div>
+        </div>
         <button id="auto-complete-button">Auto-Complete</button>
         <div id="sentence-container" class="container"></div>
         <button id="next-sentence-button">Continue</button>
@@ -38,13 +40,10 @@ class MainPage {
         displayTranslation(wordData);
       });
 
-    const resultBlock = document.createElement('div');
+    const resultBlock = document.getElementById('result-block');
+
     resultBlock.id = 'result-block';
     resultBlock.classList.add('container');
-    resultBlock.style.border = '1px solid black';
-    resultBlock.style.padding = '10px';
-    resultBlock.style.marginTop = '20px';
-    document.getElementById('main-page').appendChild(resultBlock);
 
     document
       .getElementById('next-sentence-button')
@@ -118,6 +117,8 @@ async function fetchWordData() {
 
 function displaySentence(wordData: WordData) {
   const sentenceContainer = document.getElementById('sentence-container');
+  const resultBlock = document.getElementById('result-block');
+
   if (sentenceContainer) {
     currentSentence =
       wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample ||
@@ -135,6 +136,10 @@ function displaySentence(wordData: WordData) {
     const isFiveWords = words.length == 5;
 
     shuffledWords.forEach((word) => {
+      const wordPlaceholder = document.createElement('div');
+      wordPlaceholder.classList.add('wordPlaceholder');
+      // const resultPlaceholder = document.createElement('div');
+      // resultPlaceholder.classList.add('resultPlaceholder');
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
@@ -155,12 +160,47 @@ function displaySentence(wordData: WordData) {
         wordDiv.classList.add('five-words');
       }
 
-      sentenceContainer.appendChild(wordDiv);
+      sentenceContainer.appendChild(wordPlaceholder);
+      // resultBlock.appendChild(resultPlaceholder);
+      wordPlaceholder.appendChild(wordDiv);
+
     });
+
+    // createResultPlaceholders();
   } else {
     console.error('Element with ID "sentence-container" not found');
   }
 }
+
+// function createResultPlaceholders() {
+//   const resultBlock = document.getElementById('result-block');
+//   currentSentence =
+//     wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample ||
+//     '';
+//   let words = currentSentence.split(' ');
+
+//   if (resultBlock) {
+
+//     words.forEach((word) => {
+//       const resultPlaceholder = document.createElement('div');
+//       console.log(resultPlaceholder);
+//       resultPlaceholder.classList.add('resultPlaceholder');
+//       resultBlock.appendChild(resultPlaceholder);
+
+//       const resultPlaceholders = resultBlock.querySelectorAll('.resultPlaceholder');
+//       const count = resultPlaceholders.length;
+
+//       console.log(
+//         `Количество элементов с классом 'resultPlaceholder': ${count}`,
+//       );
+//       console.log('я в форыче твоем');
+//     });
+
+//     console.log('вызвана твоя тупая функция');
+//     console.log(resultBlock);
+//     console.log(currentSentence);
+//   }
+// }
 
 // Функция для перемешивания массива
 function shuffleArray<T>(array: T[]): T[] {
@@ -260,6 +300,9 @@ function nextSentence(wordData: WordData) {
     'completed-sentences-container',
   );
   const resultBlock = document.getElementById('result-block');
+  
+  // const resultPlaceholders = resultBlock.querySelectorAll('.resultPlaceholder');
+
   if (completedSentencesContainer && resultBlock) {
     const newLineDiv = document.createElement('div');
     newLineDiv.classList.add('sentence-line');
@@ -267,21 +310,34 @@ function nextSentence(wordData: WordData) {
       newLineDiv.appendChild(resultBlock.firstChild);
     }
 
+    // resultPlaceholders.forEach((placeholder) => {
+    //   placeholder.remove();
+    // });
+
     completedSentencesContainer.appendChild(newLineDiv);
 
+    // if (currentSentenceIndex % 10 == 0) {
+    //   console.log("все жетско удалено")
+    //   while (completedSentencesContainer.firstChild) {
+    //     completedSentencesContainer.removeChild(
+    //       completedSentencesContainer.firstChild,
+    //     );
+    //   }
+    // }
+
     if (currentSentenceIndex % 10 == 0) {
-      while (completedSentencesContainer.firstChild) {
-        completedSentencesContainer.removeChild(
-          completedSentencesContainer.firstChild,
-        );
-      }
+      console.log('все жетско удалено');
+      const sentenceLines =
+        completedSentencesContainer.querySelectorAll('.sentence-line');
+      sentenceLines.forEach((line) => {
+        completedSentencesContainer.removeChild(line);
+      });
     }
   }
 
   waitForElements();
 }
 
-//обработка клика на слово
 function handleWordClick(e: MouseEvent) {
   const wordDiv = e.target as HTMLElement;
   const resultBlock = document.getElementById('result-block');
@@ -290,17 +346,22 @@ function handleWordClick(e: MouseEvent) {
   ) as HTMLButtonElement;
 
   if (resultBlock && wordDiv) {
-    const originalSize = wordDiv.offsetWidth;
-    wordDiv.setAttribute('data-original-size', originalSize.toString());
     checkButton.textContent = 'Check';
 
     if (resultBlock.contains(wordDiv)) {
-      const originalParent = wordDiv.getAttribute('data-original-parent');
-      if (originalParent) {
-        const originalParentElement = document.getElementById(originalParent);
-        if (originalParentElement) {
-          originalParentElement.appendChild(wordDiv);
-        }
+      // const resultPlaceholder = document.createElement('div');
+      // resultPlaceholder.classList.add('resultPlaceholder');
+      // resultBlock.appendChild(resultPlaceholder);
+      // console.log('я добавил');
+
+      const wordPlaceholders = Array.from(
+        document.querySelectorAll('#sentence-container .wordPlaceholder'),
+      );
+      const targetPlaceholder = wordPlaceholders.find(
+        (placeholder) => placeholder.children.length === 0,
+      );
+      if (targetPlaceholder) {
+        targetPlaceholder.appendChild(wordDiv);
       }
     } else {
       wordDiv.setAttribute(
@@ -308,17 +369,25 @@ function handleWordClick(e: MouseEvent) {
         wordDiv.parentElement?.id || '',
       );
       resultBlock.appendChild(wordDiv);
-      checkSentenceContainer();
-    }
 
-    const savedSize = wordDiv.getAttribute('data-original-size');
-    if (savedSize) {
-      wordDiv.style.width = savedSize + 'px';
+      const resultPlaceholders =
+        resultBlock.querySelectorAll('.resultPlaceholder');
+      // if (resultPlaceholders.length > 0) {
+      //   resultBlock.removeChild(
+      //     resultPlaceholders[resultPlaceholders.length - 1],
+      //   );
+      //   console.log('я удалил');
+      // }
+      checkSentenceContainer();
     }
   }
 
   const sentenceContainer = document.getElementById('sentence-container');
-  if (sentenceContainer.children.length !== 0) {
+  const allPlaceholdersEmpty = Array.from(
+    sentenceContainer.querySelectorAll('.wordPlaceholder'),
+  ).every((placeholder) => placeholder.children.length === 0);
+
+  if (!allPlaceholdersEmpty) {
     checkButton.disabled = true;
     const nextButton = document.getElementById(
       'next-sentence-button',
@@ -390,7 +459,11 @@ function checkSentenceContainer() {
     'check-sentence-button',
   ) as HTMLButtonElement;
   const sentenceContainer = document.getElementById('sentence-container');
-  if (sentenceContainer && sentenceContainer.children.length === 0) {
+  const allPlaceholdersEmpty = Array.from(
+    sentenceContainer.querySelectorAll('.wordPlaceholder'),
+  ).every((placeholder) => placeholder.children.length === 0);
+
+  if (allPlaceholdersEmpty) {
     console.log('sentence-container пустой');
     const nextButton = document.getElementById(
       'next-sentence-button',
@@ -452,17 +525,31 @@ function waitForElements() {
   const words = document.querySelectorAll('.word');
   const containers = document.querySelectorAll('.container');
   const resultBlock = document.getElementById('result-block');
-  const SentenceBlock = document.getElementById('sentence-container');
+
+  // const SentenceBlock = document.getElementById('sentence-container');
+
+  const placeholders = document.querySelectorAll('.wordPlaceholder');
+  const resultsPlaceholders = document.querySelectorAll('.resultPlaceholder');
 
   if (words.length > 0 && containers.length > 0) {
-    console.log(words);
-    console.log(containers);
-    console.log(resultBlock);
-    console.log(SentenceBlock);
+    // console.log(words);
+    // console.log(containers);
+    // console.log(resultBlock);
+    // console.log(SentenceBlock);
 
     if (resultBlock) {
       resultBlock.ondragover = allowDrop;
-      SentenceBlock.ondragover = allowDrop;
+
+      resultsPlaceholders.forEach((resultsPlaceholder) => {
+        (resultsPlaceholder as HTMLElement).ondragover = allowDrop;
+      });
+
+      placeholders.forEach((placeholder) => {
+        (placeholder as HTMLElement).ondragover = allowDrop;
+      });
+
+      // SentenceBlock.ondragover = allowDrop;
+
     } else {
       console.log('Элемент resultBlock не найден');
     }
@@ -473,12 +560,21 @@ function waitForElements() {
 
     words.forEach((word) => {
       word.id = `word-${word.textContent}`;
-      console.log(`АЛЛО ${word.id}`);
       (word as HTMLElement).ondragstart = drag;
     });
 
     resultBlock.ondrop = drop;
-    SentenceBlock.ondrop = drop;
+
+    resultsPlaceholders.forEach((resultsPlaceholder) => {
+      (resultsPlaceholder as HTMLElement).ondrop = drop;
+    });
+
+    placeholders.forEach((placeholder) => {
+      (placeholder as HTMLElement).ondrop = drop;
+    });
+
+    // SentenceBlock.ondrop = drop;
+
   } else {
     setTimeout(waitForElements, 100);
   }
@@ -500,8 +596,23 @@ function drop(event: DragEvent) {
   const item = document.getElementById(itemId);
   const target = event.target as HTMLElement;
 
+  console.log(target);
+
+  if (target.classList.contains('word')) {
+    console.error('Элемент с классом "word" не может быть целевым элементом');
+    item.classList.add('not-droppable');
+    setTimeout(() => {
+      item.classList.remove('not-droppable');
+    }, 1000);
+    return;
+  }
+
+  console.log(`БРОСАЮ ${item} с ${itemId}`);
+
   if (!target.contains(item)) {
     target.append(item);
+    console.log(target);
+
   } else {
     console.error('Куда сам на себя тянешь');
   }
