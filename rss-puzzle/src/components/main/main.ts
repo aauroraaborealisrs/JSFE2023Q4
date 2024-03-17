@@ -285,24 +285,26 @@ function nextSentence(wordData: WordData) {
 }
 
 function handleWordClick(e: MouseEvent) {
- const wordDiv = e.target as HTMLElement;
- const resultBlock = document.getElementById('result-block');
- const checkButton = document.getElementById(
+  const wordDiv = e.target as HTMLElement;
+  const resultBlock = document.getElementById('result-block');
+  const checkButton = document.getElementById(
     'check-sentence-button',
- ) as HTMLButtonElement;
+  ) as HTMLButtonElement;
 
- if (resultBlock && wordDiv) {
-  checkButton.textContent = 'Check';
+  if (resultBlock && wordDiv) {
+    checkButton.textContent = 'Check';
 
-  if (resultBlock.contains(wordDiv)) {
-
-    const wordPlaceholders = Array.from(document.querySelectorAll('#sentence-container .wordPlaceholder'));
-    const targetPlaceholder = wordPlaceholders.find(placeholder => placeholder.children.length === 0);
-    if (targetPlaceholder) {
-
-      targetPlaceholder.appendChild(wordDiv);
-    }
-  } else {
+    if (resultBlock.contains(wordDiv)) {
+      const wordPlaceholders = Array.from(
+        document.querySelectorAll('#sentence-container .wordPlaceholder'),
+      );
+      const targetPlaceholder = wordPlaceholders.find(
+        (placeholder) => placeholder.children.length === 0,
+      );
+      if (targetPlaceholder) {
+        targetPlaceholder.appendChild(wordDiv);
+      }
+    } else {
       wordDiv.setAttribute(
         'data-original-parent',
         wordDiv.parentElement?.id || '',
@@ -310,28 +312,24 @@ function handleWordClick(e: MouseEvent) {
       resultBlock.appendChild(wordDiv);
       checkSentenceContainer();
     }
- }
+  }
 
+  const sentenceContainer = document.getElementById('sentence-container');
+  const allPlaceholdersEmpty = Array.from(
+    sentenceContainer.querySelectorAll('.wordPlaceholder'),
+  ).every((placeholder) => placeholder.children.length === 0);
 
-
-
- const sentenceContainer = document.getElementById('sentence-container');
- const allPlaceholdersEmpty = Array.from(sentenceContainer.querySelectorAll('.wordPlaceholder')).every(placeholder => placeholder.children.length === 0);
- 
- if (!allPlaceholdersEmpty) {
+  if (!allPlaceholdersEmpty) {
     checkButton.disabled = false;
     const nextButton = document.getElementById(
       'next-sentence-button',
     ) as HTMLButtonElement;
     nextButton.style.visibility = 'hidden';
     checkButton.style.backgroundColor = '#ccc';
- } else {
+  } else {
     checkButton.style.backgroundColor = 'black';
- }
-
-
+  }
 }
-
 
 //я если честно не уверена что следующие 2 еще нужны но мне страшно их убирать
 
@@ -393,7 +391,9 @@ function checkSentenceContainer() {
     'check-sentence-button',
   ) as HTMLButtonElement;
   const sentenceContainer = document.getElementById('sentence-container');
-  const allPlaceholdersEmpty = Array.from(sentenceContainer.querySelectorAll('.wordPlaceholder')).every(placeholder => placeholder.children.length === 0);
+  const allPlaceholdersEmpty = Array.from(
+    sentenceContainer.querySelectorAll('.wordPlaceholder'),
+  ).every((placeholder) => placeholder.children.length === 0);
 
   if (allPlaceholdersEmpty) {
     console.log('sentence-container пустой');
@@ -457,17 +457,25 @@ function waitForElements() {
   const words = document.querySelectorAll('.word');
   const containers = document.querySelectorAll('.container');
   const resultBlock = document.getElementById('result-block');
-  const SentenceBlock = document.getElementById('sentence-container');
+  // const SentenceBlock = document.getElementById('sentence-container');
+
+  const placeholders = document.querySelectorAll('.wordPlaceholder');
 
   if (words.length > 0 && containers.length > 0) {
-    console.log(words);
-    console.log(containers);
-    console.log(resultBlock);
-    console.log(SentenceBlock);
+    // console.log(words);
+    // console.log(containers);
+    // console.log(resultBlock);
+    // console.log(SentenceBlock);
 
     if (resultBlock) {
       resultBlock.ondragover = allowDrop;
-      SentenceBlock.ondragover = allowDrop;
+
+      placeholders.forEach((placeholder) => {
+       (placeholder as HTMLElement).ondragover = allowDrop;
+      });
+      
+
+      // SentenceBlock.ondragover = allowDrop;
     } else {
       console.log('Элемент resultBlock не найден');
     }
@@ -478,12 +486,16 @@ function waitForElements() {
 
     words.forEach((word) => {
       word.id = `word-${word.textContent}`;
-      console.log(`АЛЛО ${word.id}`);
       (word as HTMLElement).ondragstart = drag;
     });
 
     resultBlock.ondrop = drop;
-    SentenceBlock.ondrop = drop;
+
+    placeholders.forEach((placeholder) => {
+      (placeholder as HTMLElement).ondrop = drop;
+     });
+
+    // SentenceBlock.ondrop = drop;
   } else {
     setTimeout(waitForElements, 100);
   }
@@ -499,14 +511,31 @@ function drag(event: DragEvent) {
   console.log(`я в drag вот id ${(event.target as HTMLElement).id}`);
 }
 
+
 function drop(event: DragEvent) {
   let itemId = event.dataTransfer.getData('id');
 
   const item = document.getElementById(itemId);
   const target = event.target as HTMLElement;
 
+  console.log(target)
+
+      if (target.classList.contains('word')) {
+          console.error('Элемент с классом "word" не может быть целевым элементом');
+                  item.classList.add('not-droppable');
+        setTimeout(() => {
+          item.classList.remove('not-droppable');
+        }, 1000); 
+          return; 
+      }
+
+  console.log(`БРОСАЮ ${item} с ${itemId}`)
+
   if (!target.contains(item)) {
+
     target.append(item);
+    console.log(target)
+
   } else {
     console.error('Куда сам на себя тянешь');
   }

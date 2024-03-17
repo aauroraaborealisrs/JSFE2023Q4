@@ -140,9 +140,14 @@
   width: 200px !important;
 }
 
-.wordPlaceholder{
-  width:fit-content;
+.wordPlaceholder {
+  width: fit-content;
   background-color: brown;
   height: 43px;
   min-width: 30px;
+}
+
+/* В вашем CSS файле */
+.not-droppable {
+    background-color: darkblue;
 }
