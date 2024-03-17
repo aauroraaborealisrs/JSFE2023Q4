@@ -114,6 +114,8 @@ async function fetchWordData() {
   }
 }
 
+//разбивает предложение на слова и показывает их
+
 function displaySentence(wordData: WordData) {
   const sentenceContainer = document.getElementById('sentence-container');
   if (sentenceContainer) {
@@ -139,7 +141,6 @@ function displaySentence(wordData: WordData) {
       wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
       wordDiv.addEventListener('click', handleWordClick);
       wordDiv.draggable = true;
-
 
       if (word === words[0]) {
         wordDiv.classList.add('first-word');
@@ -176,6 +177,8 @@ function shuffleArray<T>(array: T[]): T[] {
   }
   return arrayCopy;
 }
+
+//для кнопки автокомплита которая решает пример за тебя
 
 function autoComplete() {
   const resultBlock = document.getElementById('result-block');
@@ -226,6 +229,8 @@ function autoComplete() {
   }
 }
 
+//показывает следующее предложение
+
 function nextSentence(wordData: WordData) {
   currentSentenceIndex++;
   if (currentSentenceIndex % 10 == 0) {
@@ -272,6 +277,8 @@ function nextSentence(wordData: WordData) {
       }
     }
   }
+
+  waitForElements();
 }
 
 //обработка клика на слово
@@ -323,6 +330,8 @@ function handleWordClick(e: MouseEvent) {
   }
 }
 
+//я если честно не уверена что следующие 2 еще нужны но мне страшно их убирать
+
 //берет предложения
 function extractSentences(wordData: WordData): string[] {
   const sentences: string[] = [];
@@ -335,6 +344,8 @@ function extractSentences(wordData: WordData): string[] {
   console.log(sentences);
   return sentences;
 }
+
+//берет переводы
 
 function extractTranslations(): string[] {
   const translations: string[] = [];
@@ -356,7 +367,7 @@ function displayTranslation(wordData: WordData) {
   const translation =
     wordData.rounds[currentRound]?.words[currentSentenceIndex]
       ?.textExampleTranslate || '';
-  // wordData.rounds[2]?.words[5]
+  // wordData.rounds[2]?.words[5] это просто для дебага на словах с которыми может быть проблема
   // ?.textExampleTranslate || '';
   console.log(translation);
 
@@ -371,7 +382,7 @@ function displayTranslation(wordData: WordData) {
   }
 }
 
-//ПРОВЕРКА ПРАВИЛЬНО ЛИ СОБРАЛ ПРЕДЛОЖЕНИЕ
+//РЕАКЦИЯ НА ПРАВИЛЬНО ЛИ СОБРАЛ ПРЕДЛОЖЕНИЕ
 
 function checkSentenceContainer() {
   const check = checkResultOrder(currentSentence);
@@ -402,6 +413,8 @@ function checkSentenceContainer() {
   }
 }
 
+//проверяет правильно ли собрано предложение
+
 function checkResultOrder(originalSentence: string) {
   const resultBlock = document.getElementById('result-block');
   if (!resultBlock) {
@@ -430,76 +443,59 @@ function checkResultOrder(originalSentence: string) {
   return true;
 }
 
+//DRAG AND DROP
 
-// document.addEventListener('DOMContentLoaded', function() {
-//  const draggable = document.querySelectorAll(".word");
-//  console.log(draggable);
-//  const containers = document.querySelectorAll(".container");
-
-//  draggable.forEach(draggable => {
-//   draggable.addEventListener("dragstart", ()=>{
-//     console.log("dragging")
-//   })
-// })
-// });
+//функция с задержкой потому что вызывалась еще на стартовой странице и
+//все элементы были null и я ничего лучше не придумала
 
 function waitForElements() {
- const words = document.querySelectorAll(".word");
- const containers = document.querySelectorAll(".container");
- const zone1 = document.getElementById('result-block');
- const zone2 = document.getElementById('sentence-container');
+  const words = document.querySelectorAll('.word');
+  const containers = document.querySelectorAll('.container');
+  const resultBlock = document.getElementById('result-block');
+  const SentenceBlock = document.getElementById('sentence-container');
 
- if (words.length > 0 && containers.length > 0) {
+  if (words.length > 0 && containers.length > 0) {
     console.log(words);
     console.log(containers);
-    console.log(zone1);
-    console.log(zone2);
-  
+    console.log(resultBlock);
+    console.log(SentenceBlock);
 
-    if (zone1) {
-        zone1.ondragover = allowDrop;
-        zone2.ondragover = allowDrop;
+    if (resultBlock) {
+      resultBlock.ondragover = allowDrop;
+      SentenceBlock.ondragover = allowDrop;
     } else {
-        console.log("Элемент zone1 не найден");
+      console.log('Элемент resultBlock не найден');
     }
 
-    zone1.ondragenter = (event: DragEvent) => {
-        console.log("ondragenter вызван");
+    resultBlock.ondragenter = (event: DragEvent) => {
+      console.log('ondragenter вызван');
     };
 
-    words.forEach(word => {
+    words.forEach((word) => {
       word.id = `word-${word.textContent}`;
+      console.log(`АЛЛО ${word.id}`);
       (word as HTMLElement).ondragstart = drag;
     });
 
-    zone1.ondrop = drop;
-    zone2.ondrop = drop;
-
-    
-
-
- } else {
-    setTimeout(waitForElements, 100); 
- }
+    resultBlock.ondrop = drop;
+    SentenceBlock.ondrop = drop;
+  } else {
+    setTimeout(waitForElements, 100);
+  }
 }
 
 let allowDrop = (event: DragEvent) => {
-//  console.log("allowDrop вызвана");
- event.preventDefault();
-//  console.log("я в эллау дропе");
-}
+  event.preventDefault();
+};
 
-function drag (event: DragEvent){
-  console.log("я в драге");
+function drag(event: DragEvent) {
+  console.log('я в драге');
   event.dataTransfer.setData('id', (event.target as HTMLElement).id);
   console.log(`я в drag вот id ${(event.target as HTMLElement).id}`);
 }
 
-function drop (event: DragEvent){
-  console.log("я в дропе");
-  let itemId = event.dataTransfer.getData("id");
-  console.log(itemId);
-  console.log(`я в дропе АЙДИ ${itemId}`);
+function drop(event: DragEvent) {
+  let itemId = event.dataTransfer.getData('id');
 
   const item = document.getElementById(itemId);
   const target = event.target as HTMLElement;
@@ -507,17 +503,10 @@ function drop (event: DragEvent){
   if (!target.contains(item)) {
     target.append(item);
   } else {
-    console.error("Куда сам на себя тянешь");
+    console.error('Куда сам на себя тянешь');
   }
-
 }
 
-
-
 waitForElements();
-
-
-
-
 
 export default MainPage;
