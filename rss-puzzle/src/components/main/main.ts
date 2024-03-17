@@ -290,8 +290,6 @@ function handleWordClick(e: MouseEvent) {
   ) as HTMLButtonElement;
 
   if (resultBlock && wordDiv) {
-    const originalSize = wordDiv.offsetWidth;
-    wordDiv.setAttribute('data-original-size', originalSize.toString());
     checkButton.textContent = 'Check';
 
     if (resultBlock.contains(wordDiv)) {
@@ -311,10 +309,6 @@ function handleWordClick(e: MouseEvent) {
       checkSentenceContainer();
     }
 
-    const savedSize = wordDiv.getAttribute('data-original-size');
-    if (savedSize) {
-      wordDiv.style.width = savedSize + 'px';
-    }
   }
 
   const sentenceContainer = document.getElementById('sentence-container');
