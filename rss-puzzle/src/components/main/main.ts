@@ -15,6 +15,7 @@ class MainPage {
     const mainPage = `
         <div id="main-page">
         <div id="translation"></div>
+        <button id="toggle-translation-button">Toggle Translation Hint</button>
         <div id="completed-sentences-container"></div>
         <button id="auto-complete-button">Auto-Complete</button>
         <div id="sentence-container" class="container"></div>
@@ -76,6 +77,10 @@ class MainPage {
       'auto-complete-button',
     ) as HTMLButtonElement;
     autoCompleteButton.addEventListener('click', autoComplete);
+
+    document
+      .getElementById('toggle-translation-button')
+      .addEventListener('click', toggleTranslationHintVisibility);
   }
 
   getSentences(): string[] {
@@ -379,6 +384,16 @@ function displayTranslation(wordData: WordData) {
     translationContainer.appendChild(translationSpan);
   } else {
     console.error('Element with ID "translation" not found');
+  }
+}
+
+function toggleTranslationHintVisibility() {
+  const translationHint = document.querySelector(
+    '.translation-hint',
+  ) as HTMLElement;
+  if (translationHint) {
+    const isVisible = translationHint.style.display !== 'none';
+    translationHint.style.display = isVisible ? 'none' : 'block';
   }
 }
 
