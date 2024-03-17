@@ -44,7 +44,6 @@ class MainPage {
 
     resultBlock.id = 'result-block';
     resultBlock.classList.add('container');
-    // document.getElementById('main-page').appendChild(resultBlock);
 
     document
       .getElementById('next-sentence-button')
@@ -164,6 +163,7 @@ function displaySentence(wordData: WordData) {
       sentenceContainer.appendChild(wordPlaceholder);
       // resultBlock.appendChild(resultPlaceholder);
       wordPlaceholder.appendChild(wordDiv);
+
     });
 
     // createResultPlaceholders();
@@ -300,6 +300,7 @@ function nextSentence(wordData: WordData) {
     'completed-sentences-container',
   );
   const resultBlock = document.getElementById('result-block');
+  
   // const resultPlaceholders = resultBlock.querySelectorAll('.resultPlaceholder');
 
   if (completedSentencesContainer && resultBlock) {
@@ -308,6 +309,7 @@ function nextSentence(wordData: WordData) {
     while (resultBlock.firstChild) {
       newLineDiv.appendChild(resultBlock.firstChild);
     }
+
     // resultPlaceholders.forEach((placeholder) => {
     //   placeholder.remove();
     // });
@@ -332,6 +334,7 @@ function nextSentence(wordData: WordData) {
       });
     }
   }
+
   waitForElements();
 }
 
@@ -522,6 +525,7 @@ function waitForElements() {
   const words = document.querySelectorAll('.word');
   const containers = document.querySelectorAll('.container');
   const resultBlock = document.getElementById('result-block');
+
   // const SentenceBlock = document.getElementById('sentence-container');
 
   const placeholders = document.querySelectorAll('.wordPlaceholder');
@@ -545,6 +549,7 @@ function waitForElements() {
       });
 
       // SentenceBlock.ondragover = allowDrop;
+
     } else {
       console.log('Элемент resultBlock не найден');
     }
@@ -569,6 +574,7 @@ function waitForElements() {
     });
 
     // SentenceBlock.ondrop = drop;
+
   } else {
     setTimeout(waitForElements, 100);
   }
@@ -606,6 +612,7 @@ function drop(event: DragEvent) {
   if (!target.contains(item)) {
     target.append(item);
     console.log(target);
+
   } else {
     console.error('Куда сам на себя тянешь');
   }
