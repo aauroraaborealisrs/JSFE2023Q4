@@ -15,8 +15,9 @@ class MainPage {
     const mainPage = `
         <div id="main-page">
         <div id="translation"></div>
+        <div id="completed-sentences-container"></div>
         <button id="auto-complete-button">Auto-Complete</button>
-        <div id="sentence-container"></div>
+        <div id="sentence-container" class="container"></div>
         <button id="next-sentence-button">Continue</button>
         <button id="check-sentence-button">Check</button>
         </div>
@@ -39,6 +40,7 @@ class MainPage {
 
     const resultBlock = document.createElement('div');
     resultBlock.id = 'result-block';
+    resultBlock.classList.add('container');
     resultBlock.style.border = '1px solid black';
     resultBlock.style.padding = '10px';
     resultBlock.style.marginTop = '20px';
@@ -112,23 +114,47 @@ async function fetchWordData() {
   }
 }
 
+//разбивает предложение на слова и показывает их
+
 function displaySentence(wordData: WordData) {
   const sentenceContainer = document.getElementById('sentence-container');
   if (sentenceContainer) {
     currentSentence =
       wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample ||
       '';
+    // wordData.rounds[2]?.words[5]
+    // ?.textExample || '';
 
     originalSentence = currentSentence;
     let words = currentSentence.split(' ');
+
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
+
+    const isFewWords = words.length <= 4;
+    const isFiveWords = words.length == 5;
+
     shuffledWords.forEach((word) => {
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
       wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
       wordDiv.addEventListener('click', handleWordClick);
+      wordDiv.draggable = true;
+
+      if (word === words[0]) {
+        wordDiv.classList.add('first-word');
+      }
+      if (word === words[words.length - 1]) {
+        wordDiv.classList.add('last-word');
+      }
+      if (isFewWords) {
+        wordDiv.classList.add('few-words');
+      }
+      if (isFiveWords) {
+        wordDiv.classList.add('five-words');
+      }
+
       sentenceContainer.appendChild(wordDiv);
     });
   } else {
@@ -152,6 +178,8 @@ function shuffleArray<T>(array: T[]): T[] {
   return arrayCopy;
 }
 
+//для кнопки автокомплита которая решает пример за тебя
+
 function autoComplete() {
   const resultBlock = document.getElementById('result-block');
   const sentenceContainer = document.getElementById('sentence-container');
@@ -167,11 +195,27 @@ function autoComplete() {
 
     const wordsInOriginal = originalSentence.split(' ');
 
+    const isFewWords = wordsInOriginal.length <= 4;
+    const isFiveWords = wordsInOriginal.length == 5;
+
     wordsInOriginal.forEach((word) => {
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
       resultBlock.appendChild(wordDiv);
+
+      if (word === wordsInOriginal[0]) {
+        wordDiv.classList.add('first-word');
+      }
+      if (word === wordsInOriginal[wordsInOriginal.length - 1]) {
+        wordDiv.classList.add('last-word');
+      }
+      if (isFewWords) {
+        wordDiv.classList.add('few-words');
+      }
+      if (isFiveWords) {
+        wordDiv.classList.add('five-words');
+      }
     });
 
     const checkButton = document.getElementById('check-sentence-button');
@@ -184,6 +228,8 @@ function autoComplete() {
     nextButton.disabled = false;
   }
 }
+
+//показывает следующее предложение
 
 function nextSentence(wordData: WordData) {
   currentSentenceIndex++;
@@ -209,6 +255,30 @@ function nextSentence(wordData: WordData) {
   } else {
     console.log('No more sentences to display');
   }
+
+  const completedSentencesContainer = document.getElementById(
+    'completed-sentences-container',
+  );
+  const resultBlock = document.getElementById('result-block');
+  if (completedSentencesContainer && resultBlock) {
+    const newLineDiv = document.createElement('div');
+    newLineDiv.classList.add('sentence-line');
+    while (resultBlock.firstChild) {
+      newLineDiv.appendChild(resultBlock.firstChild);
+    }
+
+    completedSentencesContainer.appendChild(newLineDiv);
+
+    if (currentSentenceIndex % 10 == 0) {
+      while (completedSentencesContainer.firstChild) {
+        completedSentencesContainer.removeChild(
+          completedSentencesContainer.firstChild,
+        );
+      }
+    }
+  }
+
+  waitForElements();
 }
 
 //обработка клика на слово
@@ -260,6 +330,8 @@ function handleWordClick(e: MouseEvent) {
   }
 }
 
+//я если честно не уверена что следующие 2 еще нужны но мне страшно их убирать
+
 //берет предложения
 function extractSentences(wordData: WordData): string[] {
   const sentences: string[] = [];
@@ -272,6 +344,8 @@ function extractSentences(wordData: WordData): string[] {
   console.log(sentences);
   return sentences;
 }
+
+//берет переводы
 
 function extractTranslations(): string[] {
   const translations: string[] = [];
@@ -293,6 +367,8 @@ function displayTranslation(wordData: WordData) {
   const translation =
     wordData.rounds[currentRound]?.words[currentSentenceIndex]
       ?.textExampleTranslate || '';
+  // wordData.rounds[2]?.words[5] это просто для дебага на словах с которыми может быть проблема
+  // ?.textExampleTranslate || '';
   console.log(translation);
 
   translationSpan.textContent = translation;
@@ -306,7 +382,7 @@ function displayTranslation(wordData: WordData) {
   }
 }
 
-//ПРОВЕРКА ПРАВИЛЬНО ЛИ СОБРАЛ ПРЕДЛОЖЕНИЕ
+//РЕАКЦИЯ НА ПРАВИЛЬНО ЛИ СОБРАЛ ПРЕДЛОЖЕНИЕ
 
 function checkSentenceContainer() {
   const check = checkResultOrder(currentSentence);
@@ -337,6 +413,8 @@ function checkSentenceContainer() {
   }
 }
 
+//проверяет правильно ли собрано предложение
+
 function checkResultOrder(originalSentence: string) {
   const resultBlock = document.getElementById('result-block');
   if (!resultBlock) {
@@ -364,5 +442,71 @@ function checkResultOrder(originalSentence: string) {
   console.log('Порядок слов совпадает');
   return true;
 }
+
+//DRAG AND DROP
+
+//функция с задержкой потому что вызывалась еще на стартовой странице и
+//все элементы были null и я ничего лучше не придумала
+
+function waitForElements() {
+  const words = document.querySelectorAll('.word');
+  const containers = document.querySelectorAll('.container');
+  const resultBlock = document.getElementById('result-block');
+  const SentenceBlock = document.getElementById('sentence-container');
+
+  if (words.length > 0 && containers.length > 0) {
+    console.log(words);
+    console.log(containers);
+    console.log(resultBlock);
+    console.log(SentenceBlock);
+
+    if (resultBlock) {
+      resultBlock.ondragover = allowDrop;
+      SentenceBlock.ondragover = allowDrop;
+    } else {
+      console.log('Элемент resultBlock не найден');
+    }
+
+    resultBlock.ondragenter = (event: DragEvent) => {
+      console.log('ondragenter вызван');
+    };
+
+    words.forEach((word) => {
+      word.id = `word-${word.textContent}`;
+      console.log(`АЛЛО ${word.id}`);
+      (word as HTMLElement).ondragstart = drag;
+    });
+
+    resultBlock.ondrop = drop;
+    SentenceBlock.ondrop = drop;
+  } else {
+    setTimeout(waitForElements, 100);
+  }
+}
+
+let allowDrop = (event: DragEvent) => {
+  event.preventDefault();
+};
+
+function drag(event: DragEvent) {
+  console.log('я в драге');
+  event.dataTransfer.setData('id', (event.target as HTMLElement).id);
+  console.log(`я в drag вот id ${(event.target as HTMLElement).id}`);
+}
+
+function drop(event: DragEvent) {
+  let itemId = event.dataTransfer.getData('id');
+
+  const item = document.getElementById(itemId);
+  const target = event.target as HTMLElement;
+
+  if (!target.contains(item)) {
+    target.append(item);
+  } else {
+    console.error('Куда сам на себя тянешь');
+  }
+}
+
+waitForElements();
 
 export default MainPage;
