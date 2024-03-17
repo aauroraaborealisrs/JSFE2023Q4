@@ -31,9 +31,8 @@
   width: 743px;
   height: 39px;
   order: 11;
-  
-  justify-content: space-between;
 
+  justify-content: space-between;
 }
 
 #next-sentence-button {
@@ -150,15 +149,13 @@
   min-width: 30px;
 }
 
-.resultPlaceholder{
+.resultPlaceholder {
   width: fit-content;
   background-color: rgb(207, 213, 32);
   height: 43px;
   min-width: 30px;
   order: 11;
-
 }
-
 
 .not-droppable {
   background-color: darkblue;
