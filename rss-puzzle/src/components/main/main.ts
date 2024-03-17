@@ -17,7 +17,7 @@ class MainPage {
         <div id="translation"></div>
         <div id="completed-sentences-container"></div>
         <button id="auto-complete-button">Auto-Complete</button>
-        <div id="sentence-container"></div>
+        <div id="sentence-container" class="container"></div>
         <button id="next-sentence-button">Continue</button>
         <button id="check-sentence-button">Check</button>
         </div>
@@ -40,6 +40,7 @@ class MainPage {
 
     const resultBlock = document.createElement('div');
     resultBlock.id = 'result-block';
+    resultBlock.classList.add('container');
     resultBlock.style.border = '1px solid black';
     resultBlock.style.padding = '10px';
     resultBlock.style.marginTop = '20px';
@@ -119,8 +120,8 @@ function displaySentence(wordData: WordData) {
     currentSentence =
       wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample ||
       '';
-      // wordData.rounds[2]?.words[5]
-      // ?.textExample || '';
+    // wordData.rounds[2]?.words[5]
+    // ?.textExample || '';
 
     originalSentence = currentSentence;
     let words = currentSentence.split(' ');
@@ -131,30 +132,30 @@ function displaySentence(wordData: WordData) {
     const isFewWords = words.length <= 4;
     const isFiveWords = words.length == 5;
 
-
     shuffledWords.forEach((word) => {
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
       wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
       wordDiv.addEventListener('click', handleWordClick);
+      wordDiv.draggable = true;
+
 
       if (word === words[0]) {
-        wordDiv.classList.add('first-word'); 
+        wordDiv.classList.add('first-word');
       }
       if (word === words[words.length - 1]) {
-        wordDiv.classList.add('last-word'); 
+        wordDiv.classList.add('last-word');
       }
       if (isFewWords) {
-        wordDiv.classList.add('few-words'); 
+        wordDiv.classList.add('few-words');
       }
       if (isFiveWords) {
-        wordDiv.classList.add('five-words'); 
+        wordDiv.classList.add('five-words');
       }
 
       sentenceContainer.appendChild(wordDiv);
     });
-
   } else {
     console.error('Element with ID "sentence-container" not found');
   }
@@ -201,16 +202,16 @@ function autoComplete() {
       resultBlock.appendChild(wordDiv);
 
       if (word === wordsInOriginal[0]) {
-        wordDiv.classList.add('first-word'); 
+        wordDiv.classList.add('first-word');
       }
       if (word === wordsInOriginal[wordsInOriginal.length - 1]) {
-        wordDiv.classList.add('last-word'); 
+        wordDiv.classList.add('last-word');
       }
       if (isFewWords) {
-        wordDiv.classList.add('few-words'); 
+        wordDiv.classList.add('few-words');
       }
       if (isFiveWords) {
-        wordDiv.classList.add('five-words'); 
+        wordDiv.classList.add('five-words');
       }
     });
 
@@ -355,8 +356,8 @@ function displayTranslation(wordData: WordData) {
   const translation =
     wordData.rounds[currentRound]?.words[currentSentenceIndex]
       ?.textExampleTranslate || '';
-    // wordData.rounds[2]?.words[5]
-    // ?.textExampleTranslate || '';
+  // wordData.rounds[2]?.words[5]
+  // ?.textExampleTranslate || '';
   console.log(translation);
 
   translationSpan.textContent = translation;
@@ -428,5 +429,95 @@ function checkResultOrder(originalSentence: string) {
   console.log('Порядок слов совпадает');
   return true;
 }
+
+
+// document.addEventListener('DOMContentLoaded', function() {
+//  const draggable = document.querySelectorAll(".word");
+//  console.log(draggable);
+//  const containers = document.querySelectorAll(".container");
+
+//  draggable.forEach(draggable => {
+//   draggable.addEventListener("dragstart", ()=>{
+//     console.log("dragging")
+//   })
+// })
+// });
+
+function waitForElements() {
+ const words = document.querySelectorAll(".word");
+ const containers = document.querySelectorAll(".container");
+ const zone1 = document.getElementById('result-block');
+ const zone2 = document.getElementById('sentence-container');
+
+ if (words.length > 0 && containers.length > 0) {
+    console.log(words);
+    console.log(containers);
+    console.log(zone1);
+    console.log(zone2);
+  
+
+    if (zone1) {
+        zone1.ondragover = allowDrop;
+        zone2.ondragover = allowDrop;
+    } else {
+        console.log("Элемент zone1 не найден");
+    }
+
+    zone1.ondragenter = (event: DragEvent) => {
+        console.log("ondragenter вызван");
+    };
+
+    words.forEach(word => {
+      word.id = `word-${word.textContent}`;
+      (word as HTMLElement).ondragstart = drag;
+    });
+
+    zone1.ondrop = drop;
+    zone2.ondrop = drop;
+
+    
+
+
+ } else {
+    setTimeout(waitForElements, 100); 
+ }
+}
+
+let allowDrop = (event: DragEvent) => {
+//  console.log("allowDrop вызвана");
+ event.preventDefault();
+//  console.log("я в эллау дропе");
+}
+
+function drag (event: DragEvent){
+  console.log("я в драге");
+  event.dataTransfer.setData('id', (event.target as HTMLElement).id);
+  console.log(`я в drag вот id ${(event.target as HTMLElement).id}`);
+}
+
+function drop (event: DragEvent){
+  console.log("я в дропе");
+  let itemId = event.dataTransfer.getData("id");
+  console.log(itemId);
+  console.log(`я в дропе АЙДИ ${itemId}`);
+
+  const item = document.getElementById(itemId);
+  const target = event.target as HTMLElement;
+
+  if (!target.contains(item)) {
+    target.append(item);
+  } else {
+    console.error("Куда сам на себя тянешь");
+  }
+
+}
+
+
+
+waitForElements();
+
+
+
+
 
 export default MainPage;
