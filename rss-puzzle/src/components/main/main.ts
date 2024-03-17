@@ -135,6 +135,8 @@ function displaySentence(wordData: WordData) {
     const isFiveWords = words.length == 5;
 
     shuffledWords.forEach((word) => {
+      const wordPlaceholder = document.createElement('div');
+      wordPlaceholder.classList.add('wordPlaceholder');
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
@@ -155,7 +157,8 @@ function displaySentence(wordData: WordData) {
         wordDiv.classList.add('five-words');
       }
 
-      sentenceContainer.appendChild(wordDiv);
+      sentenceContainer.appendChild(wordPlaceholder);
+      wordPlaceholder.appendChild(wordDiv);
     });
   } else {
     console.error('Element with ID "sentence-container" not found');
@@ -281,26 +284,25 @@ function nextSentence(wordData: WordData) {
   waitForElements();
 }
 
-//обработка клика на слово
 function handleWordClick(e: MouseEvent) {
-  const wordDiv = e.target as HTMLElement;
-  const resultBlock = document.getElementById('result-block');
-  const checkButton = document.getElementById(
+ const wordDiv = e.target as HTMLElement;
+ const resultBlock = document.getElementById('result-block');
+ const checkButton = document.getElementById(
     'check-sentence-button',
-  ) as HTMLButtonElement;
+ ) as HTMLButtonElement;
 
-  if (resultBlock && wordDiv) {
-    checkButton.textContent = 'Check';
+ if (resultBlock && wordDiv) {
+  checkButton.textContent = 'Check';
 
-    if (resultBlock.contains(wordDiv)) {
-      const originalParent = wordDiv.getAttribute('data-original-parent');
-      if (originalParent) {
-        const originalParentElement = document.getElementById(originalParent);
-        if (originalParentElement) {
-          originalParentElement.appendChild(wordDiv);
-        }
-      }
-    } else {
+  if (resultBlock.contains(wordDiv)) {
+
+    const wordPlaceholders = Array.from(document.querySelectorAll('#sentence-container .wordPlaceholder'));
+    const targetPlaceholder = wordPlaceholders.find(placeholder => placeholder.children.length === 0);
+    if (targetPlaceholder) {
+
+      targetPlaceholder.appendChild(wordDiv);
+    }
+  } else {
       wordDiv.setAttribute(
         'data-original-parent',
         wordDiv.parentElement?.id || '',
@@ -308,20 +310,28 @@ function handleWordClick(e: MouseEvent) {
       resultBlock.appendChild(wordDiv);
       checkSentenceContainer();
     }
-  }
+ }
 
-  const sentenceContainer = document.getElementById('sentence-container');
-  if (sentenceContainer.children.length !== 0) {
-    checkButton.disabled = true;
+
+
+
+ const sentenceContainer = document.getElementById('sentence-container');
+ const allPlaceholdersEmpty = Array.from(sentenceContainer.querySelectorAll('.wordPlaceholder')).every(placeholder => placeholder.children.length === 0);
+ 
+ if (!allPlaceholdersEmpty) {
+    checkButton.disabled = false;
     const nextButton = document.getElementById(
       'next-sentence-button',
     ) as HTMLButtonElement;
     nextButton.style.visibility = 'hidden';
     checkButton.style.backgroundColor = '#ccc';
-  } else {
+ } else {
     checkButton.style.backgroundColor = 'black';
-  }
+ }
+
+
 }
+
 
 //я если честно не уверена что следующие 2 еще нужны но мне страшно их убирать
 
@@ -383,7 +393,9 @@ function checkSentenceContainer() {
     'check-sentence-button',
   ) as HTMLButtonElement;
   const sentenceContainer = document.getElementById('sentence-container');
-  if (sentenceContainer && sentenceContainer.children.length === 0) {
+  const allPlaceholdersEmpty = Array.from(sentenceContainer.querySelectorAll('.wordPlaceholder')).every(placeholder => placeholder.children.length === 0);
+
+  if (allPlaceholdersEmpty) {
     console.log('sentence-container пустой');
     const nextButton = document.getElementById(
       'next-sentence-button',

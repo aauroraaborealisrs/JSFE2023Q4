@@ -139,3 +139,10 @@
 .five-words {
   width: 200px !important;
 }
+
+.wordPlaceholder{
+  width:fit-content;
+  background-color: brown;
+  height: 43px;
+  min-width: 30px;
+}
