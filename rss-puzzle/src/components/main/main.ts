@@ -308,7 +308,6 @@ function handleWordClick(e: MouseEvent) {
       resultBlock.appendChild(wordDiv);
       checkSentenceContainer();
     }
-
   }
 
   const sentenceContainer = document.getElementById('sentence-container');
