@@ -128,10 +128,7 @@ function displaySentence(wordData: WordData) {
 
     originalSentence = currentSentence;
     let words = currentSentence.split(' ');
-    console.log(`ghtlkj;tybt ${originalSentence}`)
-
-
-
+    console.log(`ghtlkj;tybt ${originalSentence}`);
 
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
@@ -153,10 +150,6 @@ function displaySentence(wordData: WordData) {
 
       wordDiv.style.width = calculateWordWidth(word, originalSentence);
 
-
-
-
-
       if (word === words[0]) {
         wordDiv.classList.add('first-word');
       }
@@ -173,7 +166,6 @@ function displaySentence(wordData: WordData) {
       sentenceContainer.appendChild(wordPlaceholder);
       // resultBlock.appendChild(resultPlaceholder);
       wordPlaceholder.appendChild(wordDiv);
-
     });
 
     // createResultPlaceholders();
@@ -182,18 +174,16 @@ function displaySentence(wordData: WordData) {
   }
 }
 
-
 const calculateWordWidth = (word: string, originalSentence: string) => {
-
-  console.log(`слово ${word}`)
+  console.log(`слово ${word}`);
 
   const totalLength = originalSentence.length;
 
-  console.log(`длина предложения ${totalLength}`)
+  console.log(`длина предложения ${totalLength}`);
 
   const wordLength = word.length;
 
-  console.log(`длина слова ${wordLength}`)
+  console.log(`длина слова ${wordLength}`);
 
   const totalWidthInPixels = 743;
 
@@ -203,24 +193,22 @@ const calculateWordWidth = (word: string, originalSentence: string) => {
 
   const roundedPercentage = Math.round(percentage * 10) / 10;
 
-
-  console.log(`проценты ${percentage}`)
+  console.log(`проценты ${percentage}`);
 
   const widthInPixels = totalWidthInPixels * roundedPercentage;
 
-  const roundedPixels = parseFloat((totalWidthInPixels * roundedPercentage).toFixed(1));
+  const roundedPixels = parseFloat(
+    (totalWidthInPixels * roundedPercentage).toFixed(1),
+  );
 
-  console.log(`финал до +15 ${roundedPixels}`)
+  console.log(`финал до +15 ${roundedPixels}`);
 
   const final = roundedPixels + 15;
 
-  console.log(`финал ${final}`)
-
-
+  console.log(`финал ${final}`);
 
   return `${final}px`;
 };
-
 
 // function createResultPlaceholders() {
 //   const resultBlock = document.getElementById('result-block');
@@ -352,7 +340,7 @@ function nextSentence(wordData: WordData) {
     'completed-sentences-container',
   );
   const resultBlock = document.getElementById('result-block');
-  
+
   // const resultPlaceholders = resultBlock.querySelectorAll('.resultPlaceholder');
 
   if (completedSentencesContainer && resultBlock) {
@@ -601,7 +589,6 @@ function waitForElements() {
       });
 
       // SentenceBlock.ondragover = allowDrop;
-
     } else {
       console.log('Элемент resultBlock не найден');
     }
@@ -626,7 +613,6 @@ function waitForElements() {
     });
 
     // SentenceBlock.ondrop = drop;
-
   } else {
     setTimeout(waitForElements, 100);
   }
@@ -664,7 +650,6 @@ function drop(event: DragEvent) {
   if (!target.contains(item)) {
     target.append(item);
     console.log(target);
-
   } else {
     console.error('Куда сам на себя тянешь');
   }
