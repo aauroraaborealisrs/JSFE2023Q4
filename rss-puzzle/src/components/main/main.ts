@@ -6,8 +6,9 @@ let originalSentence = '';
 let wordData: WordData;
 let currentRound = 0;
 let alphaHeight = 90;
+let dataUrl = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel1.json';
 
-const imageNames = [
+const imageNames1 = [
   '9th_wave',
   'abbati2',
   'arabs',
@@ -55,6 +56,186 @@ const imageNames = [
   'woodedla',
 ];
 
+const imageNames2 = [
+ '2_01',
+ '2_02',
+ '2_03',
+ '2_04',
+ '2_05',
+ '2_06',
+ '2_07',
+ '2_08',
+ '2_09',
+ '2_10',
+ '2_11',
+ '2_12',
+ '2_13',
+ '2_14',
+ '2_15',
+ '2_16',
+ '2_17',
+ '2_18',
+ '2_19',
+ '2_20',
+ '2_21',
+ '2_22',
+ '2_23',
+ '2_24',
+ '2_25',
+ '2_26',
+ '2_27',
+ '2_28',
+ '2_29',
+ '2_30',
+ '2_31',
+ '2_32',
+ '2_33',
+ '2_34',
+ '2_35',
+ '2_36',
+ '2_37',
+ '2_38',
+ '2_39',
+ '2_40',
+ '2_41'
+];
+
+const imageNames3 = [
+ '3_01',
+ '3_02',
+ '3_03',
+ '3_04',
+ '3_05',
+ '3_06',
+ '3_07',
+ '3_08',
+ '3_09',
+ '3_10',
+ '3_11',
+ '3_12',
+ '3_13',
+ '3_14',
+ '3_15',
+ '3_16',
+ '3_17',
+ '3_18',
+ '3_19',
+ '3_20',
+ '3_21',
+ '3_22',
+ '3_23',
+ '3_24',
+ '3_25',
+ '3_26',
+ '3_27',
+ '3_28',
+ '3_29',
+ '3_30',
+ '3_31',
+ '3_32',
+ '3_33',
+ '3_34',
+ '3_35',
+ '3_36',
+ '3_37',
+ '3_38',
+ '3_39',
+ '3_40'
+];
+
+const imageNames4 = [
+ '4_01',
+ '4_02',
+ '4_03',
+ '4_04',
+ '4_05',
+ '4_06',
+ '4_07',
+ '4_08',
+ '4_09',
+ '4_10',
+ '4_11',
+ '4_12',
+ '4_13',
+ '4_14',
+ '4_15',
+ '4_16',
+ '4_17',
+ '4_18',
+ '4_19',
+ '4_20',
+ '4_21',
+ '4_22',
+ '4_23',
+ '4_24',
+ '4_25',
+ '4_26',
+ '4_27',
+ '4_28',
+ '4_29'
+];
+
+const imageNames5 = [
+ '5_01',
+ '5_02',
+ '5_03',
+ '5_04',
+ '5_05',
+ '5_06',
+ '5_07',
+ '5_08',
+ '5_09',
+ '5_10',
+ '5_11',
+ '5_12',
+ '5_13',
+ '5_14',
+ '5_15',
+ '5_16',
+ '5_17',
+ '5_18',
+ '5_19',
+ '5_20',
+ '5_21',
+ '5_22',
+ '5_23',
+ '5_24',
+ '5_25',
+ '5_26',
+ '5_27',
+ '5_28',
+ '5_29'
+];
+
+const imageNames6 = [
+ '6_01',
+ '6_02',
+ '6_03',
+ '6_04',
+ '6_05',
+ '6_06',
+ '6_07',
+ '6_08',
+ '6_09',
+ '6_10',
+ '6_11',
+ '6_12',
+ '6_13',
+ '6_14',
+ '6_15',
+ '6_16',
+ '6_17',
+ '6_18',
+ '6_19',
+ '6_20',
+ '6_21',
+ '6_22',
+ '6_23',
+ '6_24',
+ '6_25'
+];
+
+
 class MainPage {
   sentences: string[] = [];
   constructor() {
@@ -65,6 +246,14 @@ class MainPage {
         <div id="main-page">
         <div id="translation"></div>
         <button id="toggle-translation-button">Показать перевод</button>
+        <select id="numberSelect">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+    </select>
         <div id="completed-sentences-container">
         <div id="result-block"></div>
         <div class="alpha"></div>
@@ -156,6 +345,46 @@ class MainPage {
       completedSentencesContainer.style.backgroundSize = 'cover';
       completedSentencesContainer.style.backgroundPosition = 'center';
     }
+    const selectElement = document.getElementById('numberSelect');
+
+
+selectElement.addEventListener('change', () => {
+ const selectedNumber = (selectElement as HTMLSelectElement).value;
+ if (selectedNumber) {
+    dataUrl = `https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel${selectedNumber}.json`;
+    console.log('Selected data URL:', dataUrl);
+    fetchWordData()
+      .then((data) => {
+        wordData = data;
+        return extractSentences(wordData);
+      })
+      .then((fetchedSentences) => {
+        this.sentences = fetchedSentences; 
+        displaySentence(wordData);
+        return extractTranslations();
+      })
+      .then((translations) => {
+        displayTranslation(wordData);
+      });
+
+      const sentenceLines =
+      completedSentencesContainer.querySelectorAll('.sentence-line');
+    sentenceLines.forEach((line) => {
+      completedSentencesContainer.removeChild(line);
+    });
+
+    alphaHeight = 100;
+    const alphaElement = document.querySelector('.alpha') as HTMLElement;
+    if (alphaElement) {
+      alphaElement.style.height = `${100}%`;
+    }
+    currentRound =1;
+    currentSentenceIndex =0;
+
+
+ }
+});
+
   }
 
   getSentences(): string[] {
@@ -179,9 +408,10 @@ interface WordData {
 // Функция для загрузки данных из JSON-файла
 async function fetchWordData() {
   try {
-    const response = await fetch(
-      'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel1.json',
-    );
+    // const response = await fetch(
+    //   'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel1.json',
+    // );
+    const response = await fetch(dataUrl); 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -198,15 +428,17 @@ function getImageUrl(imageName: string): string {
   return `https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/${imageName}.jpg`;
 }
 
+
+
 function changeBackgroundImage() {
   const completedSentencesContainer = document.getElementById(
     'completed-sentences-container',
   ) as HTMLElement;
   if (completedSentencesContainer) {
-    const imageUrl = getImageUrl(imageNames[currentRound]);
+    const imageUrl = getImageUrl(imageNames1[currentRound]);
     completedSentencesContainer.style.backgroundImage = `url('${imageUrl}')`;
     // Увеличиваем индекс изображения для следующего изменения фона
-    currentRound = (currentRound + 1) % imageNames.length; // Остаток от деления для цикличного перебора
+    currentRound = (currentRound + 1) % imageNames1.length; // Остаток от деления для цикличного перебора
   }
 }
 
@@ -223,7 +455,7 @@ function displaySentence(wordData: WordData) {
 
   if (sentenceContainer) {
     currentSentence =
-      wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample ||
+      wordData.rounds[currentRound-1]?.words[currentSentenceIndex]?.textExample ||
       '';
     // wordData.rounds[2]?.words[5]
     // ?.textExample || '';
@@ -283,18 +515,12 @@ const calculateWordWidth = (word: string, originalSentence: string) => {
   // console.log(`слово ${word}`);
 
   const totalLength = originalSentence.length;
-  // console.log(`длина предложения ${totalLength}`);
-
   const wordLength = word.length;
-  // console.log(`длина слова ${wordLength}`);
-
-  // const totalWidthInPixels = 743;
 
   const container = document.querySelector(
     '#completed-sentences-container',
   ) as HTMLElement;
   const totalWidthInPixels = container.offsetWidth;
-  // console.log(`РАЗМЕР КОНТЕЙНЕРА ${totalWidthInPixels}`);
 
   const percentage = wordLength / totalLength;
   //const roundedPercentage = parseFloat(percentage.toFixed(1));
@@ -307,10 +533,8 @@ const calculateWordWidth = (word: string, originalSentence: string) => {
     (totalWidthInPixels * roundedPercentage).toFixed(1),
   );
 
-  // console.log(`финал до +15 ${roundedPixels}`);
   const final = roundedPixels + 15;
 
-  // console.log(`финал ${final}`);
   return `${final}px`;
 };
 
@@ -405,7 +629,9 @@ function nextSentence(wordData: WordData) {
   if (currentSentenceIndex % 10 == 0) {
     currentRound++;
     currentSentenceIndex = 0;
+    
     changeBackgroundImage();
+
   }
 
   alphaHeight -= 10;
@@ -448,7 +674,6 @@ function nextSentence(wordData: WordData) {
     completedSentencesContainer.appendChild(newLineDiv);
 
     if (currentSentenceIndex % 10 == 0) {
-      // console.log(`${alphaHeight}`);
 
       console.log('все жестко удалено');
       const sentenceLines =
@@ -570,9 +795,12 @@ function displayTranslation(wordData: WordData) {
         : 'Скрыть перевод';
   }
 
+  //ВОТ ОТЛАДКА  ПРЕДЛОЖЕНИЕ И РАУНД
+
   console.log(currentSentenceIndex, currentRound);
+
   const translation =
-    wordData.rounds[currentRound]?.words[currentSentenceIndex]
+    wordData.rounds[currentRound-1]?.words[currentSentenceIndex]
       ?.textExampleTranslate || '';
   // wordData.rounds[2]?.words[5] это просто для дебага на словах с которыми может быть проблема
   // ?.textExampleTranslate || '';
@@ -688,11 +916,11 @@ function waitForElements() {
 
       // SentenceBlock.ondragover = allowDrop;
     } else {
-      console.log('Элемент resultBlock не найден');
+      // console.log('Элемент resultBlock не найден');
     }
 
     resultBlock.ondragenter = (event: DragEvent) => {
-      console.log('ondragenter вызван');
+      // console.log('ondragenter вызван');
     };
 
     words.forEach((word) => {
