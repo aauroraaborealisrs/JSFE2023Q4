@@ -5,6 +5,7 @@ let currentSentence: string = '';
 let originalSentence = '';
 let wordData: WordData;
 let currentRound = 0;
+let alphaHeight = 90; 
 
 class MainPage {
   sentences: string[] = [];
@@ -18,6 +19,7 @@ class MainPage {
         <button id="toggle-translation-button">Показать перевод</button>
         <div id="completed-sentences-container">
         <div id="result-block"></div>
+        <div class="alpha"></div>
         </div>
         <button id="auto-complete-button">Auto-Complete</button>
         <div id="sentence-container" class="container"></div>
@@ -93,7 +95,18 @@ class MainPage {
             : 'Скрыть перевод';
         }
       });
-  }
+
+       const completedSentencesContainer = document.getElementById('completed-sentences-container') as HTMLElement;
+       if (completedSentencesContainer) {
+        console.log("КАРТИНКА")
+          completedSentencesContainer.style.backgroundImage = "url('https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/deerhunt.jpg')";
+          completedSentencesContainer.style.backgroundRepeat = 'no-repeat';
+          completedSentencesContainer.style.backgroundSize = 'cover';
+          completedSentencesContainer.style.backgroundPosition = 'center';
+       }
+
+  
+    }
 
   getSentences(): string[] {
     return this.sentences;
@@ -327,6 +340,14 @@ function nextSentence(wordData: WordData) {
     currentRound++;
     currentSentenceIndex = 0;
   }
+
+   alphaHeight -= 10;
+   const alphaElement = document.querySelector('.alpha') as HTMLElement;
+   if (alphaElement) {
+      alphaElement.style.height = `${alphaHeight}%`;
+   }
+
+
   const checkButton = document.getElementById(
     'check-sentence-button',
   ) as HTMLButtonElement;
@@ -367,6 +388,8 @@ function nextSentence(wordData: WordData) {
       sentenceLines.forEach((line) => {
         completedSentencesContainer.removeChild(line);
       });
+
+      alphaHeight = 90;
     }
   }
 
