@@ -5,6 +5,55 @@ let currentSentence: string = '';
 let originalSentence = '';
 let wordData: WordData;
 let currentRound = 0;
+let alphaHeight = 90;
+
+const imageNames = [
+  '9th_wave',
+  'abbati2',
+  'arabs',
+  'campo',
+  'citywall',
+  'coastal',
+  'deerhunt',
+  'deerlake',
+  'distress',
+  'edgewood',
+  'extensiv',
+  'extensiv_1',
+  'firework',
+  'fishing',
+  'giuseppe',
+  'ice_land',
+  'italiana',
+  'italianb',
+  'kilarney',
+  'landmose',
+  'landsca3',
+  'landscap',
+  'landscap_1',
+  'landscap_2',
+  'railway',
+  'rateship',
+  'river_la',
+  'riverla2',
+  'rome',
+  'rome1',
+  'scene',
+  'shipcalm',
+  'shipping',
+  'shipping_1',
+  'skating',
+  'tivoli',
+  'vessels1',
+  'view_stp',
+  'viewvien',
+  'viewvlaa',
+  'waterfal',
+  'winter_l',
+  'winterla',
+  'winterla_1',
+  'woodedla',
+];
 
 class MainPage {
   sentences: string[] = [];
@@ -18,6 +67,7 @@ class MainPage {
         <button id="toggle-translation-button">Показать перевод</button>
         <div id="completed-sentences-container">
         <div id="result-block"></div>
+        <div class="alpha"></div>
         </div>
         <button id="auto-complete-button">Auto-Complete</button>
         <div id="sentence-container" class="container"></div>
@@ -93,6 +143,19 @@ class MainPage {
             : 'Скрыть перевод';
         }
       });
+
+    const completedSentencesContainer = document.getElementById(
+      'completed-sentences-container',
+    ) as HTMLElement;
+    if (completedSentencesContainer) {
+      console.log('КАРТИНКА');
+      // completedSentencesContainer.style.backgroundImage =
+      //   "url('https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/deerhunt.jpg')";
+      changeBackgroundImage();
+      completedSentencesContainer.style.backgroundRepeat = 'no-repeat';
+      completedSentencesContainer.style.backgroundSize = 'cover';
+      completedSentencesContainer.style.backgroundPosition = 'center';
+    }
   }
 
   getSentences(): string[] {
@@ -131,6 +194,22 @@ async function fetchWordData() {
   }
 }
 
+function getImageUrl(imageName: string): string {
+  return `https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/${imageName}.jpg`;
+}
+
+function changeBackgroundImage() {
+  const completedSentencesContainer = document.getElementById(
+    'completed-sentences-container',
+  ) as HTMLElement;
+  if (completedSentencesContainer) {
+    const imageUrl = getImageUrl(imageNames[currentRound]);
+    completedSentencesContainer.style.backgroundImage = `url('${imageUrl}')`;
+    // Увеличиваем индекс изображения для следующего изменения фона
+    currentRound = (currentRound + 1) % imageNames.length; // Остаток от деления для цикличного перебора
+  }
+}
+
 //разбивает предложение на слова и показывает их
 
 function displaySentence(wordData: WordData) {
@@ -151,7 +230,7 @@ function displaySentence(wordData: WordData) {
 
     originalSentence = currentSentence;
     let words = currentSentence.split(' ');
-    console.log(`ghtlkj;tybt ${originalSentence}`);
+    // console.log(`ghtlkj;tybt ${originalSentence}`);
 
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
@@ -201,13 +280,13 @@ function displaySentence(wordData: WordData) {
 }
 
 const calculateWordWidth = (word: string, originalSentence: string) => {
-  console.log(`слово ${word}`);
+  // console.log(`слово ${word}`);
 
   const totalLength = originalSentence.length;
-  console.log(`длина предложения ${totalLength}`);
+  // console.log(`длина предложения ${totalLength}`);
 
   const wordLength = word.length;
-  console.log(`длина слова ${wordLength}`);
+  // console.log(`длина слова ${wordLength}`);
 
   // const totalWidthInPixels = 743;
 
@@ -215,12 +294,12 @@ const calculateWordWidth = (word: string, originalSentence: string) => {
     '#completed-sentences-container',
   ) as HTMLElement;
   const totalWidthInPixels = container.offsetWidth;
-  console.log(`РАЗМЕР КОНТЕЙНЕРА ${totalWidthInPixels}`);
+  // console.log(`РАЗМЕР КОНТЕЙНЕРА ${totalWidthInPixels}`);
 
   const percentage = wordLength / totalLength;
   //const roundedPercentage = parseFloat(percentage.toFixed(1));
   const roundedPercentage = Math.round(percentage * 10) / 10;
-  console.log(`проценты ${percentage}`);
+  // console.log(`проценты ${percentage}`);
 
   const widthInPixels = totalWidthInPixels * roundedPercentage;
 
@@ -228,10 +307,10 @@ const calculateWordWidth = (word: string, originalSentence: string) => {
     (totalWidthInPixels * roundedPercentage).toFixed(1),
   );
 
-  console.log(`финал до +15 ${roundedPixels}`);
+  // console.log(`финал до +15 ${roundedPixels}`);
   const final = roundedPixels + 15;
 
-  console.log(`финал ${final}`);
+  // console.log(`финал ${final}`);
   return `${final}px`;
 };
 
@@ -326,7 +405,15 @@ function nextSentence(wordData: WordData) {
   if (currentSentenceIndex % 10 == 0) {
     currentRound++;
     currentSentenceIndex = 0;
+    changeBackgroundImage();
   }
+
+  alphaHeight -= 10;
+  // const alphaElement = document.querySelector('.alpha') as HTMLElement;
+  // if (alphaElement) {
+  //   alphaElement.style.height = `${alphaHeight}%`;
+  // }
+
   const checkButton = document.getElementById(
     'check-sentence-button',
   ) as HTMLButtonElement;
@@ -361,13 +448,23 @@ function nextSentence(wordData: WordData) {
     completedSentencesContainer.appendChild(newLineDiv);
 
     if (currentSentenceIndex % 10 == 0) {
+      // console.log(`${alphaHeight}`);
+
       console.log('все жестко удалено');
       const sentenceLines =
         completedSentencesContainer.querySelectorAll('.sentence-line');
       sentenceLines.forEach((line) => {
         completedSentencesContainer.removeChild(line);
       });
+
+      alphaHeight = 90;
+      console.log(`${alphaHeight}`);
     }
+  }
+
+  const alphaElement = document.querySelector('.alpha') as HTMLElement;
+  if (alphaElement) {
+    alphaElement.style.height = `${alphaHeight}%`;
   }
 
   waitForElements();

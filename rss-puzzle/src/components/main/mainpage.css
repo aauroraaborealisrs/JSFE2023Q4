@@ -29,9 +29,8 @@
 #result-block {
   background-color: rgb(232, 232, 232);
   display: flex;
-  border-radius: 5px;
   width: 743px;
-  height: 39px;
+  height: 43px;
   order: 11;
 
   justify-content: space-between;
@@ -94,17 +93,34 @@
   display: flex;
   flex-wrap: wrap;
   width: 743px;
-  height: 430px;
+  height: 445px;
   background-color: aquamarine;
   align-content: flex-start;
   margin-bottom: 20px;
+  outline: 1px solid black;
 }
+
+/* #completed-sentences-container::before {
+ content: "";
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 100%;
+ height: 100%;
+ background-color: rgba(0, 0, 0, 0.5);
+ z-index: 1; 
+} */
 
 .sentence-line {
   display: flex;
   width: 743px;
   height: fit-content;
   justify-content: space-between;
+}
+
+.sentence-line .word {
+  color: white;
+  flex-grow: 1;
 }
 
 .word {
@@ -170,6 +186,17 @@
 
 .not-droppable {
   background-color: darkblue;
+}
+
+.alpha {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  order: 12;
+}
+
+.sentence-line .word:hover {
+  background-color: rgba(9, 40, 11, 0.452);
 }
 
 @media (max-width: 849px) {
