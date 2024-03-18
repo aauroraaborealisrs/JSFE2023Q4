@@ -22,6 +22,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 743px;
+  margin: 0 auto;
 }
 
 #result-block {
@@ -168,4 +170,22 @@
 
 .not-droppable {
   background-color: darkblue;
+}
+
+@media (max-width: 849px) {
+  #completed-sentences-container {
+    width: 646px;
+  }
+
+  .sentence-line {
+    width: 646px;
+  }
+
+  #sentence-container {
+    width: 646px;
+  }
+
+  #result-block {
+    width: 646px;
+  }
 }
