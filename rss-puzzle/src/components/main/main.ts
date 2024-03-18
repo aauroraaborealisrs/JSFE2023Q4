@@ -7,6 +7,54 @@ let wordData: WordData;
 let currentRound = 0;
 let alphaHeight = 90;
 
+const imageNames = [
+  '9th_wave',
+  'abbati2',
+  'arabs',
+  'campo',
+  'citywall',
+  'coastal',
+  'deerhunt',
+  'deerlake',
+  'distress',
+  'edgewood',
+  'extensiv',
+  'extensiv_1',
+  'firework',
+  'fishing',
+  'giuseppe',
+  'ice_land',
+  'italiana',
+  'italianb',
+  'kilarney',
+  'landmose',
+  'landsca3',
+  'landscap',
+  'landscap_1',
+  'landscap_2',
+  'railway',
+  'rateship',
+  'river_la',
+  'riverla2',
+  'rome',
+  'rome1',
+  'scene',
+  'shipcalm',
+  'shipping',
+  'shipping_1',
+  'skating',
+  'tivoli',
+  'vessels1',
+  'view_stp',
+  'viewvien',
+  'viewvlaa',
+  'waterfal',
+  'winter_l',
+  'winterla',
+  'winterla_1',
+  'woodedla',
+];
+
 class MainPage {
   sentences: string[] = [];
   constructor() {
@@ -101,8 +149,9 @@ class MainPage {
     ) as HTMLElement;
     if (completedSentencesContainer) {
       console.log('КАРТИНКА');
-      completedSentencesContainer.style.backgroundImage =
-        "url('https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/deerhunt.jpg')";
+      // completedSentencesContainer.style.backgroundImage =
+      //   "url('https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/deerhunt.jpg')";
+      changeBackgroundImage();
       completedSentencesContainer.style.backgroundRepeat = 'no-repeat';
       completedSentencesContainer.style.backgroundSize = 'cover';
       completedSentencesContainer.style.backgroundPosition = 'center';
@@ -142,6 +191,22 @@ async function fetchWordData() {
     return wordData;
   } catch (error) {
     console.error('Error fetching word data:', error);
+  }
+}
+
+function getImageUrl(imageName: string): string {
+  return `https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/${imageName}.jpg`;
+}
+
+function changeBackgroundImage() {
+  const completedSentencesContainer = document.getElementById(
+    'completed-sentences-container',
+  ) as HTMLElement;
+  if (completedSentencesContainer) {
+    const imageUrl = getImageUrl(imageNames[currentRound]);
+    completedSentencesContainer.style.backgroundImage = `url('${imageUrl}')`;
+    // Увеличиваем индекс изображения для следующего изменения фона
+    currentRound = (currentRound + 1) % imageNames.length; // Остаток от деления для цикличного перебора
   }
 }
 
@@ -340,6 +405,7 @@ function nextSentence(wordData: WordData) {
   if (currentSentenceIndex % 10 == 0) {
     currentRound++;
     currentSentenceIndex = 0;
+    changeBackgroundImage();
   }
 
   alphaHeight -= 10;
@@ -382,7 +448,7 @@ function nextSentence(wordData: WordData) {
     completedSentencesContainer.appendChild(newLineDiv);
 
     if (currentSentenceIndex % 10 == 0) {
-      console.log(`${alphaHeight}`);
+      // console.log(`${alphaHeight}`);
 
       console.log('все жестко удалено');
       const sentenceLines =
