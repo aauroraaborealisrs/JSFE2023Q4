@@ -15,6 +15,7 @@ class MainPage {
     const mainPage = `
         <div id="main-page">
         <div id="translation"></div>
+        <button id="toggle-translation-button">Показать перевод</button>
         <div id="completed-sentences-container">
         <div id="result-block"></div>
         </div>
@@ -74,7 +75,6 @@ class MainPage {
       'auto-complete-button',
     ) as HTMLButtonElement;
     autoCompleteButton.addEventListener('click', autoComplete);
-
 
     document
       .getElementById('toggle-translation-button')
@@ -188,10 +188,13 @@ function displaySentence(wordData: WordData) {
       wordPlaceholder.appendChild(wordDiv);
     });
 
-    const translationSpan = document.querySelector('.translation-hint') as HTMLElement;
-    const button = document.getElementById('toggle-translation-button') as HTMLButtonElement;
+    const translationSpan = document.querySelector(
+      '.translation-hint',
+    ) as HTMLElement;
+    const button = document.getElementById(
+      'toggle-translation-button',
+    ) as HTMLButtonElement;
     button.textContent = 'Показать перевод';
-
   } else {
     console.error('Element with ID "sentence-container" not found');
   }
@@ -355,10 +358,6 @@ function nextSentence(wordData: WordData) {
       newLineDiv.appendChild(resultBlock.firstChild);
     }
 
-    resultPlaceholders.forEach((placeholder) => {
-      placeholder.remove();
-    });
-
     completedSentencesContainer.appendChild(newLineDiv);
 
     if (currentSentenceIndex % 10 == 0) {
@@ -459,13 +458,13 @@ function displayTranslation(wordData: WordData) {
 
   const translationSpan = document.createElement('span');
   translationSpan.classList.add('translation-hint');
-   translationSpan.style.display = 'none';
+  translationSpan.style.display = 'none';
 
   if (translationSpan) {
     if (button.textContent === 'Скрыть перевод') {
-      translationSpan.style.display = 'block'; 
+      translationSpan.style.display = 'block';
     } else {
-      translationSpan.style.display = 'none'; 
+      translationSpan.style.display = 'none';
     }
 
     button.textContent =
@@ -583,8 +582,6 @@ function waitForElements() {
   const placeholders = document.querySelectorAll('.wordPlaceholder');
 
   if (words.length > 0 && containers.length > 0) {
-
-
     if (resultBlock) {
       resultBlock.ondragover = allowDrop;
 
@@ -642,7 +639,6 @@ function drop(event: DragEvent) {
     }, 1000);
     return;
   }
-
 
   if (!target.contains(item)) {
     target.append(item);
