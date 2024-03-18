@@ -6,7 +6,8 @@ let originalSentence = '';
 let wordData: WordData;
 let currentRound = 0;
 let alphaHeight = 90;
-let dataUrl = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel1.json';
+let dataUrl =
+  'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel1.json';
 
 let correctSentencesManual: string[] = [];
 let correctSentencesAutoComplete: string[] = [];
@@ -58,7 +59,6 @@ const imageNames1 = [
   'winterla_1',
   'woodedla',
 ];
-
 
 class MainPage {
   sentences: string[] = [];
@@ -171,47 +171,41 @@ class MainPage {
     }
     const selectElement = document.getElementById('numberSelect');
 
+    selectElement.addEventListener('change', () => {
+      const selectedNumber = (selectElement as HTMLSelectElement).value;
+      if (selectedNumber) {
+        dataUrl = `https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel${selectedNumber}.json`;
+        console.log('Selected data URL:', dataUrl);
+        fetchWordData()
+          .then((data) => {
+            wordData = data;
+            return extractSentences(wordData);
+          })
+          .then((fetchedSentences) => {
+            this.sentences = fetchedSentences;
+            displaySentence(wordData);
+            return extractTranslations();
+          })
+          .then((translations) => {
+            displayTranslation(wordData);
+          });
 
-selectElement.addEventListener('change', () => {
- const selectedNumber = (selectElement as HTMLSelectElement).value;
- if (selectedNumber) {
-    dataUrl = `https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel${selectedNumber}.json`;
-    console.log('Selected data URL:', dataUrl);
-    fetchWordData()
-      .then((data) => {
-        wordData = data;
-        return extractSentences(wordData);
-      })
-      .then((fetchedSentences) => {
-        this.sentences = fetchedSentences; 
-        displaySentence(wordData);
-        return extractTranslations();
-      })
-      .then((translations) => {
-        displayTranslation(wordData);
-      });
+        const sentenceLines =
+          completedSentencesContainer.querySelectorAll('.sentence-line');
+        sentenceLines.forEach((line) => {
+          completedSentencesContainer.removeChild(line);
+        });
 
-      const sentenceLines =
-      completedSentencesContainer.querySelectorAll('.sentence-line');
-    sentenceLines.forEach((line) => {
-      completedSentencesContainer.removeChild(line);
+        alphaHeight = 100;
+        const alphaElement = document.querySelector('.alpha') as HTMLElement;
+        if (alphaElement) {
+          alphaElement.style.height = `${100}%`;
+        }
+        currentRound = 1;
+        currentSentenceIndex = 0;
+      }
     });
-
-    alphaHeight = 100;
-    const alphaElement = document.querySelector('.alpha') as HTMLElement;
-    if (alphaElement) {
-      alphaElement.style.height = `${100}%`;
-    }
-    currentRound =1;
-    currentSentenceIndex =0;
-
-
- }
-});
-
-
   }
-
 
   getSentences(): string[] {
     return this.sentences;
@@ -237,7 +231,7 @@ async function fetchWordData() {
     // const response = await fetch(
     //   'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel1.json',
     // );
-    const response = await fetch(dataUrl); 
+    const response = await fetch(dataUrl);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -253,8 +247,6 @@ async function fetchWordData() {
 function getImageUrl(imageName: string): string {
   return `https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/${imageName}.jpg`;
 }
-
-
 
 function changeBackgroundImage() {
   const completedSentencesContainer = document.getElementById(
@@ -281,8 +273,8 @@ function displaySentence(wordData: WordData) {
 
   if (sentenceContainer) {
     currentSentence =
-      wordData.rounds[currentRound-1]?.words[currentSentenceIndex]?.textExample ||
-      '';
+      wordData.rounds[currentRound - 1]?.words[currentSentenceIndex]
+        ?.textExample || '';
     // wordData.rounds[2]?.words[5]
     // ?.textExample || '';
 
@@ -457,9 +449,8 @@ function nextSentence(wordData: WordData) {
   if (currentSentenceIndex % 10 == 0) {
     currentRound++;
     currentSentenceIndex = 0;
-    
-    changeBackgroundImage();
 
+    changeBackgroundImage();
   }
 
   alphaHeight -= 10;
@@ -502,11 +493,10 @@ function nextSentence(wordData: WordData) {
     completedSentencesContainer.appendChild(newLineDiv);
 
     if (currentSentenceIndex % 10 == 0) {
-
-      console.log("хоба")
+      console.log('хоба');
 
       //МОДАЛКА
-      
+
       const modal = document.createElement('div');
       modal.classList.add('modal');
       document.body.insertBefore(modal, document.body.firstChild);
@@ -514,64 +504,61 @@ function nextSentence(wordData: WordData) {
       const modalContent = document.createElement('div');
       modalContent.classList.add('modal-content');
 
-       const closeButton = document.createElement('span');
-       closeButton.classList.add('close');
-       closeButton.textContent = 'Continue';
-       closeButton.onclick = function() {
-          modal.style.display = 'none';
-          correctSentencesManual.length = 0;
-          correctSentencesAutoComplete.length = 0;
+      const closeButton = document.createElement('span');
+      closeButton.classList.add('close');
+      closeButton.textContent = 'Continue';
+      closeButton.onclick = function () {
+        modal.style.display = 'none';
+        correctSentencesManual.length = 0;
+        correctSentencesAutoComplete.length = 0;
+      };
 
-       };
+      const header = document.createElement('h2');
+      header.textContent = 'Congrats!';
 
-        const header = document.createElement('h2');
-        header.textContent = 'Congrats!';
-       
-        // Создание контейнеров для массивов
-        const known = document.createElement('h4');
-        known.classList.add('known');
-        known.textContent = 'Known:';
+      // Создание контейнеров для массивов
+      const known = document.createElement('h4');
+      known.classList.add('known');
+      known.textContent = 'Known:';
 
-        const manualSentencesContainer = document.createElement('div');
-        manualSentencesContainer.id = 'manualSentencesContainer';
+      const manualSentencesContainer = document.createElement('div');
+      manualSentencesContainer.id = 'manualSentencesContainer';
 
-        const unknown = document.createElement('h4');
-        unknown.classList.add('unknown');
-        unknown.textContent = 'Unknown:';
+      const unknown = document.createElement('h4');
+      unknown.classList.add('unknown');
+      unknown.textContent = 'Unknown:';
 
-        const autoCompleteSentencesContainer = document.createElement('div');
-        autoCompleteSentencesContainer.id = 'autoCompleteSentencesContainer';
-       
-        // Добавление массивов в контейнеры
-        correctSentencesManual.forEach(sentence => {
-           const p = document.createElement('p');
-           p.textContent = sentence;
-           manualSentencesContainer.appendChild(p);
-        });
-       
-        correctSentencesAutoComplete.forEach(sentence => {
-           const p = document.createElement('p');
-           p.textContent = sentence;
-           autoCompleteSentencesContainer.appendChild(p);
-        });
-       
-        // Добавление элементов в модальное окно
-        
-        modalContent.appendChild(header);
-        modalContent.appendChild(known);
-        modalContent.appendChild(manualSentencesContainer);
-        modalContent.appendChild(unknown);
-        modalContent.appendChild(autoCompleteSentencesContainer);
-        modalContent.appendChild(closeButton);
-        modal.appendChild(modalContent);
+      const autoCompleteSentencesContainer = document.createElement('div');
+      autoCompleteSentencesContainer.id = 'autoCompleteSentencesContainer';
 
+      // Добавление массивов в контейнеры
+      correctSentencesManual.forEach((sentence) => {
+        const p = document.createElement('p');
+        p.textContent = sentence;
+        manualSentencesContainer.appendChild(p);
+      });
+
+      correctSentencesAutoComplete.forEach((sentence) => {
+        const p = document.createElement('p');
+        p.textContent = sentence;
+        autoCompleteSentencesContainer.appendChild(p);
+      });
+
+      // Добавление элементов в модальное окно
+
+      modalContent.appendChild(header);
+      modalContent.appendChild(known);
+      modalContent.appendChild(manualSentencesContainer);
+      modalContent.appendChild(unknown);
+      modalContent.appendChild(autoCompleteSentencesContainer);
+      modalContent.appendChild(closeButton);
+      modal.appendChild(modalContent);
 
       if (modal) {
         modal.style.display = 'block';
 
-        console.log(correctSentencesManual, correctSentencesAutoComplete)
-     }
-
+        console.log(correctSentencesManual, correctSentencesAutoComplete);
+      }
 
       console.log('все жестко удалено');
       const sentenceLines =
@@ -592,7 +579,6 @@ function nextSentence(wordData: WordData) {
 
   waitForElements();
 }
-
 
 function handleWordClick(e: MouseEvent) {
   const wordDiv = e.target as HTMLElement;
@@ -699,7 +685,7 @@ function displayTranslation(wordData: WordData) {
   console.log(currentSentenceIndex, currentRound);
 
   const translation =
-    wordData.rounds[currentRound-1]?.words[currentSentenceIndex]
+    wordData.rounds[currentRound - 1]?.words[currentSentenceIndex]
       ?.textExampleTranslate || '';
   // wordData.rounds[2]?.words[5] это просто для дебага на словах с которыми может быть проблема
   // ?.textExampleTranslate || '';
