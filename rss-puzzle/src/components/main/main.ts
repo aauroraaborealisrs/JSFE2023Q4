@@ -15,7 +15,6 @@ class MainPage {
     const mainPage = `
         <div id="main-page">
         <div id="translation"></div>
-        <button id="toggle-translation-button">Показать перевод</button>
         <div id="completed-sentences-container">
         <div id="result-block"></div>
         </div>
@@ -356,6 +355,10 @@ function nextSentence(wordData: WordData) {
       newLineDiv.appendChild(resultBlock.firstChild);
     }
 
+    resultPlaceholders.forEach((placeholder) => {
+      placeholder.remove();
+    });
+
     completedSentencesContainer.appendChild(newLineDiv);
 
     if (currentSentenceIndex % 10 == 0) {
@@ -580,6 +583,7 @@ function waitForElements() {
   const placeholders = document.querySelectorAll('.wordPlaceholder');
 
   if (words.length > 0 && containers.length > 0) {
+
 
     if (resultBlock) {
       resultBlock.ondragover = allowDrop;
