@@ -15,8 +15,10 @@ class MainPage {
     const mainPage = `
         <div id="main-page">
         <div id="translation"></div>
-        <button id="toggle-translation-button">Toggle Translation Hint</button>
-        <div id="completed-sentences-container"></div>
+        <button id="toggle-translation-button">Показать перевод</button>
+        <div id="completed-sentences-container">
+        <div id="result-block"></div>
+        </div>
         <button id="auto-complete-button">Auto-Complete</button>
         <div id="sentence-container" class="container"></div>
         <button id="next-sentence-button">Continue</button>
@@ -39,13 +41,10 @@ class MainPage {
         displayTranslation(wordData);
       });
 
-    const resultBlock = document.createElement('div');
+    const resultBlock = document.getElementById('result-block');
+
     resultBlock.id = 'result-block';
     resultBlock.classList.add('container');
-    resultBlock.style.border = '1px solid black';
-    resultBlock.style.padding = '10px';
-    resultBlock.style.marginTop = '20px';
-    document.getElementById('main-page').appendChild(resultBlock);
 
     document
       .getElementById('next-sentence-button')
@@ -63,7 +62,7 @@ class MainPage {
       if (resultBlock) {
         nextButton.disabled = true;
         nextButton.style.visibility = 'hidden';
-        resultBlock.innerHTML = '';
+        // resultBlock.innerHTML = '';
       }
     });
 
@@ -78,9 +77,29 @@ class MainPage {
     ) as HTMLButtonElement;
     autoCompleteButton.addEventListener('click', autoComplete);
 
-    document
-      .getElementById('toggle-translation-button')
-      .addEventListener('click', toggleTranslationHintVisibility);
+
+
+// document.addEventListener('DOMContentLoaded', () => {
+//  const translationSpan = document.querySelector('.translation-hint') as HTMLElement;
+//  if (translationSpan) {
+//     translationSpan.style.display = 'none';
+//     translationSpan.style.backgroundColor = 'black';
+//  }
+// });
+
+
+
+document.getElementById('toggle-translation-button').addEventListener('click', () => {
+ const translationSpan = document.querySelector('.translation-hint') as HTMLElement;
+ const button = document.getElementById('toggle-translation-button') as HTMLButtonElement;
+ if (translationSpan) {
+    const isVisible = translationSpan.style.display !== 'none';
+    translationSpan.style.display = isVisible ? 'none' : 'block';
+    // Изменяем текст кнопки в зависимости от видимости перевода
+    button.textContent = isVisible ? 'Показать перевод' : 'Скрыть перевод';
+ }
+});
+
   }
 
   getSentences(): string[] {
@@ -123,6 +142,13 @@ async function fetchWordData() {
 
 function displaySentence(wordData: WordData) {
   const sentenceContainer = document.getElementById('sentence-container');
+  const resultBlock = document.getElementById('result-block');
+  const autoCompleteButton = document.getElementById(
+    'auto-complete-button',
+  ) as HTMLButtonElement;
+
+  // autoCompleteButton.style.visibility = 'visible';
+
   if (sentenceContainer) {
     currentSentence =
       wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample ||
@@ -132,6 +158,7 @@ function displaySentence(wordData: WordData) {
 
     originalSentence = currentSentence;
     let words = currentSentence.split(' ');
+    console.log(`ghtlkj;tybt ${originalSentence}`);
 
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
@@ -140,12 +167,18 @@ function displaySentence(wordData: WordData) {
     const isFiveWords = words.length == 5;
 
     shuffledWords.forEach((word) => {
+      const wordPlaceholder = document.createElement('div');
+      wordPlaceholder.classList.add('wordPlaceholder');
+      // const resultPlaceholder = document.createElement('div');
+      // resultPlaceholder.classList.add('resultPlaceholder');
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
       wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
       wordDiv.addEventListener('click', handleWordClick);
       wordDiv.draggable = true;
+
+      wordDiv.style.width = calculateWordWidth(word, originalSentence);
 
       if (word === words[0]) {
         wordDiv.classList.add('first-word');
@@ -160,12 +193,53 @@ function displaySentence(wordData: WordData) {
         wordDiv.classList.add('five-words');
       }
 
-      sentenceContainer.appendChild(wordDiv);
+      sentenceContainer.appendChild(wordPlaceholder);
+      // resultBlock.appendChild(resultPlaceholder);
+      wordPlaceholder.appendChild(wordDiv);
     });
+
+    // createResultPlaceholders();
+    // console.log(`в дисплее вызвана createResultPlaceholders();`);
   } else {
     console.error('Element with ID "sentence-container" not found');
   }
 }
+
+const calculateWordWidth = (word: string, originalSentence: string) => {
+  console.log(`слово ${word}`);
+
+  const totalLength = originalSentence.length;
+  console.log(`длина предложения ${totalLength}`);
+
+  const wordLength = word.length;
+  console.log(`длина слова ${wordLength}`);
+
+  // const totalWidthInPixels = 743;
+
+  const container = document.querySelector(
+    '#completed-sentences-container',
+  ) as HTMLElement;
+  const totalWidthInPixels = container.offsetWidth;
+  console.log(`РАЗМЕР КОНТЕЙНЕРА ${totalWidthInPixels}`);
+
+  const percentage = wordLength / totalLength;
+  //const roundedPercentage = parseFloat(percentage.toFixed(1));
+  const roundedPercentage = Math.round(percentage * 10) / 10;
+  console.log(`проценты ${percentage}`);
+
+  const widthInPixels = totalWidthInPixels * roundedPercentage;
+
+  const roundedPixels = parseFloat(
+    (totalWidthInPixels * roundedPercentage).toFixed(1),
+  );
+
+  console.log(`финал до +15 ${roundedPixels}`);
+  const final = roundedPixels + 15;
+
+  console.log(`финал ${final}`);
+  return `${final}px`;
+};
+
 
 // Функция для перемешивания массива
 function shuffleArray<T>(array: T[]): T[] {
@@ -191,6 +265,12 @@ function autoComplete() {
   const nextButton = document.getElementById(
     'next-sentence-button',
   ) as HTMLButtonElement;
+  const autoCompleteButton = document.getElementById(
+    'auto-complete-button',
+  ) as HTMLButtonElement;
+
+
+
   nextButton.style.visibility = 'visible';
   nextButton.style.backgroundColor = 'black';
 
@@ -207,6 +287,8 @@ function autoComplete() {
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
+      wordDiv.style.width = calculateWordWidth(word, originalSentence);
+
       resultBlock.appendChild(wordDiv);
 
       if (word === wordsInOriginal[0]) {
@@ -226,11 +308,19 @@ function autoComplete() {
     const checkButton = document.getElementById('check-sentence-button');
 
     checkButton.style.visibility = 'hidden';
-
+    // autoCompleteButton.style.visibility = 'hidden';
     const nextButton = document.getElementById(
       'next-sentence-button',
     ) as HTMLButtonElement;
     nextButton.disabled = false;
+
+    //ДЛЯ АВТОКОМПЛИТА
+
+    const button = document.getElementById('toggle-translation-button') as HTMLButtonElement;
+    button.textContent = 'Скрыть перевод';
+    const translationSpan = document.querySelector('.translation-hint') as HTMLElement;
+    translationSpan.style.display = 'block'; 
+    // translationSpan.style.backgroundColor = 'black'; 
   }
 }
 
@@ -265,6 +355,8 @@ function nextSentence(wordData: WordData) {
     'completed-sentences-container',
   );
   const resultBlock = document.getElementById('result-block');
+
+
   if (completedSentencesContainer && resultBlock) {
     const newLineDiv = document.createElement('div');
     newLineDiv.classList.add('sentence-line');
@@ -275,18 +367,18 @@ function nextSentence(wordData: WordData) {
     completedSentencesContainer.appendChild(newLineDiv);
 
     if (currentSentenceIndex % 10 == 0) {
-      while (completedSentencesContainer.firstChild) {
-        completedSentencesContainer.removeChild(
-          completedSentencesContainer.firstChild,
-        );
-      }
+      console.log('все жестко удалено');
+      const sentenceLines =
+        completedSentencesContainer.querySelectorAll('.sentence-line');
+      sentenceLines.forEach((line) => {
+        completedSentencesContainer.removeChild(line);
+      });
     }
   }
 
   waitForElements();
 }
 
-//обработка клика на слово
 function handleWordClick(e: MouseEvent) {
   const wordDiv = e.target as HTMLElement;
   const resultBlock = document.getElementById('result-block');
@@ -295,17 +387,18 @@ function handleWordClick(e: MouseEvent) {
   ) as HTMLButtonElement;
 
   if (resultBlock && wordDiv) {
-    const originalSize = wordDiv.offsetWidth;
-    wordDiv.setAttribute('data-original-size', originalSize.toString());
     checkButton.textContent = 'Check';
 
     if (resultBlock.contains(wordDiv)) {
-      const originalParent = wordDiv.getAttribute('data-original-parent');
-      if (originalParent) {
-        const originalParentElement = document.getElementById(originalParent);
-        if (originalParentElement) {
-          originalParentElement.appendChild(wordDiv);
-        }
+
+      const wordPlaceholders = Array.from(
+        document.querySelectorAll('#sentence-container .wordPlaceholder'),
+      );
+      const targetPlaceholder = wordPlaceholders.find(
+        (placeholder) => placeholder.children.length === 0,
+      );
+      if (targetPlaceholder) {
+        targetPlaceholder.appendChild(wordDiv);
       }
     } else {
       wordDiv.setAttribute(
@@ -313,17 +406,16 @@ function handleWordClick(e: MouseEvent) {
         wordDiv.parentElement?.id || '',
       );
       resultBlock.appendChild(wordDiv);
-      checkSentenceContainer();
-    }
 
-    const savedSize = wordDiv.getAttribute('data-original-size');
-    if (savedSize) {
-      wordDiv.style.width = savedSize + 'px';
     }
   }
 
   const sentenceContainer = document.getElementById('sentence-container');
-  if (sentenceContainer.children.length !== 0) {
+  const allPlaceholdersEmpty = Array.from(
+    sentenceContainer.querySelectorAll('.wordPlaceholder'),
+  ).every((placeholder) => placeholder.children.length === 0);
+
+  if (!allPlaceholdersEmpty) {
     checkButton.disabled = true;
     const nextButton = document.getElementById(
       'next-sentence-button',
@@ -332,6 +424,8 @@ function handleWordClick(e: MouseEvent) {
     checkButton.style.backgroundColor = '#ccc';
   } else {
     checkButton.style.backgroundColor = 'black';
+    checkButton.disabled = false;
+    checkSentenceContainer();
   }
 }
 
@@ -366,8 +460,30 @@ function extractTranslations(): string[] {
 }
 
 function displayTranslation(wordData: WordData) {
+
+  const button = document.getElementById('toggle-translation-button') as HTMLButtonElement;
+
   const translationSpan = document.createElement('span');
   translationSpan.classList.add('translation-hint');
+  //translationSpan.style.backgroundColor = 'black'; 
+
+  // isHidden = 
+
+  // button.textContent = isVisible ? 'Показать перевод' : 'Скрыть перевод';
+
+  translationSpan.style.display = 'none';
+
+   if (translationSpan) {
+      // Проверяем текст кнопки и устанавливаем свойство display элемента translationSpan
+      if (button.textContent === 'Скрыть перевод') {
+        translationSpan.style.display = 'block'; // Делаем перевод видимым
+      } else {
+        translationSpan.style.display = 'none'; // Скрываем перевод
+      }
+      // Изменяем текст кнопки в зависимости от видимости перевода
+      button.textContent = button.textContent === 'Показать перевод' ? 'Показать перевод' : 'Скрыть перевод';
+   }
+
   console.log(currentSentenceIndex, currentRound);
   const translation =
     wordData.rounds[currentRound]?.words[currentSentenceIndex]
@@ -387,16 +503,6 @@ function displayTranslation(wordData: WordData) {
   }
 }
 
-function toggleTranslationHintVisibility() {
-  const translationHint = document.querySelector(
-    '.translation-hint',
-  ) as HTMLElement;
-  if (translationHint) {
-    const isVisible = translationHint.style.display !== 'none';
-    translationHint.style.display = isVisible ? 'none' : 'block';
-  }
-}
-
 //РЕАКЦИЯ НА ПРАВИЛЬНО ЛИ СОБРАЛ ПРЕДЛОЖЕНИЕ
 
 function checkSentenceContainer() {
@@ -404,21 +510,34 @@ function checkSentenceContainer() {
   const checkButton = document.getElementById(
     'check-sentence-button',
   ) as HTMLButtonElement;
+  const autoCompleteButton = document.getElementById(
+    'auto-complete-button',
+  ) as HTMLButtonElement;
   const sentenceContainer = document.getElementById('sentence-container');
-  if (sentenceContainer && sentenceContainer.children.length === 0) {
+  const allPlaceholdersEmpty = Array.from(
+    sentenceContainer.querySelectorAll('.wordPlaceholder'),
+  ).every((placeholder) => placeholder.children.length === 0);
+
+  if (allPlaceholdersEmpty) {
     console.log('sentence-container пустой');
     const nextButton = document.getElementById(
       'next-sentence-button',
     ) as HTMLButtonElement;
     checkButton.disabled = false;
 
+
     checkButton.addEventListener('click', () => {
       if (check) {
         checkButton.textContent = 'Correct';
+        const translationSpan = document.querySelector('.translation-hint') as HTMLElement;
+        if (translationSpan) {
+          translationSpan.style.display = 'block'; 
+        }
         nextButton.disabled = false;
         checkButton.style.backgroundColor = 'green';
         nextButton.style.visibility = 'visible';
         nextButton.style.backgroundColor = 'green';
+        // autoCompleteButton.style.visibility = 'hidden';
       } else {
         checkButton.textContent = 'Incorrect. Try again';
         checkButton.style.backgroundColor = 'red';
@@ -467,17 +586,26 @@ function waitForElements() {
   const words = document.querySelectorAll('.word');
   const containers = document.querySelectorAll('.container');
   const resultBlock = document.getElementById('result-block');
-  const SentenceBlock = document.getElementById('sentence-container');
+
+  // const SentenceBlock = document.getElementById('sentence-container');
+
+  const placeholders = document.querySelectorAll('.wordPlaceholder');
 
   if (words.length > 0 && containers.length > 0) {
-    console.log(words);
-    console.log(containers);
-    console.log(resultBlock);
-    console.log(SentenceBlock);
+    // console.log(words);
+    // console.log(containers);
+    // console.log(resultBlock);
+    // console.log(SentenceBlock);
 
     if (resultBlock) {
       resultBlock.ondragover = allowDrop;
-      SentenceBlock.ondragover = allowDrop;
+
+
+      placeholders.forEach((placeholder) => {
+        (placeholder as HTMLElement).ondragover = allowDrop;
+      });
+
+      // SentenceBlock.ondragover = allowDrop;
     } else {
       console.log('Элемент resultBlock не найден');
     }
@@ -488,12 +616,16 @@ function waitForElements() {
 
     words.forEach((word) => {
       word.id = `word-${word.textContent}`;
-      console.log(`АЛЛО ${word.id}`);
       (word as HTMLElement).ondragstart = drag;
     });
 
     resultBlock.ondrop = drop;
-    SentenceBlock.ondrop = drop;
+
+    placeholders.forEach((placeholder) => {
+      (placeholder as HTMLElement).ondrop = drop;
+    });
+
+    // SentenceBlock.ondrop = drop;
   } else {
     setTimeout(waitForElements, 100);
   }
@@ -515,8 +647,22 @@ function drop(event: DragEvent) {
   const item = document.getElementById(itemId);
   const target = event.target as HTMLElement;
 
+  console.log(target);
+
+  if (target.classList.contains('word')) {
+    console.error('Элемент с классом "word" не может быть целевым элементом');
+    item.classList.add('not-droppable');
+    setTimeout(() => {
+      item.classList.remove('not-droppable');
+    }, 1000);
+    return;
+  }
+
+  console.log(`БРОСАЮ ${item} с ${itemId}`);
+
   if (!target.contains(item)) {
     target.append(item);
+    console.log(target);
   } else {
     console.error('Куда сам на себя тянешь');
   }

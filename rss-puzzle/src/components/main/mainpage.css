@@ -22,6 +22,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 743px;
+  margin: 0 auto;
 }
 
 #result-block {
@@ -30,6 +32,9 @@
   border-radius: 5px;
   width: 743px;
   height: 39px;
+  order: 11;
+
+  justify-content: space-between;
 }
 
 #next-sentence-button {
@@ -103,38 +108,84 @@
 }
 
 .word {
-  background-color: cadetblue;
+  background-color: rgba(9, 40, 11, 0.452);
   /* padding: 10px; */
   /* margin: 0 5px; */
   cursor: pointer;
-  width: 148px !important;
+
+  /* width: 148px; */
   /* width: fit-content; */
   height: 43px !important;
-  background: url('middle.png') no-repeat;
+  /* background: url('middletransparent.png') no-repeat; */
+
   background-size: 100% 100%;
-  /* mask: url('middle.svg') no-repeat; */
+  mask: url('middle.png') no-repeat;
+  mask-size: 100% 100%;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: -14px;
+  /* margin-left: -14px; */
+  border: 1px solid black;
   /* padding-right: 14px; */
 }
 
 .last-word {
-  background: url('end.png') no-repeat;
-  background-size: 100% 100%;
+  /* background: url('endtransparent.png') no-repeat;
+  background-size: 100% 100%; */
+
+  mask: url('end.png') no-repeat;
+  mask-size: 100% 100%;
 }
 
 .first-word {
-  background: url('start.png') no-repeat;
-  background-size: 100% 100%;
+  /* background: url('starttransparent.png') no-repeat;
+  background-size: 100% 100%; */
+  mask: url('start.png') no-repeat;
+  mask-size: 100% 100%;
 }
 
-.few-words {
+/* .few-words {
   width: 200px !important;
 }
 
 .five-words {
   width: 200px !important;
+} */
+
+.wordPlaceholder {
+  width: fit-content;
+  background-color: rgba(224, 120, 45, 0.215);
+  height: 43px;
+  min-width: 30px;
+}
+
+.resultPlaceholder {
+  width: fit-content;
+  background-color: rgb(207, 213, 32);
+  height: 43px;
+  min-width: 30px;
+  order: 11;
+}
+
+.not-droppable {
+  background-color: darkblue;
+}
+
+@media (max-width: 849px) {
+  #completed-sentences-container {
+    width: 646px;
+  }
+
+  .sentence-line {
+    width: 646px;
+  }
+
+  #sentence-container {
+    width: 646px;
+  }
+
+  #result-block {
+    width: 646px;
+  }
 }
