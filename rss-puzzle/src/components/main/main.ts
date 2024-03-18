@@ -62,7 +62,6 @@ class MainPage {
       if (resultBlock) {
         nextButton.disabled = true;
         nextButton.style.visibility = 'hidden';
-        // resultBlock.innerHTML = '';
       }
     });
 
@@ -78,28 +77,23 @@ class MainPage {
     autoCompleteButton.addEventListener('click', autoComplete);
 
 
-
-// document.addEventListener('DOMContentLoaded', () => {
-//  const translationSpan = document.querySelector('.translation-hint') as HTMLElement;
-//  if (translationSpan) {
-//     translationSpan.style.display = 'none';
-//     translationSpan.style.backgroundColor = 'black';
-//  }
-// });
-
-
-
-document.getElementById('toggle-translation-button').addEventListener('click', () => {
- const translationSpan = document.querySelector('.translation-hint') as HTMLElement;
- const button = document.getElementById('toggle-translation-button') as HTMLButtonElement;
- if (translationSpan) {
-    const isVisible = translationSpan.style.display !== 'none';
-    translationSpan.style.display = isVisible ? 'none' : 'block';
-    // Изменяем текст кнопки в зависимости от видимости перевода
-    button.textContent = isVisible ? 'Показать перевод' : 'Скрыть перевод';
- }
-});
-
+    document
+      .getElementById('toggle-translation-button')
+      .addEventListener('click', () => {
+        const translationSpan = document.querySelector(
+          '.translation-hint',
+        ) as HTMLElement;
+        const button = document.getElementById(
+          'toggle-translation-button',
+        ) as HTMLButtonElement;
+        if (translationSpan) {
+          const isVisible = translationSpan.style.display !== 'none';
+          translationSpan.style.display = isVisible ? 'none' : 'block';
+          button.textContent = isVisible
+            ? 'Показать перевод'
+            : 'Скрыть перевод';
+        }
+      });
   }
 
   getSentences(): string[] {
@@ -169,8 +163,6 @@ function displaySentence(wordData: WordData) {
     shuffledWords.forEach((word) => {
       const wordPlaceholder = document.createElement('div');
       wordPlaceholder.classList.add('wordPlaceholder');
-      // const resultPlaceholder = document.createElement('div');
-      // resultPlaceholder.classList.add('resultPlaceholder');
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
@@ -194,12 +186,13 @@ function displaySentence(wordData: WordData) {
       }
 
       sentenceContainer.appendChild(wordPlaceholder);
-      // resultBlock.appendChild(resultPlaceholder);
       wordPlaceholder.appendChild(wordDiv);
     });
 
-    // createResultPlaceholders();
-    // console.log(`в дисплее вызвана createResultPlaceholders();`);
+    const translationSpan = document.querySelector('.translation-hint') as HTMLElement;
+    const button = document.getElementById('toggle-translation-button') as HTMLButtonElement;
+    button.textContent = 'Показать перевод';
+
   } else {
     console.error('Element with ID "sentence-container" not found');
   }
@@ -240,7 +233,6 @@ const calculateWordWidth = (word: string, originalSentence: string) => {
   return `${final}px`;
 };
 
-
 // Функция для перемешивания массива
 function shuffleArray<T>(array: T[]): T[] {
   let currentIndex = array.length,
@@ -268,8 +260,6 @@ function autoComplete() {
   const autoCompleteButton = document.getElementById(
     'auto-complete-button',
   ) as HTMLButtonElement;
-
-
 
   nextButton.style.visibility = 'visible';
   nextButton.style.backgroundColor = 'black';
@@ -316,11 +306,14 @@ function autoComplete() {
 
     //ДЛЯ АВТОКОМПЛИТА
 
-    const button = document.getElementById('toggle-translation-button') as HTMLButtonElement;
+    const button = document.getElementById(
+      'toggle-translation-button',
+    ) as HTMLButtonElement;
     button.textContent = 'Скрыть перевод';
-    const translationSpan = document.querySelector('.translation-hint') as HTMLElement;
-    translationSpan.style.display = 'block'; 
-    // translationSpan.style.backgroundColor = 'black'; 
+    const translationSpan = document.querySelector(
+      '.translation-hint',
+    ) as HTMLElement;
+    translationSpan.style.display = 'block';
   }
 }
 
@@ -356,7 +349,6 @@ function nextSentence(wordData: WordData) {
   );
   const resultBlock = document.getElementById('result-block');
 
-
   if (completedSentencesContainer && resultBlock) {
     const newLineDiv = document.createElement('div');
     newLineDiv.classList.add('sentence-line');
@@ -390,7 +382,6 @@ function handleWordClick(e: MouseEvent) {
     checkButton.textContent = 'Check';
 
     if (resultBlock.contains(wordDiv)) {
-
       const wordPlaceholders = Array.from(
         document.querySelectorAll('#sentence-container .wordPlaceholder'),
       );
@@ -406,7 +397,6 @@ function handleWordClick(e: MouseEvent) {
         wordDiv.parentElement?.id || '',
       );
       resultBlock.appendChild(wordDiv);
-
     }
   }
 
@@ -460,29 +450,26 @@ function extractTranslations(): string[] {
 }
 
 function displayTranslation(wordData: WordData) {
-
-  const button = document.getElementById('toggle-translation-button') as HTMLButtonElement;
+  const button = document.getElementById(
+    'toggle-translation-button',
+  ) as HTMLButtonElement;
 
   const translationSpan = document.createElement('span');
   translationSpan.classList.add('translation-hint');
-  //translationSpan.style.backgroundColor = 'black'; 
+   translationSpan.style.display = 'none';
 
-  // isHidden = 
+  if (translationSpan) {
+    if (button.textContent === 'Скрыть перевод') {
+      translationSpan.style.display = 'block'; 
+    } else {
+      translationSpan.style.display = 'none'; 
+    }
 
-  // button.textContent = isVisible ? 'Показать перевод' : 'Скрыть перевод';
-
-  translationSpan.style.display = 'none';
-
-   if (translationSpan) {
-      // Проверяем текст кнопки и устанавливаем свойство display элемента translationSpan
-      if (button.textContent === 'Скрыть перевод') {
-        translationSpan.style.display = 'block'; // Делаем перевод видимым
-      } else {
-        translationSpan.style.display = 'none'; // Скрываем перевод
-      }
-      // Изменяем текст кнопки в зависимости от видимости перевода
-      button.textContent = button.textContent === 'Показать перевод' ? 'Показать перевод' : 'Скрыть перевод';
-   }
+    button.textContent =
+      button.textContent === 'Показать перевод'
+        ? 'Показать перевод'
+        : 'Скрыть перевод';
+  }
 
   console.log(currentSentenceIndex, currentRound);
   const translation =
@@ -525,13 +512,14 @@ function checkSentenceContainer() {
     ) as HTMLButtonElement;
     checkButton.disabled = false;
 
-
     checkButton.addEventListener('click', () => {
       if (check) {
         checkButton.textContent = 'Correct';
-        const translationSpan = document.querySelector('.translation-hint') as HTMLElement;
+        const translationSpan = document.querySelector(
+          '.translation-hint',
+        ) as HTMLElement;
         if (translationSpan) {
-          translationSpan.style.display = 'block'; 
+          translationSpan.style.display = 'block';
         }
         nextButton.disabled = false;
         checkButton.style.backgroundColor = 'green';
@@ -592,14 +580,9 @@ function waitForElements() {
   const placeholders = document.querySelectorAll('.wordPlaceholder');
 
   if (words.length > 0 && containers.length > 0) {
-    // console.log(words);
-    // console.log(containers);
-    // console.log(resultBlock);
-    // console.log(SentenceBlock);
 
     if (resultBlock) {
       resultBlock.ondragover = allowDrop;
-
 
       placeholders.forEach((placeholder) => {
         (placeholder as HTMLElement).ondragover = allowDrop;
@@ -636,9 +619,7 @@ let allowDrop = (event: DragEvent) => {
 };
 
 function drag(event: DragEvent) {
-  console.log('я в драге');
   event.dataTransfer.setData('id', (event.target as HTMLElement).id);
-  console.log(`я в drag вот id ${(event.target as HTMLElement).id}`);
 }
 
 function drop(event: DragEvent) {
@@ -658,7 +639,6 @@ function drop(event: DragEvent) {
     return;
   }
 
-  console.log(`БРОСАЮ ${item} с ${itemId}`);
 
   if (!target.contains(item)) {
     target.append(item);
