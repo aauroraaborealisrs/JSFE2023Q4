@@ -106,47 +106,54 @@
 }
 
 .word {
-  background-color: cadetblue;
+  background-color: rgba(9, 40, 11, 0.452);
   /* padding: 10px; */
   /* margin: 0 5px; */
   cursor: pointer;
 
-  width: 148px;
+  /* width: 148px; */
   /* width: fit-content; */
   height: 43px !important;
-  background: url('middletransparent.png') no-repeat;
+  /* background: url('middletransparent.png') no-repeat; */
 
   background-size: 100% 100%;
-  /* mask: url('middle.svg') no-repeat; */
+  mask: url('middle.png') no-repeat;
+  mask-size: 100% 100%;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: -14px;
+  /* margin-left: -14px; */
+  border: 1px solid black
   /* padding-right: 14px; */
 }
 
 .last-word {
-  background: url('endtransparent.png') no-repeat;
-  background-size: 100% 100%;
+  /* background: url('endtransparent.png') no-repeat;
+  background-size: 100% 100%; */
+
+  mask: url('end.png') no-repeat;
+  mask-size: 100% 100%;
 }
 
 .first-word {
-  background: url('starttransparent.png') no-repeat;
-  background-size: 100% 100%;
+  /* background: url('starttransparent.png') no-repeat;
+  background-size: 100% 100%; */
+  mask: url('start.png') no-repeat;
+  mask-size: 100% 100%;
 }
 
-.few-words {
+/* .few-words {
   width: 200px !important;
 }
 
 .five-words {
   width: 200px !important;
-}
+} */
 
 .wordPlaceholder {
   width: fit-content;
-  background-color: brown;
+  background-color:rgba(224, 120, 45, 0.215);
   height: 43px;
   min-width: 30px;
 }

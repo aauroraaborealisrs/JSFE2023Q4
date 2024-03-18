@@ -128,6 +128,10 @@ function displaySentence(wordData: WordData) {
 
     originalSentence = currentSentence;
     let words = currentSentence.split(' ');
+    console.log(`ghtlkj;tybt ${originalSentence}`)
+
+
+
 
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
@@ -146,6 +150,12 @@ function displaySentence(wordData: WordData) {
       wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
       wordDiv.addEventListener('click', handleWordClick);
       wordDiv.draggable = true;
+
+      wordDiv.style.width = calculateWordWidth(word, originalSentence);
+
+
+
+
 
       if (word === words[0]) {
         wordDiv.classList.add('first-word');
@@ -171,6 +181,46 @@ function displaySentence(wordData: WordData) {
     console.error('Element with ID "sentence-container" not found');
   }
 }
+
+
+const calculateWordWidth = (word: string, originalSentence: string) => {
+
+  console.log(`слово ${word}`)
+
+  const totalLength = originalSentence.length;
+
+  console.log(`длина предложения ${totalLength}`)
+
+  const wordLength = word.length;
+
+  console.log(`длина слова ${wordLength}`)
+
+  const totalWidthInPixels = 743;
+
+  const percentage = wordLength / totalLength;
+
+  //const roundedPercentage = parseFloat(percentage.toFixed(1));
+
+  const roundedPercentage = Math.round(percentage * 10) / 10;
+
+
+  console.log(`проценты ${percentage}`)
+
+  const widthInPixels = totalWidthInPixels * roundedPercentage;
+
+  const roundedPixels = parseFloat((totalWidthInPixels * roundedPercentage).toFixed(1));
+
+  console.log(`финал до +15 ${roundedPixels}`)
+
+  const final = roundedPixels + 15;
+
+  console.log(`финал ${final}`)
+
+
+
+  return `${final}px`;
+};
+
 
 // function createResultPlaceholders() {
 //   const resultBlock = document.getElementById('result-block');
@@ -242,6 +292,8 @@ function autoComplete() {
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
+      wordDiv.style.width = calculateWordWidth(word, originalSentence);
+
       resultBlock.appendChild(wordDiv);
 
       if (word === wordsInOriginal[0]) {
