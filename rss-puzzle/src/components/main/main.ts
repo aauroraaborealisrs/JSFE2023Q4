@@ -5,7 +5,7 @@ let currentSentence: string = '';
 let originalSentence = '';
 let wordData: WordData;
 let currentRound = 0;
-let alphaHeight = 90; 
+let alphaHeight = 90;
 
 class MainPage {
   sentences: string[] = [];
@@ -96,17 +96,18 @@ class MainPage {
         }
       });
 
-       const completedSentencesContainer = document.getElementById('completed-sentences-container') as HTMLElement;
-       if (completedSentencesContainer) {
-        console.log("КАРТИНКА")
-          completedSentencesContainer.style.backgroundImage = "url('https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/deerhunt.jpg')";
-          completedSentencesContainer.style.backgroundRepeat = 'no-repeat';
-          completedSentencesContainer.style.backgroundSize = 'cover';
-          completedSentencesContainer.style.backgroundPosition = 'center';
-       }
-
-  
+    const completedSentencesContainer = document.getElementById(
+      'completed-sentences-container',
+    ) as HTMLElement;
+    if (completedSentencesContainer) {
+      console.log('КАРТИНКА');
+      completedSentencesContainer.style.backgroundImage =
+        "url('https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/deerhunt.jpg')";
+      completedSentencesContainer.style.backgroundRepeat = 'no-repeat';
+      completedSentencesContainer.style.backgroundSize = 'cover';
+      completedSentencesContainer.style.backgroundPosition = 'center';
     }
+  }
 
   getSentences(): string[] {
     return this.sentences;
@@ -164,7 +165,7 @@ function displaySentence(wordData: WordData) {
 
     originalSentence = currentSentence;
     let words = currentSentence.split(' ');
-    console.log(`ghtlkj;tybt ${originalSentence}`);
+    // console.log(`ghtlkj;tybt ${originalSentence}`);
 
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
@@ -214,13 +215,13 @@ function displaySentence(wordData: WordData) {
 }
 
 const calculateWordWidth = (word: string, originalSentence: string) => {
-  console.log(`слово ${word}`);
+  // console.log(`слово ${word}`);
 
   const totalLength = originalSentence.length;
-  console.log(`длина предложения ${totalLength}`);
+  // console.log(`длина предложения ${totalLength}`);
 
   const wordLength = word.length;
-  console.log(`длина слова ${wordLength}`);
+  // console.log(`длина слова ${wordLength}`);
 
   // const totalWidthInPixels = 743;
 
@@ -228,12 +229,12 @@ const calculateWordWidth = (word: string, originalSentence: string) => {
     '#completed-sentences-container',
   ) as HTMLElement;
   const totalWidthInPixels = container.offsetWidth;
-  console.log(`РАЗМЕР КОНТЕЙНЕРА ${totalWidthInPixels}`);
+  // console.log(`РАЗМЕР КОНТЕЙНЕРА ${totalWidthInPixels}`);
 
   const percentage = wordLength / totalLength;
   //const roundedPercentage = parseFloat(percentage.toFixed(1));
   const roundedPercentage = Math.round(percentage * 10) / 10;
-  console.log(`проценты ${percentage}`);
+  // console.log(`проценты ${percentage}`);
 
   const widthInPixels = totalWidthInPixels * roundedPercentage;
 
@@ -241,10 +242,10 @@ const calculateWordWidth = (word: string, originalSentence: string) => {
     (totalWidthInPixels * roundedPercentage).toFixed(1),
   );
 
-  console.log(`финал до +15 ${roundedPixels}`);
+  // console.log(`финал до +15 ${roundedPixels}`);
   const final = roundedPixels + 15;
 
-  console.log(`финал ${final}`);
+  // console.log(`финал ${final}`);
   return `${final}px`;
 };
 
@@ -341,12 +342,11 @@ function nextSentence(wordData: WordData) {
     currentSentenceIndex = 0;
   }
 
-   alphaHeight -= 10;
-   const alphaElement = document.querySelector('.alpha') as HTMLElement;
-   if (alphaElement) {
-      alphaElement.style.height = `${alphaHeight}%`;
-   }
-
+  alphaHeight -= 10;
+  // const alphaElement = document.querySelector('.alpha') as HTMLElement;
+  // if (alphaElement) {
+  //   alphaElement.style.height = `${alphaHeight}%`;
+  // }
 
   const checkButton = document.getElementById(
     'check-sentence-button',
@@ -382,6 +382,8 @@ function nextSentence(wordData: WordData) {
     completedSentencesContainer.appendChild(newLineDiv);
 
     if (currentSentenceIndex % 10 == 0) {
+      console.log(`${alphaHeight}`);
+
       console.log('все жестко удалено');
       const sentenceLines =
         completedSentencesContainer.querySelectorAll('.sentence-line');
@@ -390,7 +392,13 @@ function nextSentence(wordData: WordData) {
       });
 
       alphaHeight = 90;
+      console.log(`${alphaHeight}`);
     }
+  }
+
+  const alphaElement = document.querySelector('.alpha') as HTMLElement;
+  if (alphaElement) {
+    alphaElement.style.height = `${alphaHeight}%`;
   }
 
   waitForElements();
