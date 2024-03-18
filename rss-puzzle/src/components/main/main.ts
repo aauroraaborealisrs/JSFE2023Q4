@@ -61,7 +61,6 @@ class MainPage {
       if (resultBlock) {
         nextButton.disabled = true;
         nextButton.style.visibility = 'hidden';
-        // resultBlock.innerHTML = '';
       }
     });
 
@@ -75,6 +74,25 @@ class MainPage {
       'auto-complete-button',
     ) as HTMLButtonElement;
     autoCompleteButton.addEventListener('click', autoComplete);
+
+
+    document
+      .getElementById('toggle-translation-button')
+      .addEventListener('click', () => {
+        const translationSpan = document.querySelector(
+          '.translation-hint',
+        ) as HTMLElement;
+        const button = document.getElementById(
+          'toggle-translation-button',
+        ) as HTMLButtonElement;
+        if (translationSpan) {
+          const isVisible = translationSpan.style.display !== 'none';
+          translationSpan.style.display = isVisible ? 'none' : 'block';
+          button.textContent = isVisible
+            ? 'Показать перевод'
+            : 'Скрыть перевод';
+        }
+      });
   }
 
   getSentences(): string[] {
@@ -144,8 +162,6 @@ function displaySentence(wordData: WordData) {
     shuffledWords.forEach((word) => {
       const wordPlaceholder = document.createElement('div');
       wordPlaceholder.classList.add('wordPlaceholder');
-      // const resultPlaceholder = document.createElement('div');
-      // resultPlaceholder.classList.add('resultPlaceholder');
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
@@ -169,12 +185,13 @@ function displaySentence(wordData: WordData) {
       }
 
       sentenceContainer.appendChild(wordPlaceholder);
-      // resultBlock.appendChild(resultPlaceholder);
       wordPlaceholder.appendChild(wordDiv);
     });
 
-    createResultPlaceholders();
-    console.log(`в дисплее вызвана createResultPlaceholders();`);
+    const translationSpan = document.querySelector('.translation-hint') as HTMLElement;
+    const button = document.getElementById('toggle-translation-button') as HTMLButtonElement;
+    button.textContent = 'Показать перевод';
+
   } else {
     console.error('Element with ID "sentence-container" not found');
   }
@@ -214,42 +231,6 @@ const calculateWordWidth = (word: string, originalSentence: string) => {
   console.log(`финал ${final}`);
   return `${final}px`;
 };
-
-function createResultPlaceholders() {
-  const resultBlock = document.getElementById('result-block');
-  currentSentence =
-    wordData.rounds[currentRound]?.words[currentSentenceIndex]?.textExample ||
-    '';
-
-  let words = currentSentence.split(' ');
-
-  console.log(`ТЕКУЩЩЕЕ ПРЕДЛОЖЕНИЕ ${currentSentence}`);
-  console.log(`ТЕКУЩЩЕЕ ПРЕДЛОЖЕНИЕ ${words}`);
-
-  if (resultBlock) {
-    words.forEach((word) => {
-      console.log(`ДЛЯ СЛОВА ${word}`);
-
-      const resultPlaceholder = document.createElement('div');
-      console.log(resultPlaceholder);
-      resultPlaceholder.classList.add('resultPlaceholder');
-      resultBlock.appendChild(resultPlaceholder);
-
-      const resultPlaceholders =
-        resultBlock.querySelectorAll('.resultPlaceholder');
-      const count = resultPlaceholders.length;
-
-      console.log(
-        `Количество элементов с классом 'resultPlaceholder': ${count}`,
-      );
-      console.log('я в forEach кстати');
-    });
-
-    console.log('вызвана createResultPlaceholders');
-    console.log(resultBlock);
-    console.log(currentSentence);
-  }
-}
 
 // Функция для перемешивания массива
 function shuffleArray<T>(array: T[]): T[] {
@@ -321,6 +302,17 @@ function autoComplete() {
       'next-sentence-button',
     ) as HTMLButtonElement;
     nextButton.disabled = false;
+
+    //ДЛЯ АВТОКОМПЛИТА
+
+    const button = document.getElementById(
+      'toggle-translation-button',
+    ) as HTMLButtonElement;
+    button.textContent = 'Скрыть перевод';
+    const translationSpan = document.querySelector(
+      '.translation-hint',
+    ) as HTMLElement;
+    translationSpan.style.display = 'block';
   }
 }
 
@@ -355,8 +347,6 @@ function nextSentence(wordData: WordData) {
     'completed-sentences-container',
   );
   const resultBlock = document.getElementById('result-block');
-
-  const resultPlaceholders = resultBlock.querySelectorAll('.resultPlaceholder');
 
   if (completedSentencesContainer && resultBlock) {
     const newLineDiv = document.createElement('div');
@@ -395,11 +385,6 @@ function handleWordClick(e: MouseEvent) {
     checkButton.textContent = 'Check';
 
     if (resultBlock.contains(wordDiv)) {
-      const resultPlaceholder = document.createElement('div');
-      resultPlaceholder.classList.add('resultPlaceholder');
-      resultBlock.appendChild(resultPlaceholder);
-      console.log('я добавил плейсхолдер');
-
       const wordPlaceholders = Array.from(
         document.querySelectorAll('#sentence-container .wordPlaceholder'),
       );
@@ -415,15 +400,6 @@ function handleWordClick(e: MouseEvent) {
         wordDiv.parentElement?.id || '',
       );
       resultBlock.appendChild(wordDiv);
-
-      const resultPlaceholders =
-        resultBlock.querySelectorAll('.resultPlaceholder');
-      if (resultPlaceholders.length > 0) {
-        resultBlock.removeChild(
-          resultPlaceholders[resultPlaceholders.length - 1],
-        );
-        console.log('я удалил плейсхолдер');
-      }
     }
   }
 
@@ -477,8 +453,27 @@ function extractTranslations(): string[] {
 }
 
 function displayTranslation(wordData: WordData) {
+  const button = document.getElementById(
+    'toggle-translation-button',
+  ) as HTMLButtonElement;
+
   const translationSpan = document.createElement('span');
   translationSpan.classList.add('translation-hint');
+   translationSpan.style.display = 'none';
+
+  if (translationSpan) {
+    if (button.textContent === 'Скрыть перевод') {
+      translationSpan.style.display = 'block'; 
+    } else {
+      translationSpan.style.display = 'none'; 
+    }
+
+    button.textContent =
+      button.textContent === 'Показать перевод'
+        ? 'Показать перевод'
+        : 'Скрыть перевод';
+  }
+
   console.log(currentSentenceIndex, currentRound);
   const translation =
     wordData.rounds[currentRound]?.words[currentSentenceIndex]
@@ -523,6 +518,12 @@ function checkSentenceContainer() {
     checkButton.addEventListener('click', () => {
       if (check) {
         checkButton.textContent = 'Correct';
+        const translationSpan = document.querySelector(
+          '.translation-hint',
+        ) as HTMLElement;
+        if (translationSpan) {
+          translationSpan.style.display = 'block';
+        }
         nextButton.disabled = false;
         checkButton.style.backgroundColor = 'green';
         nextButton.style.visibility = 'visible';
@@ -580,20 +581,12 @@ function waitForElements() {
   // const SentenceBlock = document.getElementById('sentence-container');
 
   const placeholders = document.querySelectorAll('.wordPlaceholder');
-  const resultsPlaceholders = document.querySelectorAll('.resultPlaceholder');
 
   if (words.length > 0 && containers.length > 0) {
-    // console.log(words);
-    // console.log(containers);
-    // console.log(resultBlock);
-    // console.log(SentenceBlock);
+
 
     if (resultBlock) {
       resultBlock.ondragover = allowDrop;
-
-      resultsPlaceholders.forEach((resultsPlaceholder) => {
-        (resultsPlaceholder as HTMLElement).ondragover = allowDrop;
-      });
 
       placeholders.forEach((placeholder) => {
         (placeholder as HTMLElement).ondragover = allowDrop;
@@ -615,10 +608,6 @@ function waitForElements() {
 
     resultBlock.ondrop = drop;
 
-    resultsPlaceholders.forEach((resultsPlaceholder) => {
-      (resultsPlaceholder as HTMLElement).ondrop = drop;
-    });
-
     placeholders.forEach((placeholder) => {
       (placeholder as HTMLElement).ondrop = drop;
     });
@@ -634,9 +623,7 @@ let allowDrop = (event: DragEvent) => {
 };
 
 function drag(event: DragEvent) {
-  console.log('я в драге');
   event.dataTransfer.setData('id', (event.target as HTMLElement).id);
-  console.log(`я в drag вот id ${(event.target as HTMLElement).id}`);
 }
 
 function drop(event: DragEvent) {
@@ -656,7 +643,6 @@ function drop(event: DragEvent) {
     return;
   }
 
-  console.log(`БРОСАЮ ${item} с ${itemId}`);
 
   if (!target.contains(item)) {
     target.append(item);
