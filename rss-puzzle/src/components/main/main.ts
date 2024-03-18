@@ -8,6 +8,9 @@ let currentRound = 0;
 let alphaHeight = 90;
 let dataUrl = 'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel1.json';
 
+let correctSentencesManual: string[] = [];
+let correctSentencesAutoComplete: string[] = [];
+
 const imageNames1 = [
   '9th_wave',
   'abbati2',
@@ -56,185 +59,6 @@ const imageNames1 = [
   'woodedla',
 ];
 
-const imageNames2 = [
- '2_01',
- '2_02',
- '2_03',
- '2_04',
- '2_05',
- '2_06',
- '2_07',
- '2_08',
- '2_09',
- '2_10',
- '2_11',
- '2_12',
- '2_13',
- '2_14',
- '2_15',
- '2_16',
- '2_17',
- '2_18',
- '2_19',
- '2_20',
- '2_21',
- '2_22',
- '2_23',
- '2_24',
- '2_25',
- '2_26',
- '2_27',
- '2_28',
- '2_29',
- '2_30',
- '2_31',
- '2_32',
- '2_33',
- '2_34',
- '2_35',
- '2_36',
- '2_37',
- '2_38',
- '2_39',
- '2_40',
- '2_41'
-];
-
-const imageNames3 = [
- '3_01',
- '3_02',
- '3_03',
- '3_04',
- '3_05',
- '3_06',
- '3_07',
- '3_08',
- '3_09',
- '3_10',
- '3_11',
- '3_12',
- '3_13',
- '3_14',
- '3_15',
- '3_16',
- '3_17',
- '3_18',
- '3_19',
- '3_20',
- '3_21',
- '3_22',
- '3_23',
- '3_24',
- '3_25',
- '3_26',
- '3_27',
- '3_28',
- '3_29',
- '3_30',
- '3_31',
- '3_32',
- '3_33',
- '3_34',
- '3_35',
- '3_36',
- '3_37',
- '3_38',
- '3_39',
- '3_40'
-];
-
-const imageNames4 = [
- '4_01',
- '4_02',
- '4_03',
- '4_04',
- '4_05',
- '4_06',
- '4_07',
- '4_08',
- '4_09',
- '4_10',
- '4_11',
- '4_12',
- '4_13',
- '4_14',
- '4_15',
- '4_16',
- '4_17',
- '4_18',
- '4_19',
- '4_20',
- '4_21',
- '4_22',
- '4_23',
- '4_24',
- '4_25',
- '4_26',
- '4_27',
- '4_28',
- '4_29'
-];
-
-const imageNames5 = [
- '5_01',
- '5_02',
- '5_03',
- '5_04',
- '5_05',
- '5_06',
- '5_07',
- '5_08',
- '5_09',
- '5_10',
- '5_11',
- '5_12',
- '5_13',
- '5_14',
- '5_15',
- '5_16',
- '5_17',
- '5_18',
- '5_19',
- '5_20',
- '5_21',
- '5_22',
- '5_23',
- '5_24',
- '5_25',
- '5_26',
- '5_27',
- '5_28',
- '5_29'
-];
-
-const imageNames6 = [
- '6_01',
- '6_02',
- '6_03',
- '6_04',
- '6_05',
- '6_06',
- '6_07',
- '6_08',
- '6_09',
- '6_10',
- '6_11',
- '6_12',
- '6_13',
- '6_14',
- '6_15',
- '6_16',
- '6_17',
- '6_18',
- '6_19',
- '6_20',
- '6_21',
- '6_22',
- '6_23',
- '6_24',
- '6_25'
-];
-
 
 class MainPage {
   sentences: string[] = [];
@@ -253,7 +77,7 @@ class MainPage {
         <option>4</option>
         <option>5</option>
         <option>6</option>
-    </select>
+        </select>
         <div id="completed-sentences-container">
         <div id="result-block"></div>
         <div class="alpha"></div>
@@ -385,7 +209,9 @@ selectElement.addEventListener('change', () => {
  }
 });
 
+
   }
+
 
   getSentences(): string[] {
     return this.sentences;
@@ -575,6 +401,8 @@ function autoComplete() {
 
     const wordsInOriginal = originalSentence.split(' ');
 
+    correctSentencesAutoComplete.push(originalSentence);
+
     const isFewWords = wordsInOriginal.length <= 4;
     const isFiveWords = wordsInOriginal.length == 5;
 
@@ -675,6 +503,76 @@ function nextSentence(wordData: WordData) {
 
     if (currentSentenceIndex % 10 == 0) {
 
+      console.log("хоба")
+
+      //МОДАЛКА
+      
+      const modal = document.createElement('div');
+      modal.classList.add('modal');
+      document.body.insertBefore(modal, document.body.firstChild);
+
+      const modalContent = document.createElement('div');
+      modalContent.classList.add('modal-content');
+
+       const closeButton = document.createElement('span');
+       closeButton.classList.add('close');
+       closeButton.textContent = 'Continue';
+       closeButton.onclick = function() {
+          modal.style.display = 'none';
+          correctSentencesManual.length = 0;
+          correctSentencesAutoComplete.length = 0;
+
+       };
+
+        const header = document.createElement('h2');
+        header.textContent = 'Congrats!';
+       
+        // Создание контейнеров для массивов
+        const known = document.createElement('h4');
+        known.classList.add('known');
+        known.textContent = 'Known:';
+
+        const manualSentencesContainer = document.createElement('div');
+        manualSentencesContainer.id = 'manualSentencesContainer';
+
+        const unknown = document.createElement('h4');
+        unknown.classList.add('unknown');
+        unknown.textContent = 'Unknown:';
+
+        const autoCompleteSentencesContainer = document.createElement('div');
+        autoCompleteSentencesContainer.id = 'autoCompleteSentencesContainer';
+       
+        // Добавление массивов в контейнеры
+        correctSentencesManual.forEach(sentence => {
+           const p = document.createElement('p');
+           p.textContent = sentence;
+           manualSentencesContainer.appendChild(p);
+        });
+       
+        correctSentencesAutoComplete.forEach(sentence => {
+           const p = document.createElement('p');
+           p.textContent = sentence;
+           autoCompleteSentencesContainer.appendChild(p);
+        });
+       
+        // Добавление элементов в модальное окно
+        
+        modalContent.appendChild(header);
+        modalContent.appendChild(known);
+        modalContent.appendChild(manualSentencesContainer);
+        modalContent.appendChild(unknown);
+        modalContent.appendChild(autoCompleteSentencesContainer);
+        modalContent.appendChild(closeButton);
+        modal.appendChild(modalContent);
+
+
+      if (modal) {
+        modal.style.display = 'block';
+
+        console.log(correctSentencesManual, correctSentencesAutoComplete)
+     }
+
+
       console.log('все жестко удалено');
       const sentenceLines =
         completedSentencesContainer.querySelectorAll('.sentence-line');
@@ -694,6 +592,7 @@ function nextSentence(wordData: WordData) {
 
   waitForElements();
 }
+
 
 function handleWordClick(e: MouseEvent) {
   const wordDiv = e.target as HTMLElement;
@@ -842,6 +741,9 @@ function checkSentenceContainer() {
     checkButton.addEventListener('click', () => {
       if (check) {
         checkButton.textContent = 'Correct';
+
+        correctSentencesManual.push(currentSentence);
+
         const translationSpan = document.querySelector(
           '.translation-hint',
         ) as HTMLElement;
