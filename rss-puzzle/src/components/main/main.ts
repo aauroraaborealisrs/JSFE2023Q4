@@ -705,6 +705,8 @@ function displayTranslation(wordData: WordData) {
 //РЕАКЦИЯ НА ПРАВИЛЬНО ЛИ СОБРАЛ ПРЕДЛОЖЕНИЕ
 
 function checkSentenceContainer() {
+
+  console.log("checkSentenceContainer() called")
   const check = checkResultOrder(currentSentence);
   const checkButton = document.getElementById(
     'check-sentence-button',
@@ -764,6 +766,11 @@ function checkResultOrder(originalSentence: string) {
   );
   const wordsInOriginal = originalSentence.split(' ');
 
+  console.log(wordsInResult)
+  console.log(wordsInResult.length)
+  console.log(wordsInOriginal)
+  console.log(wordsInOriginal.length)
+
   if (wordsInResult.length !== wordsInOriginal.length) {
     console.log('Количество слов не совпадает');
     return false;
@@ -811,9 +818,10 @@ function waitForElements() {
       // console.log('ondragenter вызван');
     };
 
-    words.forEach((word) => {
-      word.id = `word-${word.textContent}`;
-      (word as HTMLElement).ondragstart = drag;
+
+    words.forEach((word, index) => {
+    word.id = `word-${word.textContent}-${index}`;
+    (word as HTMLElement).ondragstart = drag;
     });
 
     resultBlock.ondrop = drop;
@@ -841,6 +849,8 @@ function drop(event: DragEvent) {
 
   const item = document.getElementById(itemId);
   const target = event.target as HTMLElement;
+
+  checkSentenceContainer()
 
   console.log(target);
 
