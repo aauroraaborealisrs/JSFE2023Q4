@@ -196,6 +196,13 @@ class MainPage {
           completedSentencesContainer.removeChild(line);
         });
 
+        const resultBlock = document.getElementById('result-block');
+        if (resultBlock) {
+         while (resultBlock.firstChild) {
+            resultBlock.removeChild(resultBlock.firstChild);
+         }
+        }
+
         alphaHeight = 100;
         const alphaElement = document.querySelector('.alpha') as HTMLElement;
         if (alphaElement) {
@@ -868,7 +875,7 @@ function drop(event: DragEvent) {
     console.error('Куда сам на себя тянешь');
   }
 
-  checkSentenceContainer()
+  checkSentenceContainer();
 }
 
 waitForElements();
