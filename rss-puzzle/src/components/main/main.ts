@@ -705,8 +705,7 @@ function displayTranslation(wordData: WordData) {
 //РЕАКЦИЯ НА ПРАВИЛЬНО ЛИ СОБРАЛ ПРЕДЛОЖЕНИЕ
 
 function checkSentenceContainer() {
-
-  console.log("checkSentenceContainer() called")
+  console.log('checkSentenceContainer() called');
   const check = checkResultOrder(currentSentence);
   const checkButton = document.getElementById(
     'check-sentence-button',
@@ -725,6 +724,8 @@ function checkSentenceContainer() {
       'next-sentence-button',
     ) as HTMLButtonElement;
     checkButton.disabled = false;
+
+    checkButton.style.backgroundColor = 'black';
 
     checkButton.addEventListener('click', () => {
       if (check) {
@@ -766,10 +767,10 @@ function checkResultOrder(originalSentence: string) {
   );
   const wordsInOriginal = originalSentence.split(' ');
 
-  console.log(wordsInResult)
-  console.log(wordsInResult.length)
-  console.log(wordsInOriginal)
-  console.log(wordsInOriginal.length)
+  console.log(wordsInResult);
+  console.log(wordsInResult.length);
+  console.log(wordsInOriginal);
+  console.log(wordsInOriginal.length);
 
   if (wordsInResult.length !== wordsInOriginal.length) {
     console.log('Количество слов не совпадает');
@@ -818,10 +819,9 @@ function waitForElements() {
       // console.log('ondragenter вызван');
     };
 
-
     words.forEach((word, index) => {
-    word.id = `word-${word.textContent}-${index}`;
-    (word as HTMLElement).ondragstart = drag;
+      word.id = `word-${word.textContent}-${index}`;
+      (word as HTMLElement).ondragstart = drag;
     });
 
     resultBlock.ondrop = drop;
@@ -850,8 +850,6 @@ function drop(event: DragEvent) {
   const item = document.getElementById(itemId);
   const target = event.target as HTMLElement;
 
-  checkSentenceContainer()
-
   console.log(target);
 
   if (target.classList.contains('word')) {
@@ -869,6 +867,8 @@ function drop(event: DragEvent) {
   } else {
     console.error('Куда сам на себя тянешь');
   }
+
+  checkSentenceContainer()
 }
 
 waitForElements();
