@@ -214,6 +214,11 @@ class MainPage {
         currentRound = 1;
         currentSentenceIndex = 0;
       }
+
+      checkButton.disabled = true;
+      checkButton.textContent = 'Check';
+      checkButton.style.backgroundColor = '#ccc';
+      nextButton.style.visibility = 'hidden';
     });
   }
 
