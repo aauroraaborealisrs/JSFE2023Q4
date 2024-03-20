@@ -195,7 +195,7 @@ class LoginForm {
       if (allFilled && firstNameValid && surnameValid && submitButton) {
         submitButton.style.backgroundColor = '6b3f34;';
         submitButton.style.color = '6b3f34';
-        submitButton.style.cursor = "pointer";
+        submitButton.style.cursor = 'pointer';
         submitButton.disabled = false;
       } else if (submitButton) {
         submitButton.style.backgroundColor = 'e1caab';

@@ -27,7 +27,7 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  outline: 3px solid darkgoldenrod
+  outline: 3px solid darkgoldenrod;
 }
 
 .start-button:hover {
@@ -49,7 +49,7 @@
   top: 0;
   left: 20px;
   font-size: 1.2em;
-  color:  #462821;
+  color: #462821;
   text-align: center;
   margin-top: 20px;
   padding-left: 20px;
@@ -76,18 +76,18 @@
 .logout-button:hover {
   background-color: #6b3f34;
   transition: background-color 0.3s ease;
-  color: #f6e9d7; 
+  color: #f6e9d7;
 }
 
 body {
- background: url(bg.jpg) no-repeat center center fixed;
- -webkit-background-size: cover;
- -moz-background-size: cover;
- -o-background-size: cover;
- background-size: cover;
-} 
+  background: url(bg.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 
-.start__header{
+.start__header {
   background-color: #bb5942;
   color: #f6e9d7;
   padding: 10px 20px;
