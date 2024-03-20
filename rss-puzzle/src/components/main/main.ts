@@ -89,6 +89,9 @@ class MainPage {
         </div>
     `;
     document.getElementById('app').innerHTML = mainPage;
+    const bodyElement = document.body;
+
+    bodyElement.classList.add('no-bg');
 
     fetchWordData()
       .then((data) => {
@@ -198,9 +201,9 @@ class MainPage {
 
         const resultBlock = document.getElementById('result-block');
         if (resultBlock) {
-         while (resultBlock.firstChild) {
+          while (resultBlock.firstChild) {
             resultBlock.removeChild(resultBlock.firstChild);
-         }
+          }
         }
 
         alphaHeight = 100;

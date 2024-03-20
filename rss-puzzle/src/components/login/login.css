@@ -9,6 +9,13 @@ html {
   justify-content: center;
   margin-top: 20vh;
   gap: 10px;
+  background-color: #e1caab;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  border-radius: 10px;
+  border: solid 3px #6b3f34;
 }
 
 .button__main {
@@ -30,6 +37,7 @@ html {
 
 #login-form * {
   width: 20vw;
+  border-radius: 8px;
 }
 
 input:focus {

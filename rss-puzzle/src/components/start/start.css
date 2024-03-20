@@ -22,16 +22,17 @@
 .start-button {
   padding: 10px 20px;
   font-size: 1.2em;
-  background-color: black;
+  background-color: #6b3f34;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  outline: 3px solid darkgoldenrod
 }
 
 .start-button:hover {
   transform: scale(1.1);
-  background-color: #333;
+  background-color: #462821;
   transition:
     transform 0.5s ease,
     background-color 0.3s ease;
@@ -46,19 +47,22 @@
 .greeting {
   position: fixed;
   top: 0;
-  left: 0;
-  font-size: 1em;
-  color: #000000;
+  left: 20px;
+  font-size: 1.2em;
+  color:  #462821;
   text-align: center;
   margin-top: 20px;
   padding-left: 20px;
+  background-color: #dea766;
+  border-radius: 5px;
+  padding: 10px 20px;
 }
 
 .logout-button {
   padding: 10px 20px;
   font-size: 1.2em;
   color: black;
-  border: solid 1px black;
+  border: solid 3px #6b3f34;
   border-radius: 5px;
   cursor: pointer;
   position: fixed;
@@ -66,11 +70,27 @@
   right: 0;
   margin-top: 20px;
   margin-right: 20px;
+  background-color: #dea766;
 }
 
 .logout-button:hover {
-  background-color: rgb(122, 122, 122);
-  border: solid 1px black;
-  border-radius: 5px;
+  background-color: #6b3f34;
   transition: background-color 0.3s ease;
+  color: #f6e9d7; 
+}
+
+body {
+ background: url(bg.jpg) no-repeat center center fixed;
+ -webkit-background-size: cover;
+ -moz-background-size: cover;
+ -o-background-size: cover;
+ background-size: cover;
+} 
+
+.start__header{
+  background-color: #bb5942;
+  color: #f6e9d7;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-bottom: 40px;
 }

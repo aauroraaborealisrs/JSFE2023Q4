@@ -193,11 +193,12 @@ class LoginForm {
       });
 
       if (allFilled && firstNameValid && surnameValid && submitButton) {
-        submitButton.style.backgroundColor = 'black';
-        submitButton.style.color = 'white';
+        submitButton.style.backgroundColor = '6b3f34;';
+        submitButton.style.color = '6b3f34';
+        submitButton.style.cursor = "pointer";
         submitButton.disabled = false;
       } else if (submitButton) {
-        submitButton.style.backgroundColor = 'darkgrey';
+        submitButton.style.backgroundColor = 'e1caab';
         submitButton.style.color = 'black';
         submitButton.disabled = true;
       }
