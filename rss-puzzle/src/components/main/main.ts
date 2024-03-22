@@ -1,4 +1,5 @@
 import './mainpage.css';
+import { imageNames1 } from './imageNames'; 
 
 let currentSentenceIndex = 0;
 let currentSentence: string = '';
@@ -12,83 +13,68 @@ let dataUrl =
 let correctSentencesManual: string[] = [];
 let correctSentencesAutoComplete: string[] = [];
 
-const imageNames1 = [
-  '9th_wave',
-  'abbati2',
-  'arabs',
-  'campo',
-  'citywall',
-  'coastal',
-  'deerhunt',
-  'deerlake',
-  'distress',
-  'edgewood',
-  'extensiv',
-  'extensiv_1',
-  'firework',
-  'fishing',
-  'giuseppe',
-  'ice_land',
-  'italiana',
-  'italianb',
-  'kilarney',
-  'landmose',
-  'landsca3',
-  'landscap',
-  'landscap_1',
-  'landscap_2',
-  'railway',
-  'rateship',
-  'river_la',
-  'riverla2',
-  'rome',
-  'rome1',
-  'scene',
-  'shipcalm',
-  'shipping',
-  'shipping_1',
-  'skating',
-  'tivoli',
-  'vessels1',
-  'view_stp',
-  'viewvien',
-  'viewvlaa',
-  'waterfal',
-  'winter_l',
-  'winterla',
-  'winterla_1',
-  'woodedla',
-];
-
 class MainPage {
   sentences: string[] = [];
   constructor() {
     this.render();
   }
   render() {
-    const mainPage = `
-        <div id="main-page">
-        <div id="translation"></div>
-        <button id="toggle-translation-button">Показать перевод</button>
-        <select id="numberSelect">
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-        <option>6</option>
-        </select>
-        <div id="completed-sentences-container">
-        <div id="result-block"></div>
-        <div class="alpha"></div>
-        </div>
-        <button id="auto-complete-button">Auto-Complete</button>
-        <div id="sentence-container" class="container"></div>
-        <button id="next-sentence-button">Continue</button>
-        <button id="check-sentence-button">Check</button>
-        </div>
-    `;
-    document.getElementById('app').innerHTML = mainPage;
+    const mainPage = document.createElement('div');
+    mainPage.id = 'main-page';
+    
+    const translationDiv = document.createElement('div');
+    translationDiv.id = 'translation';
+    
+    const toggleTranslationButton = document.createElement('button');
+    toggleTranslationButton.id = 'toggle-translation-button';
+    toggleTranslationButton.textContent = 'Показать перевод';
+    
+    const numberSelect = document.createElement('select');
+    numberSelect.id = 'numberSelect';
+    const options = [1, 2, 3, 4, 5, 6];
+    options.forEach(optionValue => {
+     const option = document.createElement('option');
+     option.textContent = optionValue.toString();
+     numberSelect.appendChild(option);
+    });
+    
+    const completedSentences = document.createElement('div');
+    completedSentences.id = 'completed-sentences-container';
+    
+    const resultDiv = document.createElement('div');
+    resultDiv.id = 'result-block';
+    
+    const alphaDiv = document.createElement('div');
+    alphaDiv.className = 'alpha';
+    
+    const autoCompleteButtonDOM = document.createElement('button');
+    autoCompleteButtonDOM.id = 'auto-complete-button';
+    autoCompleteButtonDOM.textContent = 'Auto-Complete';
+    
+    const sentenceContainer = document.createElement('div');
+    sentenceContainer.id = 'sentence-container';
+    sentenceContainer.className = 'container';
+    
+    const nextSentenceButton = document.createElement('button');
+    nextSentenceButton.id = 'next-sentence-button';
+    nextSentenceButton.textContent = 'Continue';
+    
+    const checkSentenceButton = document.createElement('button');
+    checkSentenceButton.id = 'check-sentence-button';
+    checkSentenceButton.textContent = 'Check';
+    
+    mainPage.appendChild(translationDiv);
+    mainPage.appendChild(toggleTranslationButton);
+    mainPage.appendChild(numberSelect);
+    mainPage.appendChild(completedSentences);
+    completedSentences.appendChild(resultDiv);
+    completedSentences.appendChild(alphaDiv);
+    mainPage.appendChild(autoCompleteButtonDOM);
+    mainPage.appendChild(sentenceContainer);
+    mainPage.appendChild(nextSentenceButton);
+    mainPage.appendChild(checkSentenceButton);
+    
+    document.getElementById('app').innerHTML = mainPage.outerHTML;
     const bodyElement = document.body;
 
     bodyElement.classList.add('no-bg');
@@ -99,7 +85,6 @@ class MainPage {
       })
       .then((fetchedSentences) => {
         displaySentence(wordData);
-        // return extractTranslations();
       })
       .then((translations) => {
         displayTranslation(wordData);
@@ -257,23 +242,17 @@ function changeBackgroundImage() {
   if (completedSentencesContainer) {
     const imageUrl = getImageUrl(imageNames1[currentRound]);
     completedSentencesContainer.style.backgroundImage = `url('${imageUrl}')`;
-    currentRound = (currentRound + 1) % imageNames1.length; 
+    currentRound = (currentRound + 1) % imageNames1.length;
   }
 }
 
-
 function displaySentence(wordData: WordData) {
   const sentenceContainer = document.getElementById('sentence-container');
-  const resultBlock = document.getElementById('result-block');
-  const autoCompleteButton = document.getElementById(
-    'auto-complete-button',
-  ) as HTMLButtonElement;
 
   if (sentenceContainer) {
     currentSentence =
       wordData.rounds[currentRound - 1]?.words[currentSentenceIndex]
         ?.textExample || '';
-    // ?.textExample || '';
 
     originalSentence = currentSentence;
     let words = currentSentence.split(' ');
@@ -304,9 +283,6 @@ function displaySentence(wordData: WordData) {
       wordPlaceholder.appendChild(wordDiv);
     });
 
-    const translationSpan = document.querySelector(
-      '.translation-hint',
-    ) as HTMLElement;
     const button = document.getElementById(
       'toggle-translation-button',
     ) as HTMLButtonElement;
@@ -317,7 +293,6 @@ function displaySentence(wordData: WordData) {
 }
 
 const calculateWordWidth = (word: string, originalSentence: string) => {
-
   const totalLength = originalSentence.length;
   const wordLength = word.length;
 
@@ -444,7 +419,6 @@ function nextSentence(wordData: WordData) {
     completedSentencesContainer.appendChild(newLineDiv);
 
     if (currentSentenceIndex % 10 == 0) {
-
       const modal = document.createElement('div');
       modal.classList.add('modal');
       document.body.insertBefore(modal, document.body.firstChild);
@@ -571,7 +545,6 @@ function handleWordClick(e: MouseEvent) {
   }
 }
 
-
 function displayTranslation(wordData: WordData) {
   const button = document.getElementById(
     'toggle-translation-button',
@@ -594,13 +567,9 @@ function displayTranslation(wordData: WordData) {
         : 'Скрыть перевод';
   }
 
-
   const translation =
     wordData.rounds[currentRound - 1]?.words[currentSentenceIndex]
       ?.textExampleTranslate || '';
-  // wordData.rounds[2]?.words[5] это просто для дебага на словах с которыми может быть проблема
-  // ?.textExampleTranslate || '';
-  console.log(translation);
 
   translationSpan.textContent = translation;
 
@@ -612,7 +581,6 @@ function displayTranslation(wordData: WordData) {
     console.error('Element with ID "translation" not found');
   }
 }
-
 
 function checkSentenceContainer() {
   console.log('checkSentenceContainer() called');
@@ -662,7 +630,6 @@ function checkSentenceContainer() {
   }
 }
 
-
 function checkResultOrder(originalSentence: string) {
   const resultBlock = document.getElementById('result-block');
   if (!resultBlock) {
@@ -674,11 +641,6 @@ function checkResultOrder(originalSentence: string) {
     (child) => child.textContent,
   );
   const wordsInOriginal = originalSentence.split(' ');
-
-  console.log(wordsInResult);
-  console.log(wordsInResult.length);
-  console.log(wordsInOriginal);
-  console.log(wordsInOriginal.length);
 
   if (wordsInResult.length !== wordsInOriginal.length) {
     console.log('Количество слов не совпадает');
@@ -696,7 +658,6 @@ function checkResultOrder(originalSentence: string) {
   return true;
 }
 
-
 function waitForElements() {
   const words = document.querySelectorAll('.word');
   const containers = document.querySelectorAll('.container');
@@ -710,7 +671,7 @@ function waitForElements() {
       placeholders.forEach((placeholder) => {
         (placeholder as HTMLElement).ondragover = allowDrop;
       });
-    } 
+    }
 
     words.forEach((word, index) => {
       word.id = `word-${word.textContent}-${index}`;
@@ -722,7 +683,6 @@ function waitForElements() {
     placeholders.forEach((placeholder) => {
       (placeholder as HTMLElement).ondrop = drop;
     });
-
   } else {
     setTimeout(waitForElements, 100);
   }
