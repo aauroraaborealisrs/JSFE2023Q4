@@ -96,12 +96,10 @@ class MainPage {
     fetchWordData()
       .then((data) => {
         wordData = data;
-        return extractSentences(wordData);
       })
       .then((fetchedSentences) => {
-        this.sentences = fetchedSentences;
         displaySentence(wordData);
-        return extractTranslations();
+        // return extractTranslations();
       })
       .then((translations) => {
         displayTranslation(wordData);
@@ -164,9 +162,6 @@ class MainPage {
       'completed-sentences-container',
     ) as HTMLElement;
     if (completedSentencesContainer) {
-      console.log('КАРТИНКА');
-      // completedSentencesContainer.style.backgroundImage =
-      //   "url('https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/deerhunt.jpg')";
       changeBackgroundImage();
       completedSentencesContainer.style.backgroundRepeat = 'no-repeat';
       completedSentencesContainer.style.backgroundSize = 'cover';
@@ -182,12 +177,9 @@ class MainPage {
         fetchWordData()
           .then((data) => {
             wordData = data;
-            return extractSentences(wordData);
           })
           .then((fetchedSentences) => {
-            this.sentences = fetchedSentences;
             displaySentence(wordData);
-            return extractTranslations();
           })
           .then((translations) => {
             displayTranslation(wordData);
@@ -240,19 +232,14 @@ interface WordData {
   rounds: Round[];
 }
 
-// Функция для загрузки данных из JSON-файла
 async function fetchWordData() {
   try {
-    // const response = await fetch(
-    //   'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel1.json',
-    // );
     const response = await fetch(dataUrl);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     wordData = await response.json();
     console.log('Fetched data:', wordData);
-
     return wordData;
   } catch (error) {
     console.error('Error fetching word data:', error);
@@ -270,12 +257,10 @@ function changeBackgroundImage() {
   if (completedSentencesContainer) {
     const imageUrl = getImageUrl(imageNames1[currentRound]);
     completedSentencesContainer.style.backgroundImage = `url('${imageUrl}')`;
-    // Увеличиваем индекс изображения для следующего изменения фона
-    currentRound = (currentRound + 1) % imageNames1.length; // Остаток от деления для цикличного перебора
+    currentRound = (currentRound + 1) % imageNames1.length; 
   }
 }
 
-//разбивает предложение на слова и показывает их
 
 function displaySentence(wordData: WordData) {
   const sentenceContainer = document.getElementById('sentence-container');
@@ -284,24 +269,17 @@ function displaySentence(wordData: WordData) {
     'auto-complete-button',
   ) as HTMLButtonElement;
 
-  // autoCompleteButton.style.visibility = 'visible';
-
   if (sentenceContainer) {
     currentSentence =
       wordData.rounds[currentRound - 1]?.words[currentSentenceIndex]
         ?.textExample || '';
-    // wordData.rounds[2]?.words[5]
     // ?.textExample || '';
 
     originalSentence = currentSentence;
     let words = currentSentence.split(' ');
-    // console.log(`ghtlkj;tybt ${originalSentence}`);
 
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
-
-    const isFewWords = words.length <= 4;
-    const isFiveWords = words.length == 5;
 
     shuffledWords.forEach((word) => {
       const wordPlaceholder = document.createElement('div');
@@ -321,12 +299,6 @@ function displaySentence(wordData: WordData) {
       if (word === words[words.length - 1]) {
         wordDiv.classList.add('last-word');
       }
-      if (isFewWords) {
-        wordDiv.classList.add('few-words');
-      }
-      if (isFiveWords) {
-        wordDiv.classList.add('five-words');
-      }
 
       sentenceContainer.appendChild(wordPlaceholder);
       wordPlaceholder.appendChild(wordDiv);
@@ -345,7 +317,6 @@ function displaySentence(wordData: WordData) {
 }
 
 const calculateWordWidth = (word: string, originalSentence: string) => {
-  // console.log(`слово ${word}`);
 
   const totalLength = originalSentence.length;
   const wordLength = word.length;
@@ -356,22 +327,16 @@ const calculateWordWidth = (word: string, originalSentence: string) => {
   const totalWidthInPixels = container.offsetWidth;
 
   const percentage = wordLength / totalLength;
-  //const roundedPercentage = parseFloat(percentage.toFixed(1));
   const roundedPercentage = Math.round(percentage * 10) / 10;
-  // console.log(`проценты ${percentage}`);
-
-  const widthInPixels = totalWidthInPixels * roundedPercentage;
 
   const roundedPixels = parseFloat(
     (totalWidthInPixels * roundedPercentage).toFixed(1),
   );
 
   const final = roundedPixels + 15;
-
   return `${final}px`;
 };
 
-// Функция для перемешивания массива
 function shuffleArray<T>(array: T[]): T[] {
   let currentIndex = array.length,
     temporaryValue,
@@ -387,16 +352,11 @@ function shuffleArray<T>(array: T[]): T[] {
   return arrayCopy;
 }
 
-//для кнопки автокомплита которая решает пример за тебя
-
 function autoComplete() {
   const resultBlock = document.getElementById('result-block');
   const sentenceContainer = document.getElementById('sentence-container');
   const nextButton = document.getElementById(
     'next-sentence-button',
-  ) as HTMLButtonElement;
-  const autoCompleteButton = document.getElementById(
-    'auto-complete-button',
   ) as HTMLButtonElement;
 
   nextButton.style.visibility = 'visible';
@@ -407,18 +367,13 @@ function autoComplete() {
     sentenceContainer.innerHTML = '';
 
     const wordsInOriginal = originalSentence.split(' ');
-
     correctSentencesAutoComplete.push(originalSentence);
-
-    const isFewWords = wordsInOriginal.length <= 4;
-    const isFiveWords = wordsInOriginal.length == 5;
 
     wordsInOriginal.forEach((word) => {
       const wordDiv = document.createElement('div');
       wordDiv.textContent = word;
       wordDiv.classList.add('word');
       wordDiv.style.width = calculateWordWidth(word, originalSentence);
-
       resultBlock.appendChild(wordDiv);
 
       if (word === wordsInOriginal[0]) {
@@ -427,24 +382,12 @@ function autoComplete() {
       if (word === wordsInOriginal[wordsInOriginal.length - 1]) {
         wordDiv.classList.add('last-word');
       }
-      if (isFewWords) {
-        wordDiv.classList.add('few-words');
-      }
-      if (isFiveWords) {
-        wordDiv.classList.add('five-words');
-      }
     });
 
     const checkButton = document.getElementById('check-sentence-button');
 
     checkButton.style.visibility = 'hidden';
-    // autoCompleteButton.style.visibility = 'hidden';
-    const nextButton = document.getElementById(
-      'next-sentence-button',
-    ) as HTMLButtonElement;
     nextButton.disabled = false;
-
-    //ДЛЯ АВТОКОМПЛИТА
 
     const button = document.getElementById(
       'toggle-translation-button',
@@ -457,22 +400,15 @@ function autoComplete() {
   }
 }
 
-//показывает следующее предложение
-
 function nextSentence(wordData: WordData) {
   currentSentenceIndex++;
   if (currentSentenceIndex % 10 == 0) {
     currentRound++;
     currentSentenceIndex = 0;
-
     changeBackgroundImage();
   }
 
   alphaHeight -= 10;
-  // const alphaElement = document.querySelector('.alpha') as HTMLElement;
-  // if (alphaElement) {
-  //   alphaElement.style.height = `${alphaHeight}%`;
-  // }
 
   const checkButton = document.getElementById(
     'check-sentence-button',
@@ -508,9 +444,6 @@ function nextSentence(wordData: WordData) {
     completedSentencesContainer.appendChild(newLineDiv);
 
     if (currentSentenceIndex % 10 == 0) {
-      console.log('хоба');
-
-      //МОДАЛКА
 
       const modal = document.createElement('div');
       modal.classList.add('modal');
@@ -531,7 +464,6 @@ function nextSentence(wordData: WordData) {
       const header = document.createElement('h2');
       header.textContent = 'Congrats!';
 
-      // Создание контейнеров для массивов
       const known = document.createElement('h4');
       known.classList.add('known');
       known.textContent = 'Known:';
@@ -546,7 +478,6 @@ function nextSentence(wordData: WordData) {
       const autoCompleteSentencesContainer = document.createElement('div');
       autoCompleteSentencesContainer.id = 'autoCompleteSentencesContainer';
 
-      // Добавление массивов в контейнеры
       correctSentencesManual.forEach((sentence) => {
         const p = document.createElement('p');
         p.textContent = sentence;
@@ -558,8 +489,6 @@ function nextSentence(wordData: WordData) {
         p.textContent = sentence;
         autoCompleteSentencesContainer.appendChild(p);
       });
-
-      // Добавление элементов в модальное окно
 
       modalContent.appendChild(header);
       modalContent.appendChild(known);
@@ -575,7 +504,6 @@ function nextSentence(wordData: WordData) {
         console.log(correctSentencesManual, correctSentencesAutoComplete);
       }
 
-      console.log('все жестко удалено');
       const sentenceLines =
         completedSentencesContainer.querySelectorAll('.sentence-line');
       sentenceLines.forEach((line) => {
@@ -643,35 +571,6 @@ function handleWordClick(e: MouseEvent) {
   }
 }
 
-//я если честно не уверена что следующие 2 еще нужны но мне страшно их убирать
-
-//берет предложения
-function extractSentences(wordData: WordData): string[] {
-  const sentences: string[] = [];
-
-  wordData.rounds.forEach((round) => {
-    round.words.forEach((word) => {
-      sentences.push(word.textExample);
-    });
-  });
-  console.log(sentences);
-  return sentences;
-}
-
-//берет переводы
-
-function extractTranslations(): string[] {
-  const translations: string[] = [];
-
-  wordData.rounds.forEach((round) => {
-    round.words.forEach((word) => {
-      translations.push(word.textExampleTranslate);
-    });
-  });
-
-  console.log(translations);
-  return translations;
-}
 
 function displayTranslation(wordData: WordData) {
   const button = document.getElementById(
@@ -695,9 +594,6 @@ function displayTranslation(wordData: WordData) {
         : 'Скрыть перевод';
   }
 
-  //ВОТ ОТЛАДКА  ПРЕДЛОЖЕНИЕ И РАУНД
-
-  console.log(currentSentenceIndex, currentRound);
 
   const translation =
     wordData.rounds[currentRound - 1]?.words[currentSentenceIndex]
@@ -717,7 +613,6 @@ function displayTranslation(wordData: WordData) {
   }
 }
 
-//РЕАКЦИЯ НА ПРАВИЛЬНО ЛИ СОБРАЛ ПРЕДЛОЖЕНИЕ
 
 function checkSentenceContainer() {
   console.log('checkSentenceContainer() called');
@@ -758,7 +653,6 @@ function checkSentenceContainer() {
         checkButton.style.backgroundColor = 'green';
         nextButton.style.visibility = 'visible';
         nextButton.style.backgroundColor = 'green';
-        // autoCompleteButton.style.visibility = 'hidden';
       } else {
         checkButton.textContent = 'Incorrect. Try again';
         checkButton.style.backgroundColor = 'red';
@@ -768,7 +662,6 @@ function checkSentenceContainer() {
   }
 }
 
-//проверяет правильно ли собрано предложение
 
 function checkResultOrder(originalSentence: string) {
   const resultBlock = document.getElementById('result-block');
@@ -803,18 +696,11 @@ function checkResultOrder(originalSentence: string) {
   return true;
 }
 
-//DRAG AND DROP
-
-//функция с задержкой потому что вызывалась еще на стартовой странице и
-//все элементы были null и я ничего лучше не придумала
 
 function waitForElements() {
   const words = document.querySelectorAll('.word');
   const containers = document.querySelectorAll('.container');
   const resultBlock = document.getElementById('result-block');
-
-  // const SentenceBlock = document.getElementById('sentence-container');
-
   const placeholders = document.querySelectorAll('.wordPlaceholder');
 
   if (words.length > 0 && containers.length > 0) {
@@ -824,15 +710,7 @@ function waitForElements() {
       placeholders.forEach((placeholder) => {
         (placeholder as HTMLElement).ondragover = allowDrop;
       });
-
-      // SentenceBlock.ondragover = allowDrop;
-    } else {
-      // console.log('Элемент resultBlock не найден');
-    }
-
-    resultBlock.ondragenter = (event: DragEvent) => {
-      // console.log('ondragenter вызван');
-    };
+    } 
 
     words.forEach((word, index) => {
       word.id = `word-${word.textContent}-${index}`;
@@ -845,7 +723,6 @@ function waitForElements() {
       (placeholder as HTMLElement).ondrop = drop;
     });
 
-    // SentenceBlock.ondrop = drop;
   } else {
     setTimeout(waitForElements, 100);
   }
