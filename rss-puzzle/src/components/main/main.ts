@@ -1,16 +1,24 @@
 import './mainpage.css';
-import { imageNames1 } from './imageNames'; 
+import { imageNames1 } from './imageNames';
+import { waitForElements, allowDrop, drag, drop } from './dragAndDrop';
+import { checkResultOrder } from './checkResultOrder'; 
+import { checkSentenceContainer } from './checkSentence'; 
+import { createInterfaceElements } from './interfaceElements';
+import { setupEventHandlers } from './eventHandlers';
+import { fetchWordData } from './fetchData';
+import { IWordData } from './interfaces';
+
 
 let currentSentenceIndex = 0;
-let currentSentence: string = '';
+export let currentSentence: string = '';
 let originalSentence = '';
-let wordData: WordData;
+let wordData: IWordData;
 let currentRound = 0;
 let alphaHeight = 90;
 let dataUrl =
   'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel1.json';
 
-let correctSentencesManual: string[] = [];
+export let correctSentencesManual: string[] = [];
 let correctSentencesAutoComplete: string[] = [];
 
 class MainPage {
@@ -19,67 +27,12 @@ class MainPage {
     this.render();
   }
   render() {
-    const mainPage = document.createElement('div');
-    mainPage.id = 'main-page';
-    
-    const translationDiv = document.createElement('div');
-    translationDiv.id = 'translation';
-    
-    const toggleTranslationButton = document.createElement('button');
-    toggleTranslationButton.id = 'toggle-translation-button';
-    toggleTranslationButton.textContent = 'Показать перевод';
-    
-    const numberSelect = document.createElement('select');
-    numberSelect.id = 'numberSelect';
-    const options = [1, 2, 3, 4, 5, 6];
-    options.forEach(optionValue => {
-     const option = document.createElement('option');
-     option.textContent = optionValue.toString();
-     numberSelect.appendChild(option);
-    });
-    
-    const completedSentences = document.createElement('div');
-    completedSentences.id = 'completed-sentences-container';
-    
-    const resultDiv = document.createElement('div');
-    resultDiv.id = 'result-block';
-    
-    const alphaDiv = document.createElement('div');
-    alphaDiv.className = 'alpha';
-    
-    const autoCompleteButtonDOM = document.createElement('button');
-    autoCompleteButtonDOM.id = 'auto-complete-button';
-    autoCompleteButtonDOM.textContent = 'Auto-Complete';
-    
-    const sentenceContainer = document.createElement('div');
-    sentenceContainer.id = 'sentence-container';
-    sentenceContainer.className = 'container';
-    
-    const nextSentenceButton = document.createElement('button');
-    nextSentenceButton.id = 'next-sentence-button';
-    nextSentenceButton.textContent = 'Continue';
-    
-    const checkSentenceButton = document.createElement('button');
-    checkSentenceButton.id = 'check-sentence-button';
-    checkSentenceButton.textContent = 'Check';
-    
-    mainPage.appendChild(translationDiv);
-    mainPage.appendChild(toggleTranslationButton);
-    mainPage.appendChild(numberSelect);
-    mainPage.appendChild(completedSentences);
-    completedSentences.appendChild(resultDiv);
-    completedSentences.appendChild(alphaDiv);
-    mainPage.appendChild(autoCompleteButtonDOM);
-    mainPage.appendChild(sentenceContainer);
-    mainPage.appendChild(nextSentenceButton);
-    mainPage.appendChild(checkSentenceButton);
-    
+    const mainPage = createInterfaceElements();
     document.getElementById('app').innerHTML = mainPage.outerHTML;
     const bodyElement = document.body;
-
     bodyElement.classList.add('no-bg');
 
-    fetchWordData()
+    fetchWordData(dataUrl)
       .then((data) => {
         wordData = data;
       })
@@ -90,58 +43,18 @@ class MainPage {
         displayTranslation(wordData);
       });
 
-    const resultBlock = document.getElementById('result-block');
-
-    resultBlock.id = 'result-block';
-    resultBlock.classList.add('container');
-
     document
       .getElementById('next-sentence-button')
       .addEventListener('click', () => {
         nextSentence(wordData);
       });
 
-    const nextButton = document.getElementById(
-      'next-sentence-button',
-    ) as HTMLButtonElement;
-    nextButton.disabled = true;
-    nextButton.style.visibility = 'hidden';
-
-    nextButton.addEventListener('click', () => {
-      if (resultBlock) {
-        nextButton.disabled = true;
-        nextButton.style.visibility = 'hidden';
-      }
-    });
-
-    const checkButton = document.getElementById(
-      'check-sentence-button',
-    ) as HTMLButtonElement;
-    checkButton.disabled = true;
-    nextButton.style.visibility = 'hidden';
+    setupEventHandlers();
 
     const autoCompleteButton = document.getElementById(
       'auto-complete-button',
     ) as HTMLButtonElement;
     autoCompleteButton.addEventListener('click', autoComplete);
-
-    document
-      .getElementById('toggle-translation-button')
-      .addEventListener('click', () => {
-        const translationSpan = document.querySelector(
-          '.translation-hint',
-        ) as HTMLElement;
-        const button = document.getElementById(
-          'toggle-translation-button',
-        ) as HTMLButtonElement;
-        if (translationSpan) {
-          const isVisible = translationSpan.style.display !== 'none';
-          translationSpan.style.display = isVisible ? 'none' : 'block';
-          button.textContent = isVisible
-            ? 'Показать перевод'
-            : 'Скрыть перевод';
-        }
-      });
 
     const completedSentencesContainer = document.getElementById(
       'completed-sentences-container',
@@ -152,6 +65,7 @@ class MainPage {
       completedSentencesContainer.style.backgroundSize = 'cover';
       completedSentencesContainer.style.backgroundPosition = 'center';
     }
+
     const selectElement = document.getElementById('numberSelect');
 
     selectElement.addEventListener('change', () => {
@@ -159,7 +73,7 @@ class MainPage {
       if (selectedNumber) {
         dataUrl = `https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel${selectedNumber}.json`;
         console.log('Selected data URL:', dataUrl);
-        fetchWordData()
+        fetchWordData(dataUrl)
           .then((data) => {
             wordData = data;
           })
@@ -192,6 +106,13 @@ class MainPage {
         currentSentenceIndex = 0;
       }
 
+      const nextButton = document.getElementById(
+        'next-sentence-button',
+      ) as HTMLButtonElement;
+      const checkButton = document.getElementById(
+        'check-sentence-button',
+      ) as HTMLButtonElement;
+
       checkButton.disabled = true;
       checkButton.textContent = 'Check';
       checkButton.style.backgroundColor = '#ccc';
@@ -201,33 +122,6 @@ class MainPage {
 
   getSentences(): string[] {
     return this.sentences;
-  }
-}
-
-interface Word {
-  textExample: string;
-  textExampleTranslate: string;
-}
-
-interface Round {
-  words: Word[];
-}
-
-interface WordData {
-  rounds: Round[];
-}
-
-async function fetchWordData() {
-  try {
-    const response = await fetch(dataUrl);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    wordData = await response.json();
-    console.log('Fetched data:', wordData);
-    return wordData;
-  } catch (error) {
-    console.error('Error fetching word data:', error);
   }
 }
 
@@ -246,7 +140,7 @@ function changeBackgroundImage() {
   }
 }
 
-function displaySentence(wordData: WordData) {
+function displaySentence(wordData: IWordData) {
   const sentenceContainer = document.getElementById('sentence-container');
 
   if (sentenceContainer) {
@@ -287,8 +181,6 @@ function displaySentence(wordData: WordData) {
       'toggle-translation-button',
     ) as HTMLButtonElement;
     button.textContent = 'Показать перевод';
-  } else {
-    console.error('Element with ID "sentence-container" not found');
   }
 }
 
@@ -375,7 +267,7 @@ function autoComplete() {
   }
 }
 
-function nextSentence(wordData: WordData) {
+function nextSentence(wordData: IWordData) {
   currentSentenceIndex++;
   if (currentSentenceIndex % 10 == 0) {
     currentRound++;
@@ -541,11 +433,11 @@ function handleWordClick(e: MouseEvent) {
   } else {
     checkButton.style.backgroundColor = 'black';
     checkButton.disabled = false;
-    checkSentenceContainer();
+    checkSentenceContainer(currentSentence, correctSentencesManual);
   }
 }
 
-function displayTranslation(wordData: WordData) {
+function displayTranslation(wordData: IWordData) {
   const button = document.getElementById(
     'toggle-translation-button',
   ) as HTMLButtonElement;
@@ -580,147 +472,6 @@ function displayTranslation(wordData: WordData) {
   } else {
     console.error('Element with ID "translation" not found');
   }
-}
-
-function checkSentenceContainer() {
-  console.log('checkSentenceContainer() called');
-  const check = checkResultOrder(currentSentence);
-  const checkButton = document.getElementById(
-    'check-sentence-button',
-  ) as HTMLButtonElement;
-  const autoCompleteButton = document.getElementById(
-    'auto-complete-button',
-  ) as HTMLButtonElement;
-  const sentenceContainer = document.getElementById('sentence-container');
-  const allPlaceholdersEmpty = Array.from(
-    sentenceContainer.querySelectorAll('.wordPlaceholder'),
-  ).every((placeholder) => placeholder.children.length === 0);
-
-  if (allPlaceholdersEmpty) {
-    console.log('sentence-container пустой');
-    const nextButton = document.getElementById(
-      'next-sentence-button',
-    ) as HTMLButtonElement;
-    checkButton.disabled = false;
-
-    checkButton.style.backgroundColor = 'black';
-
-    checkButton.addEventListener('click', () => {
-      if (check) {
-        checkButton.textContent = 'Correct';
-
-        correctSentencesManual.push(currentSentence);
-
-        const translationSpan = document.querySelector(
-          '.translation-hint',
-        ) as HTMLElement;
-        if (translationSpan) {
-          translationSpan.style.display = 'block';
-        }
-        nextButton.disabled = false;
-        checkButton.style.backgroundColor = 'green';
-        nextButton.style.visibility = 'visible';
-        nextButton.style.backgroundColor = 'green';
-      } else {
-        checkButton.textContent = 'Incorrect. Try again';
-        checkButton.style.backgroundColor = 'red';
-        nextButton.style.visibility = 'hidden';
-      }
-    });
-  }
-}
-
-function checkResultOrder(originalSentence: string) {
-  const resultBlock = document.getElementById('result-block');
-  if (!resultBlock) {
-    console.error('Element with ID "result-block" not found');
-    return false;
-  }
-
-  const wordsInResult = Array.from(resultBlock.children).map(
-    (child) => child.textContent,
-  );
-  const wordsInOriginal = originalSentence.split(' ');
-
-  if (wordsInResult.length !== wordsInOriginal.length) {
-    console.log('Количество слов не совпадает');
-    return false;
-  }
-
-  for (let i = 0; i < wordsInResult.length; i++) {
-    if (wordsInResult[i] !== wordsInOriginal[i]) {
-      console.log('Порядок слов не совпадает');
-      return false;
-    }
-  }
-
-  console.log('Порядок слов совпадает');
-  return true;
-}
-
-function waitForElements() {
-  const words = document.querySelectorAll('.word');
-  const containers = document.querySelectorAll('.container');
-  const resultBlock = document.getElementById('result-block');
-  const placeholders = document.querySelectorAll('.wordPlaceholder');
-
-  if (words.length > 0 && containers.length > 0) {
-    if (resultBlock) {
-      resultBlock.ondragover = allowDrop;
-
-      placeholders.forEach((placeholder) => {
-        (placeholder as HTMLElement).ondragover = allowDrop;
-      });
-    }
-
-    words.forEach((word, index) => {
-      word.id = `word-${word.textContent}-${index}`;
-      (word as HTMLElement).ondragstart = drag;
-    });
-
-    resultBlock.ondrop = drop;
-
-    placeholders.forEach((placeholder) => {
-      (placeholder as HTMLElement).ondrop = drop;
-    });
-  } else {
-    setTimeout(waitForElements, 100);
-  }
-}
-
-let allowDrop = (event: DragEvent) => {
-  event.preventDefault();
-};
-
-function drag(event: DragEvent) {
-  event.dataTransfer.setData('id', (event.target as HTMLElement).id);
-}
-
-function drop(event: DragEvent) {
-  let itemId = event.dataTransfer.getData('id');
-
-  const item = document.getElementById(itemId);
-  const target = event.target as HTMLElement;
-
-  console.log(target);
-
-  if (target.classList.contains('word')) {
-    console.error('Элемент с классом "word" не может быть целевым элементом');
-    item.classList.add('not-droppable');
-    setTimeout(() => {
-      item.classList.remove('not-droppable');
-    }, 1000);
-    return;
-  }
-
-  if (!target.contains(item)) {
-    target.append(item);
-    console.log(target);
-  } else {
-    console.error('Куда сам на себя тянешь');
-  }
-
-  checkSentenceContainer();
 }
 
 waitForElements();
