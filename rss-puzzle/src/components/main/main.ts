@@ -32,15 +32,25 @@ class MainPage {
     this.render();
   }
   render() {
+
     const mainPage = createInterfaceElements();
-    document.getElementById('app').innerHTML = mainPage.outerHTML;
+    const appElement = document.getElementById('app');
+    if (appElement) {
+        appElement.innerHTML = mainPage.outerHTML;
+    } else {
+        console.error('Element with ID "app" not found');
+    }
     const bodyElement = document.body;
     bodyElement.classList.add('no-bg');
 
     fetchWordData(dataUrl)
-      .then((data) => {
+    .then((data) => {
+      if (data) {
         wordData = data;
-      })
+      } else {
+        throw new Error('Failed to fetch word data');
+      }
+    })
       .then((fetchedSentences) => {
         displaySentence(wordData);
       })
@@ -48,12 +58,15 @@ class MainPage {
         displayTranslation(wordData);
       });
 
-    document
-      .getElementById('next-sentence-button')
-      .addEventListener('click', () => {
-        nextSentence(wordData);
-      });
-
+      
+    const nextSentenceButton = document.getElementById('next-sentence-button');
+    if (nextSentenceButton) {
+        nextSentenceButton.addEventListener('click', () => {
+            nextSentence(wordData);
+        });
+    } else {
+        console.error('Element with ID "next-sentence-button" not found');
+    }
     setupEventHandlers();
 
     const autoCompleteButton = document.getElementById(
@@ -73,22 +86,26 @@ class MainPage {
 
     const selectElement = document.getElementById('numberSelect');
 
+    if (selectElement) {
     selectElement.addEventListener('change', () => {
       const selectedNumber = (selectElement as HTMLSelectElement).value;
       if (selectedNumber) {
         dataUrl = `https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel${selectedNumber}.json`;
         console.log('Selected data URL:', dataUrl);
         fetchWordData(dataUrl)
-          .then((data) => {
+        .then((data) => {
+          if (data) {
             wordData = data;
-          })
+          } else {
+            throw new Error('Failed to fetch word data');
+          }
+        })
           .then((fetchedSentences) => {
             displaySentence(wordData);
           })
           .then((translations) => {
             displayTranslation(wordData);
           });
-
         handleSelectElementChange(completedSentencesContainer);
 
         alphaHeight = 100;
@@ -100,7 +117,7 @@ class MainPage {
         currentSentenceIndex = 0;
       }
     });
-  }
+  }}
 
   getSentences(): string[] {
     return this.sentences;
@@ -159,7 +176,9 @@ function autoComplete() {
 
   if (resultBlock) {
     resultBlock.innerHTML = '';
-    sentenceContainer.innerHTML = '';
+    if (sentenceContainer) {
+      sentenceContainer.innerHTML = '';
+    }
 
     const wordsInOriginal = originalSentence.split(' ');
     correctSentencesAutoComplete.push(originalSentence);
@@ -169,8 +188,10 @@ function autoComplete() {
     });
 
     const checkButton = document.getElementById('check-sentence-button');
-
-    checkButton.style.visibility = 'hidden';
+    
+    if (checkButton) {
+        checkButton.style.visibility = 'hidden';
+    }
     nextButton.disabled = false;
 
     const button = document.getElementById(

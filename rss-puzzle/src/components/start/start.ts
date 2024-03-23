@@ -1,7 +1,7 @@
 import './start.css';
 import MainPage from '../main/main';
 import LoginForm from '../login/login';
-import { createStartScreen } from './page/startScreen'; 
+import { createStartScreen } from './page/startScreen';
 
 function getUserGreeting() {
   const userData = localStorage.getItem('userData');
@@ -22,11 +22,11 @@ class StartScreen {
     const userGreeting = getUserGreeting();
     const startScreen = createStartScreen(userGreeting);
 
-    if (startScreen){
-    const appElement = document.getElementById('app');
+    if (startScreen) {
+      const appElement = document.getElementById('app');
       if (appElement) {
-          appElement.innerHTML = '';
-          appElement.appendChild(startScreen);
+        appElement.innerHTML = '';
+        appElement.appendChild(startScreen);
       }
     }
   }

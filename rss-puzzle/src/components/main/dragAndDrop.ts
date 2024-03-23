@@ -6,16 +6,22 @@ export let allowDrop = (event: DragEvent) => {
 };
 
 export function drag(event: DragEvent) {
-  event.dataTransfer.setData('id', (event.target as HTMLElement).id);
+ if (event.dataTransfer) {
+    event.dataTransfer.setData('id', (event.target as HTMLElement).id);
+ }
 }
 
 export function drop(event: DragEvent) {
+  if (event.dataTransfer){
   let itemId = event.dataTransfer.getData('id');
 
   const item = document.getElementById(itemId);
-  const target = event.target as HTMLElement;
+  if (!item) {
+    console.error('Item not found');
+    return;
+  }
 
-  console.log(target);
+  const target = event.target as HTMLElement;
 
   if (target.classList.contains('word')) {
     console.error('Элемент с классом "word" не может быть целевым элементом');
@@ -34,7 +40,7 @@ export function drop(event: DragEvent) {
   }
 
   checkSentenceContainer(currentSentence, correctSentencesManual);
-}
+}}
 
 export function waitForElements() {
   const words = document.querySelectorAll('.word');
@@ -56,7 +62,9 @@ export function waitForElements() {
       (word as HTMLElement).ondragstart = drag;
     });
 
-    resultBlock.ondrop = drop;
+    if (resultBlock) {
+        resultBlock.ondrop = drop;
+    }
 
     placeholders.forEach((placeholder) => {
       (placeholder as HTMLElement).ondrop = drop;

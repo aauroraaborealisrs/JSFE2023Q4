@@ -30,10 +30,13 @@ export function handleWordClick(e: MouseEvent) {
     }
   }
 
-  const sentenceContainer = document.getElementById('sentence-container');
-  const allPlaceholdersEmpty = Array.from(
+const sentenceContainer = document.getElementById('sentence-container');
+let allPlaceholdersEmpty = false;
+if (sentenceContainer) {
+  allPlaceholdersEmpty = Array.from(
     sentenceContainer.querySelectorAll('.wordPlaceholder'),
   ).every((placeholder) => placeholder.children.length === 0);
+}
 
   if (!allPlaceholdersEmpty) {
     checkButton.disabled = true;

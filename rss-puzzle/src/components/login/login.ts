@@ -1,7 +1,7 @@
 import './login.css';
-import { loginFormRenderer } from './page/loginFormRenderer'; 
-import { setupFormSubmitHandler } from './validation/formSubmitHandler'; 
-import { checkInputs } from './validation/checkInputs'; 
+import { loginFormRenderer } from './page/loginFormRenderer';
+import { setupFormSubmitHandler } from './validation/formSubmitHandler';
+import { checkInputs } from './validation/checkInputs';
 
 class LoginForm {
   constructor() {
@@ -9,7 +9,9 @@ class LoginForm {
     this.addEventListeners();
   }
 
-  render() {loginFormRenderer()}
+  render() {
+    loginFormRenderer();
+  }
 
   addEventListeners() {
     const inputs: NodeListOf<HTMLInputElement> =
