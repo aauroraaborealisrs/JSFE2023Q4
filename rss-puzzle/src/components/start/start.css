@@ -1,0 +1,96 @@
+#start-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+  color: #000000;
+  text-align: center;
+}
+
+.app-name {
+  font-size: 2em;
+  font-family: 'Your Game Font', sans-serif;
+  margin-bottom: 20px;
+}
+
+.game-description {
+  font-size: 1em;
+  margin-bottom: 30px;
+}
+
+.start-button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  background-color: #6b3f34;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: 3px solid darkgoldenrod;
+}
+
+.start-button:hover {
+  transform: scale(1.1);
+  background-color: #462821;
+  transition:
+    transform 0.5s ease,
+    background-color 0.3s ease;
+}
+
+.start-button:active {
+  transform: scale(1);
+  background-color: #555;
+  transition: transform 1s ease;
+}
+
+.greeting {
+  position: fixed;
+  top: 0;
+  left: 20px;
+  font-size: 1.2em;
+  color: #462821;
+  text-align: center;
+  margin-top: 20px;
+  padding-left: 20px;
+  background-color: #dea766;
+  border-radius: 5px;
+  padding: 10px 20px;
+}
+
+.logout-button {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  color: black;
+  border: solid 3px #6b3f34;
+  border-radius: 5px;
+  cursor: pointer;
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-top: 20px;
+  margin-right: 20px;
+  background-color: #dea766;
+}
+
+.logout-button:hover {
+  background-color: #6b3f34;
+  transition: background-color 0.3s ease;
+  color: #f6e9d7;
+}
+
+body {
+  background: url(./images/bg.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.start__header {
+  background-color: #bb5942;
+  color: #f6e9d7;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-bottom: 40px;
+}
