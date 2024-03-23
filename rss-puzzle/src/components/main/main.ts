@@ -1,27 +1,30 @@
 import './mainpage.css';
 import { imageNames1 } from './imageNames';
-import { waitForElements} from './dragAndDrop';
+import { waitForElements } from './dragAndDrop';
 import { createInterfaceElements } from './interfaceElements';
 import { setupEventHandlers } from './eventHandlers';
 import { fetchWordData } from './fetchData';
 import { IWordData } from './interfaces';
 import { displayTranslation } from './translationModule';
-import { handleWordClick } from './handleWordClick';
 import { shuffleArray } from './shuffleArray';
-import { calculateWordWidth } from './calculateWordWidth';
+import { createAndShowModal } from './modal';
+import { handleSelectElementChange } from './selectElementHandler';
+import { createWordElement } from './wordElementCreator';
+import { createWordElementAutocomplete } from './wordElementCreatorForAutocomplete';
+import { updateButtonStates } from './buttonHandler';
 
 export let currentSentenceIndex = 0;
 export let currentSentence: string = '';
 export let originalSentence = '';
-let wordData: IWordData;
 export let currentRound = 0;
-let alphaHeight = 90;
+export let alphaHeight = 90;
+export let wordData: IWordData;
+
 let dataUrl =
   'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel1.json';
 
 export let correctSentencesManual: string[] = [];
 let correctSentencesAutoComplete: string[] = [];
-
 
 class MainPage {
   sentences: string[] = [];
@@ -86,18 +89,7 @@ class MainPage {
             displayTranslation(wordData);
           });
 
-        const sentenceLines =
-          completedSentencesContainer.querySelectorAll('.sentence-line');
-        sentenceLines.forEach((line) => {
-          completedSentencesContainer.removeChild(line);
-        });
-
-        const resultBlock = document.getElementById('result-block');
-        if (resultBlock) {
-          while (resultBlock.firstChild) {
-            resultBlock.removeChild(resultBlock.firstChild);
-          }
-        }
+          handleSelectElementChange(completedSentencesContainer);
 
         alphaHeight = 100;
         const alphaElement = document.querySelector('.alpha') as HTMLElement;
@@ -108,17 +100,6 @@ class MainPage {
         currentSentenceIndex = 0;
       }
 
-      const nextButton = document.getElementById(
-        'next-sentence-button',
-      ) as HTMLButtonElement;
-      const checkButton = document.getElementById(
-        'check-sentence-button',
-      ) as HTMLButtonElement;
-
-      checkButton.disabled = true;
-      checkButton.textContent = 'Check';
-      checkButton.style.backgroundColor = '#ccc';
-      nextButton.style.visibility = 'hidden';
     });
   }
 
@@ -127,7 +108,7 @@ class MainPage {
   }
 }
 
-function getImageUrl(imageName: string): string {
+export function getImageUrl(imageName: string): string {
   return `https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/images/level1/${imageName}.jpg`;
 }
 
@@ -142,8 +123,7 @@ function changeBackgroundImage() {
   }
 }
 
-
-function displaySentence(wordData: IWordData) {
+export function displaySentence(wordData: IWordData) {
   const sentenceContainer = document.getElementById('sentence-container');
 
   if (sentenceContainer) {
@@ -158,26 +138,7 @@ function displaySentence(wordData: IWordData) {
     sentenceContainer.innerHTML = '';
 
     shuffledWords.forEach((word: string) => {
-      const wordPlaceholder = document.createElement('div');
-      wordPlaceholder.classList.add('wordPlaceholder');
-      const wordDiv = document.createElement('div');
-      wordDiv.textContent = word;
-      wordDiv.classList.add('word');
-      wordDiv.setAttribute('data-original-parent', sentenceContainer.id);
-      wordDiv.addEventListener('click', handleWordClick);
-      wordDiv.draggable = true;
-
-      wordDiv.style.width = calculateWordWidth(word, originalSentence);
-
-      if (word === words[0]) {
-        wordDiv.classList.add('first-word');
-      }
-      if (word === words[words.length - 1]) {
-        wordDiv.classList.add('last-word');
-      }
-
-      sentenceContainer.appendChild(wordPlaceholder);
-      wordPlaceholder.appendChild(wordDiv);
+      createWordElement(word, originalSentence, sentenceContainer);
     });
 
     const button = document.getElementById(
@@ -205,18 +166,7 @@ function autoComplete() {
     correctSentencesAutoComplete.push(originalSentence);
 
     wordsInOriginal.forEach((word) => {
-      const wordDiv = document.createElement('div');
-      wordDiv.textContent = word;
-      wordDiv.classList.add('word');
-      wordDiv.style.width = calculateWordWidth(word, originalSentence);
-      resultBlock.appendChild(wordDiv);
-
-      if (word === wordsInOriginal[0]) {
-        wordDiv.classList.add('first-word');
-      }
-      if (word === wordsInOriginal[wordsInOriginal.length - 1]) {
-        wordDiv.classList.add('last-word');
-      }
+      createWordElementAutocomplete(word, originalSentence, resultBlock);
     });
 
     const checkButton = document.getElementById('check-sentence-button');
@@ -251,11 +201,8 @@ function nextSentence(wordData: IWordData) {
   const nextButton = document.getElementById(
     'next-sentence-button',
   ) as HTMLButtonElement;
-  nextButton.style.visibility = 'visible';
-  checkButton.disabled = true;
-  checkButton.textContent = 'Check';
-  checkButton.style.backgroundColor = '#ccc';
-  checkButton.style.visibility = 'visible';
+
+  updateButtonStates(checkButton, nextButton)
 
   if (currentSentenceIndex < wordData.rounds.length) {
     displaySentence(wordData);
@@ -279,65 +226,6 @@ function nextSentence(wordData: IWordData) {
     completedSentencesContainer.appendChild(newLineDiv);
 
     if (currentSentenceIndex % 10 == 0) {
-      const modal = document.createElement('div');
-      modal.classList.add('modal');
-      document.body.insertBefore(modal, document.body.firstChild);
-
-      const modalContent = document.createElement('div');
-      modalContent.classList.add('modal-content');
-
-      const closeButton = document.createElement('span');
-      closeButton.classList.add('close');
-      closeButton.textContent = 'Continue';
-      closeButton.onclick = function () {
-        modal.style.display = 'none';
-        correctSentencesManual.length = 0;
-        correctSentencesAutoComplete.length = 0;
-      };
-
-      const header = document.createElement('h2');
-      header.textContent = 'Congrats!';
-
-      const known = document.createElement('h4');
-      known.classList.add('known');
-      known.textContent = 'Known:';
-
-      const manualSentencesContainer = document.createElement('div');
-      manualSentencesContainer.id = 'manualSentencesContainer';
-
-      const unknown = document.createElement('h4');
-      unknown.classList.add('unknown');
-      unknown.textContent = 'Unknown:';
-
-      const autoCompleteSentencesContainer = document.createElement('div');
-      autoCompleteSentencesContainer.id = 'autoCompleteSentencesContainer';
-
-      correctSentencesManual.forEach((sentence) => {
-        const p = document.createElement('p');
-        p.textContent = sentence;
-        manualSentencesContainer.appendChild(p);
-      });
-
-      correctSentencesAutoComplete.forEach((sentence) => {
-        const p = document.createElement('p');
-        p.textContent = sentence;
-        autoCompleteSentencesContainer.appendChild(p);
-      });
-
-      modalContent.appendChild(header);
-      modalContent.appendChild(known);
-      modalContent.appendChild(manualSentencesContainer);
-      modalContent.appendChild(unknown);
-      modalContent.appendChild(autoCompleteSentencesContainer);
-      modalContent.appendChild(closeButton);
-      modal.appendChild(modalContent);
-
-      if (modal) {
-        modal.style.display = 'block';
-
-        console.log(correctSentencesManual, correctSentencesAutoComplete);
-      }
-
       const sentenceLines =
         completedSentencesContainer.querySelectorAll('.sentence-line');
       sentenceLines.forEach((line) => {
@@ -345,7 +233,16 @@ function nextSentence(wordData: IWordData) {
       });
 
       alphaHeight = 90;
-      console.log(`${alphaHeight}`);
+    
+    createAndShowModal(
+     'Congrats!',
+     'Continue',
+     () => {
+        console.log('Modal closed');
+     },
+     correctSentencesManual,
+     correctSentencesAutoComplete
+    );
     }
   }
 

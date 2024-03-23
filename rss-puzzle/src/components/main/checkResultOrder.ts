@@ -1,5 +1,4 @@
 export function checkResultOrder(originalSentence: string) {
-
   const resultBlock = document.getElementById('result-block');
   if (!resultBlock) {
     console.error('Element with ID "result-block" not found');

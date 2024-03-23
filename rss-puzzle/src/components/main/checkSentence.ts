@@ -4,7 +4,6 @@ export function checkSentenceContainer(
   currentSentence: string,
   correctSentencesManual: string[],
 ) {
-
   const check = checkResultOrder(currentSentence);
 
   const checkButton = document.getElementById(
