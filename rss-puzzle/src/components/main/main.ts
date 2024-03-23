@@ -1,17 +1,17 @@
 import './mainpage.css';
-import { imageNames1 } from './imageNames';
+import { imageNames1 } from './definitions/imageNames';
 import { waitForElements } from './dragAndDrop';
-import { createInterfaceElements } from './interfaceElements';
-import { setupEventHandlers } from './eventHandlers';
+import { createInterfaceElements } from './UI/interfaceElements';
+import { setupEventHandlers } from './eventHandlers/eventHandlers';
 import { fetchWordData } from './fetchData';
-import { IWordData } from './interfaces';
-import { displayTranslation } from './translationModule';
-import { shuffleArray } from './shuffleArray';
-import { createAndShowModal } from './modal';
-import { handleSelectElementChange } from './selectElementHandler';
-import { createWordElement } from './wordElementCreator';
-import { createWordElementAutocomplete } from './wordElementCreatorForAutocomplete';
-import { updateButtonStates } from './buttonHandler';
+import { IWordData } from './definitions/interfaces';
+import { displayTranslation } from './display/translationModule';
+import { shuffleArray } from './display/shuffleArray';
+import { createAndShowModal } from './UI/modal';
+import { handleSelectElementChange } from './eventHandlers/selectElementHandler';
+import { createWordElement } from './display/wordElementCreator';
+import { createWordElementAutocomplete } from './display/wordElementCreatorForAutocomplete';
+import { updateButtonStates } from './display/buttonHandler';
 
 export let currentSentenceIndex = 0;
 export let currentSentence: string = '';
@@ -89,7 +89,7 @@ class MainPage {
             displayTranslation(wordData);
           });
 
-          handleSelectElementChange(completedSentencesContainer);
+        handleSelectElementChange(completedSentencesContainer);
 
         alphaHeight = 100;
         const alphaElement = document.querySelector('.alpha') as HTMLElement;
@@ -99,7 +99,6 @@ class MainPage {
         currentRound = 1;
         currentSentenceIndex = 0;
       }
-
     });
   }
 
@@ -202,7 +201,7 @@ function nextSentence(wordData: IWordData) {
     'next-sentence-button',
   ) as HTMLButtonElement;
 
-  updateButtonStates(checkButton, nextButton)
+  updateButtonStates(checkButton, nextButton);
 
   if (currentSentenceIndex < wordData.rounds.length) {
     displaySentence(wordData);
@@ -233,16 +232,16 @@ function nextSentence(wordData: IWordData) {
       });
 
       alphaHeight = 90;
-    
-    createAndShowModal(
-     'Congrats!',
-     'Continue',
-     () => {
-        console.log('Modal closed');
-     },
-     correctSentencesManual,
-     correctSentencesAutoComplete
-    );
+
+      createAndShowModal(
+        'Congrats!',
+        'Continue',
+        () => {
+          console.log('Modal closed');
+        },
+        correctSentencesManual,
+        correctSentencesAutoComplete,
+      );
     }
   }
 

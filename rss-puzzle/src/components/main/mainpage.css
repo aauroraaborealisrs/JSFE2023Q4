@@ -5,8 +5,6 @@
 #sentence-container {
   display: flex;
   width: 743px;
-  /* width: 900px; */
-
   justify-content: space-between;
   justify-items: center;
   align-items: center;
@@ -128,39 +126,25 @@
 
 .word {
   background-color: rgb(67 14 14 / 30%);
-  /* padding: 10px; */
-  /* margin: 0 5px; */
   cursor: pointer;
-
-  /* width: 148px; */
-  /* width: fit-content; */
   height: 43px !important;
-  /* background: url('middletransparent.png') no-repeat; */
-
   background-size: 100% 100%;
-  mask: url('middle.png') no-repeat;
+  mask: url('images/middle.png') no-repeat;
   mask-size: 100% 100%;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* margin-left: -14px; */
   border: 1px solid black;
-  /* padding-right: 14px; */
 }
 
 .last-word {
-  /* background: url('endtransparent.png') no-repeat;
-  background-size: 100% 100%; */
-
-  mask: url('end.png') no-repeat;
+  mask: url('images/end.png') no-repeat;
   mask-size: 100% 100%;
 }
 
 .first-word {
-  /* background: url('starttransparent.png') no-repeat;
-  background-size: 100% 100%; */
-  mask: url('start.png') no-repeat;
+  mask: url('images/start.png') no-repeat;
   mask-size: 100% 100%;
 }
 

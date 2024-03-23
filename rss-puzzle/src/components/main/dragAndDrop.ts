@@ -1,4 +1,4 @@
-import { checkSentenceContainer } from './checkSentence';
+import { checkSentenceContainer } from './checkResult/checkSentence';
 import { currentSentence, correctSentencesManual } from './main';
 
 export let allowDrop = (event: DragEvent) => {

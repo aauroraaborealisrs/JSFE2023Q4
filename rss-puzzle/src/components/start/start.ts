@@ -1,6 +1,7 @@
 import './start.css';
 import MainPage from '../main/main';
 import LoginForm from '../login/login';
+import { createStartScreen } from './page/startScreen'; 
 
 function getUserGreeting() {
   const userData = localStorage.getItem('userData');
@@ -11,10 +12,6 @@ function getUserGreeting() {
   return null;
 }
 
-function isLoggedIn() {
-  return localStorage.getItem('userData') !== null;
-}
-
 class StartScreen {
   constructor() {
     this.render();
@@ -23,25 +20,15 @@ class StartScreen {
 
   render() {
     const userGreeting = getUserGreeting();
-    let greetingMessage = '';
-    if (userGreeting) {
-      greetingMessage = `<p class="greeting">Welcome back, ${userGreeting}!</p>`;
-    }
+    const startScreen = createStartScreen(userGreeting);
 
-    const startScreen = `
-      <div id="start-screen">
-        <header class="start__header">
-          <h1 class="app-name">RSS Puzzle</h1>
-          <p class="game-description">
-            Unlock English grammar mastery one puzzle piece at a time with our innovative learning app!
-          </p>
-        </header>
-        <button class="logout-button">Logout</button>
-        ${greetingMessage}
-        <button class="start-button">Start Learning</button>
-      </div>
-    `;
-    document.getElementById('app').innerHTML = startScreen;
+    if (startScreen){
+    const appElement = document.getElementById('app');
+      if (appElement) {
+          appElement.innerHTML = '';
+          appElement.appendChild(startScreen);
+      }
+    }
   }
 
   addEventListeners() {

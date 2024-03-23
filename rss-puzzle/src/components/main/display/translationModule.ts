@@ -1,5 +1,5 @@
-import { IWordData } from './interfaces';
-import { currentRound, currentSentenceIndex } from './main';
+import { IWordData } from '../definitions/interfaces';
+import { currentRound, currentSentenceIndex } from '../main';
 
 export function displayTranslation(wordData: IWordData) {
   const button = document.getElementById(

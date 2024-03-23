@@ -1,4 +1,4 @@
-import { IWordData } from './interfaces';
+import { IWordData } from './definitions/interfaces';
 
 export async function fetchWordData(
   dataUrl: string,

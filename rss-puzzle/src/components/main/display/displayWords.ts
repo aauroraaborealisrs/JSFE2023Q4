@@ -1,7 +1,11 @@
 import { calculateWordWidth } from './calculateWordWidth';
 
-export function displayWords(wordsInOriginal: string[], originalSentence: string, resultBlock: HTMLElement) {
- wordsInOriginal.forEach((word) => {
+export function displayWords(
+  wordsInOriginal: string[],
+  originalSentence: string,
+  resultBlock: HTMLElement,
+) {
+  wordsInOriginal.forEach((word) => {
     const wordDiv = document.createElement('div');
     wordDiv.textContent = word;
     wordDiv.classList.add('word');
@@ -14,5 +18,5 @@ export function displayWords(wordsInOriginal: string[], originalSentence: string
     if (word === wordsInOriginal[wordsInOriginal.length - 1]) {
       wordDiv.classList.add('last-word');
     }
- });
+  });
 }

@@ -1,5 +1,5 @@
-import { checkSentenceContainer } from './checkSentence';
-import { currentSentence, correctSentencesManual } from './main';
+import { checkSentenceContainer } from '../checkResult/checkSentence';
+import { currentSentence, correctSentencesManual } from '../main';
 
 export function handleWordClick(e: MouseEvent) {
   const wordDiv = e.target as HTMLElement;
