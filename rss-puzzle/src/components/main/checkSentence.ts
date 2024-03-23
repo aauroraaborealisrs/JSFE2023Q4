@@ -1,17 +1,21 @@
-import { checkResultOrder } from './checkResultOrder'; 
+import { checkResultOrder } from './checkResultOrder';
 
-export function checkSentenceContainer(currentSentence: string, correctSentencesManual: string[]) {
- console.log('checkSentenceContainer() called');
- const check = checkResultOrder(currentSentence);
- const checkButton = document.getElementById(
+export function checkSentenceContainer(
+  currentSentence: string,
+  correctSentencesManual: string[],
+) {
+
+  const check = checkResultOrder(currentSentence);
+
+  const checkButton = document.getElementById(
     'check-sentence-button',
- ) as HTMLButtonElement;
- const sentenceContainer = document.getElementById('sentence-container');
- const allPlaceholdersEmpty = Array.from(
+  ) as HTMLButtonElement;
+  const sentenceContainer = document.getElementById('sentence-container');
+  const allPlaceholdersEmpty = Array.from(
     sentenceContainer.querySelectorAll('.wordPlaceholder'),
- ).every((placeholder) => placeholder.children.length === 0);
+  ).every((placeholder) => placeholder.children.length === 0);
 
- if (allPlaceholdersEmpty) {
+  if (allPlaceholdersEmpty) {
     console.log('sentence-container пустой');
     const nextButton = document.getElementById(
       'next-sentence-button',
@@ -42,5 +46,5 @@ export function checkSentenceContainer(currentSentence: string, correctSentences
         nextButton.style.visibility = 'hidden';
       }
     });
- }
+  }
 }

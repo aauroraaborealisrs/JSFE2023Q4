@@ -1,25 +1,27 @@
 import './mainpage.css';
 import { imageNames1 } from './imageNames';
-import { waitForElements, allowDrop, drag, drop } from './dragAndDrop';
-import { checkResultOrder } from './checkResultOrder'; 
-import { checkSentenceContainer } from './checkSentence'; 
+import { waitForElements} from './dragAndDrop';
 import { createInterfaceElements } from './interfaceElements';
 import { setupEventHandlers } from './eventHandlers';
 import { fetchWordData } from './fetchData';
 import { IWordData } from './interfaces';
+import { displayTranslation } from './translationModule';
+import { handleWordClick } from './handleWordClick';
+import { shuffleArray } from './shuffleArray';
+import { calculateWordWidth } from './calculateWordWidth';
 
-
-let currentSentenceIndex = 0;
+export let currentSentenceIndex = 0;
 export let currentSentence: string = '';
-let originalSentence = '';
+export let originalSentence = '';
 let wordData: IWordData;
-let currentRound = 0;
+export let currentRound = 0;
 let alphaHeight = 90;
 let dataUrl =
   'https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/data/wordCollectionLevel1.json';
 
 export let correctSentencesManual: string[] = [];
 let correctSentencesAutoComplete: string[] = [];
+
 
 class MainPage {
   sentences: string[] = [];
@@ -140,6 +142,7 @@ function changeBackgroundImage() {
   }
 }
 
+
 function displaySentence(wordData: IWordData) {
   const sentenceContainer = document.getElementById('sentence-container');
 
@@ -154,7 +157,7 @@ function displaySentence(wordData: IWordData) {
     let shuffledWords = shuffleArray([...words]);
     sentenceContainer.innerHTML = '';
 
-    shuffledWords.forEach((word) => {
+    shuffledWords.forEach((word: string) => {
       const wordPlaceholder = document.createElement('div');
       wordPlaceholder.classList.add('wordPlaceholder');
       const wordDiv = document.createElement('div');
@@ -182,41 +185,6 @@ function displaySentence(wordData: IWordData) {
     ) as HTMLButtonElement;
     button.textContent = 'Показать перевод';
   }
-}
-
-const calculateWordWidth = (word: string, originalSentence: string) => {
-  const totalLength = originalSentence.length;
-  const wordLength = word.length;
-
-  const container = document.querySelector(
-    '#completed-sentences-container',
-  ) as HTMLElement;
-  const totalWidthInPixels = container.offsetWidth;
-
-  const percentage = wordLength / totalLength;
-  const roundedPercentage = Math.round(percentage * 10) / 10;
-
-  const roundedPixels = parseFloat(
-    (totalWidthInPixels * roundedPercentage).toFixed(1),
-  );
-
-  const final = roundedPixels + 15;
-  return `${final}px`;
-};
-
-function shuffleArray<T>(array: T[]): T[] {
-  let currentIndex = array.length,
-    temporaryValue,
-    randomIndex;
-  let arrayCopy = array.slice();
-  while (0 !== currentIndex) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-    temporaryValue = arrayCopy[currentIndex];
-    arrayCopy[currentIndex] = arrayCopy[randomIndex];
-    arrayCopy[randomIndex] = temporaryValue;
-  }
-  return arrayCopy;
 }
 
 function autoComplete() {
@@ -387,91 +355,6 @@ function nextSentence(wordData: IWordData) {
   }
 
   waitForElements();
-}
-
-function handleWordClick(e: MouseEvent) {
-  const wordDiv = e.target as HTMLElement;
-  const resultBlock = document.getElementById('result-block');
-  const checkButton = document.getElementById(
-    'check-sentence-button',
-  ) as HTMLButtonElement;
-
-  if (resultBlock && wordDiv) {
-    checkButton.textContent = 'Check';
-
-    if (resultBlock.contains(wordDiv)) {
-      const wordPlaceholders = Array.from(
-        document.querySelectorAll('#sentence-container .wordPlaceholder'),
-      );
-      const targetPlaceholder = wordPlaceholders.find(
-        (placeholder) => placeholder.children.length === 0,
-      );
-      if (targetPlaceholder) {
-        targetPlaceholder.appendChild(wordDiv);
-      }
-    } else {
-      wordDiv.setAttribute(
-        'data-original-parent',
-        wordDiv.parentElement?.id || '',
-      );
-      resultBlock.appendChild(wordDiv);
-    }
-  }
-
-  const sentenceContainer = document.getElementById('sentence-container');
-  const allPlaceholdersEmpty = Array.from(
-    sentenceContainer.querySelectorAll('.wordPlaceholder'),
-  ).every((placeholder) => placeholder.children.length === 0);
-
-  if (!allPlaceholdersEmpty) {
-    checkButton.disabled = true;
-    const nextButton = document.getElementById(
-      'next-sentence-button',
-    ) as HTMLButtonElement;
-    nextButton.style.visibility = 'hidden';
-    checkButton.style.backgroundColor = '#ccc';
-  } else {
-    checkButton.style.backgroundColor = 'black';
-    checkButton.disabled = false;
-    checkSentenceContainer(currentSentence, correctSentencesManual);
-  }
-}
-
-function displayTranslation(wordData: IWordData) {
-  const button = document.getElementById(
-    'toggle-translation-button',
-  ) as HTMLButtonElement;
-
-  const translationSpan = document.createElement('span');
-  translationSpan.classList.add('translation-hint');
-  translationSpan.style.display = 'none';
-
-  if (translationSpan) {
-    if (button.textContent === 'Скрыть перевод') {
-      translationSpan.style.display = 'block';
-    } else {
-      translationSpan.style.display = 'none';
-    }
-
-    button.textContent =
-      button.textContent === 'Показать перевод'
-        ? 'Показать перевод'
-        : 'Скрыть перевод';
-  }
-
-  const translation =
-    wordData.rounds[currentRound - 1]?.words[currentSentenceIndex]
-      ?.textExampleTranslate || '';
-
-  translationSpan.textContent = translation;
-
-  const translationContainer = document.getElementById('translation');
-  if (translationContainer) {
-    translationContainer.innerHTML = '';
-    translationContainer.appendChild(translationSpan);
-  } else {
-    console.error('Element with ID "translation" not found');
-  }
 }
 
 waitForElements();

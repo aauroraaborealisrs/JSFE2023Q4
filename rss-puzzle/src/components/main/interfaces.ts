@@ -1,12 +1,12 @@
 export interface IWord {
- textExample: string;
- textExampleTranslate: string;
+  textExample: string;
+  textExampleTranslate: string;
 }
 
 export interface IRound {
- words: IWord[];
+  words: IWord[];
 }
 
 export interface IWordData {
- rounds: IRound[];
+  rounds: IRound[];
 }
